@@ -1,0 +1,19 @@
+"use client";
+import React from "react";
+import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+const TopSection = () => {
+  return (
+    <div className="w-full flex justify-between p-1">
+      <div>
+        <Image src="/logo.svg" width={40} height={0} alt="logo" />
+      </div>
+      <Avatar className="me-2">
+        <AvatarImage src="" sizes="2"/>
+        <AvatarFallback>P</AvatarFallback>
+      </Avatar>
+    </div>
+  );
+};
+
+export default TopSection;
