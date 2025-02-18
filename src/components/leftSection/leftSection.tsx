@@ -3,9 +3,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { useNewProjectStore } from "@/store/projectStore";
+import { useNewInviteStore } from "@/store/inviteStore";
 
 export default function LeftSection() {
-  const { onOpen } = useNewProjectStore();
+  const { onOpen: onProjectOpen } = useNewProjectStore();
+  const { onOpen: onInviteOpen } = useNewInviteStore();
   return (
     <div className="p-2 space-y-2">
            <Avatar>
@@ -28,7 +30,10 @@ export default function LeftSection() {
         <AvatarImage src="https://cdn.shopify.com/app-store/listing_images/d4718e5822b10dc93891cc169d97f4e3/icon/CLnh6ejKhfkCEAE=.png" />
         <AvatarFallback>P</AvatarFallback>
       </Avatar>
-      <Button size="icon" className="border-non rounded-full" onClick={onOpen}>
+      <Button size="icon" className="border-non rounded-full" onClick={onProjectOpen}>
+        <Plus />
+      </Button>
+      <Button size="icon" className="border-non rounded-full" onClick={onInviteOpen}>
         <Plus />
       </Button>
     </div>
