@@ -16,7 +16,7 @@ import { Textarea } from "../ui/textarea"
 import { useUpdateProfile } from "@/store/updateProfileStore"
 
 const myBio = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo distinctio autem nesciunt cumque at provident, facere laborum a eaque debitis expedita, beatae ipsa maxime tenetur soluta quaerat minima sunt placeat.'
-const profileImage = '/images/barc.jpg'
+const profileImage = '/sampleProfile.jpg'
 
 export function UpdateProfileModal() {
 
@@ -35,7 +35,7 @@ export function UpdateProfileModal() {
   const {onClose, isOpen } = useUpdateProfile()
   return (
     <Dialog open={isOpen} onOpenChange={onClose} >
-      <DialogContent className="sm:max-w-[420px] border-none">
+      <DialogContent className="sm:max-w-[420px] border-none text-white">
         <DialogHeader>
           <DialogTitle>Update your profile</DialogTitle>
         </DialogHeader>
