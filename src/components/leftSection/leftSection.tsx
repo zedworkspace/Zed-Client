@@ -2,8 +2,10 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
+import { useNewProjectStore } from "@/store/projectStore";
 
 export default function LeftSection() {
+  const { onOpen } = useNewProjectStore();
   return (
     <div className="p-2 space-y-2">
            <Avatar>
@@ -26,7 +28,7 @@ export default function LeftSection() {
         <AvatarImage src="https://cdn.shopify.com/app-store/listing_images/d4718e5822b10dc93891cc169d97f4e3/icon/CLnh6ejKhfkCEAE=.png" />
         <AvatarFallback>P</AvatarFallback>
       </Avatar>
-      <Button size="icon" className="border-non rounded-full">
+      <Button size="icon" className="border-non rounded-full" onClick={onOpen}>
         <Plus />
       </Button>
     </div>
