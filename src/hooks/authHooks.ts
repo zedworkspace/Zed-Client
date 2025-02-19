@@ -10,7 +10,8 @@ export const useOtp = () => {
     
     }})
 }
-export const useRegister = () => {
+export const 
+useRegister = () => {
     const navigate = useRouter();
     return useMutation({mutationFn:async(signupData)=>{
         const res = await axios.post('http://localhost:5000/api/v1/register',signupData);
@@ -23,6 +24,7 @@ export const useSignin = () => {
     const navigate = useRouter();
     return useMutation({mutationFn:async(signupData)=>{
         const res = await axios.post('http://localhost:5000/api/v1/signin',signupData);
+        localStorage.setItem('user',JSON.stringify(res.data))
         return res.data;
     },onSuccess:(data)=>{
         navigate.replace('/')

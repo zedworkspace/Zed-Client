@@ -7,6 +7,9 @@ const API_ROUTES = {
   PROJECT: {
     CREATE: "/api/v1/projects",
   },
+  PROFILE:{
+    GET:"/api/v1/profile"
+  }
 };
 
 export default API_ROUTES;
