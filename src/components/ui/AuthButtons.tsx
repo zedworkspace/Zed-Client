@@ -6,7 +6,7 @@ interface IButton {
     width:string;
     height:string;
     backgroundColor:string;
-    value:string;
+    value:any;
     color:string;
     icon?:any;
     type?: "button" | "submit";

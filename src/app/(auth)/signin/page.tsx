@@ -6,8 +6,9 @@ import { FaGithub } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useSignin } from "@/hooks/authHooks";
+import { useSignin } from "@/hooks/useAuth";
 import { loginSchema } from '@/validations/authValidation';
+import ButtonLoading from "@/components/ui/ButtonLoading";
 
 interface ILogin {
   email: string;
@@ -18,11 +19,10 @@ const signinPage = () => {
   const [emailPage, setEmailPage] = useState(false);
   const navigate = useRouter();
 
-  const {mutate,data,isError,isPending,isSuccess} = useSignin();
+  const {mutate, data, isError, isPending,  error} = useSignin();
   const handleOnSubmit = (signinData : any) => {
     mutate(signinData);
-    console.log(signinData)
-  }
+  };
 
   return (
     <div className="w-[100%] flex justify-center h-screen">
@@ -40,6 +40,8 @@ const signinPage = () => {
                 </div>
               </div>
 
+             {isError && <p className="text-red-500 text-xs text-center">{error.message}</p> }
+
               <Formik
                 initialValues={{ email: "", password: "" }}
                 validationSchema={loginSchema}
@@ -51,7 +53,7 @@ const signinPage = () => {
                   <Form className="mid gap-5 flex flex-col">
                     <div className="flex flex-col gap-2">
                       <label className="text-xs text-[#A3A39E] font-semibold" htmlFor="email">Email</label>
-                      <Field type="text" name="email" className="bg-[#171717] h-10 rounded-lg text-md px-3" placeholder="Enter email"/>
+                      <Field type="text" name="email" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="Enter email"/>
                       <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
                     </div>
 
@@ -59,11 +61,11 @@ const signinPage = () => {
                       <label className="text-xs text-[#A3A39E] font-semibold" htmlFor="password">
                         Password
                       </label>
-                      <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-md px-3" placeholder="Enter password" />
+                      <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="Enter password" />
                       <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
                     </div>
 
-                    <AuthButtons width="100%" height="40px" color="black" value="Sign In" backgroundColor="white" type="submit" />
+                    <AuthButtons width="100%" height="40px" color="black" value={isPending?<ButtonLoading bg={{color:"black"}}/>:"Sign In"} backgroundColor="white" type="submit" />
                   </Form>
                 )}
               </Formik>
