@@ -6,7 +6,7 @@ import { FaGithub } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useSignin } from "@/hooks/authHooks";
+import { useSignin } from "@/hooks/useAuth";
 import { loginSchema } from '@/validations/authValidation';
 import ButtonLoading from "@/components/ui/ButtonLoading";
 
