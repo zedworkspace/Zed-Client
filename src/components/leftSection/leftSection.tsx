@@ -3,9 +3,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { useNewProjectStore } from "@/store/projectStore";
+import { useNewInviteStore } from "@/store/inviteStore";
 
 export default function LeftSection() {
   const { onOpen } = useNewProjectStore();
+  const { onOpen: onInviteOpen } = useNewInviteStore();
   return (
     <div className="p-2 space-y-2">
            <Avatar>
@@ -29,6 +31,9 @@ export default function LeftSection() {
         <AvatarFallback>P</AvatarFallback>
       </Avatar>
       <Button size="icon" className="border-non rounded-full" onClick={onOpen}>
+        <Plus />
+      </Button>
+      <Button size="icon" className="border-non rounded-full" onClick={onInviteOpen}>
         <Plus />
       </Button>
     </div>
