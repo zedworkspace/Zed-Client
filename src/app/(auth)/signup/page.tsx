@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Image from "next/image";
 import { FaGithub } from "react-icons/fa";
@@ -7,31 +7,27 @@ import AuthButtons from "@/components/ui/AuthButtons";
 import { useRouter } from "next/navigation";
 import { useOtp, useRegister } from "@/hooks/authHooks";
 import { signupSchema, otpSchema } from "@/validations/authValidation";
-
-interface ISignup {
-  name: string;
-  email: string;
-  password: string;
-  otp: string;
-}
+import ButtonLoading from "@/components/ui/ButtonLoading";
 
 const AuthPage = () => {
   const [otpPage, setOtpPage] = useState(false);
-  const [formData, setFormData] = useState<ISignup>({ name: "", email: "", password: "", otp: "" });
+  const [formData, setFormData] = useState<IUser>({ name: "", email: "", password: "", otp: "" });
   const navigate = useRouter();
   const [signupError, setSignupError] = useState("");
 
-  const { mutate: otpMutate, data: otpRes } = useOtp();
-  const handleOtp = (signupData: any) => {
+  const { mutate: otpMutate, data: otpRes, error:otpError, isPending:otpIsPending, isSuccess } = useOtp();
+  const handleOtp = async (signupData: IUser) => {
     otpMutate(signupData);
-    setOtpPage(true);
   };
 
-  const { mutate } = useRegister();
-  const handleOnSubmit = (signupData: any) => {
+  useEffect(()=>{
+    if(isSuccess) setOtpPage(true)
+  },[isSuccess])
+
+  const { mutate, isError, error, isPending } = useRegister();
+  const handleOnSubmit = (signupData: IUser) => {
     if (signupData.otp !== otpRes?.otp) return setSignupError("Invalid OTP");
     mutate(signupData);
-    setOtpPage(false);
   };
 
   return (
@@ -55,6 +51,7 @@ const AuthPage = () => {
                       <span>Zed</span>
                     </div>
                     <div className="flex flex-col">
+                  {isError && <p className="text-red-500 text-xs text-center">{error.message}</p> }
                       <h3 className="font-bold text-2xl">OTP sent to</h3>
                       <span className="text-sm font-normal text-gray-500">abhay@gmail.com</span>
                     </div>
@@ -76,7 +73,6 @@ const AuthPage = () => {
               initialValues={formData}
               validationSchema={signupSchema}
               onSubmit={(values) => {
-                console.log("Signup Submitted:", values);
                 setFormData(values);
                 handleOtp(values);
               }}
@@ -91,6 +87,7 @@ const AuthPage = () => {
                     <h3 className="font-bold text-2xl">Signup for an account</h3>
                   </div>
                   <div className="mid flex flex-col gap-5">
+                  {otpError && <p className="text-red-500 text-xs text-center">{otpError.message}</p> }
                     <div className="flex flex-col gap-2">
                       <label className="text-xs text-[#A3A39E] font-semibold">Full Name</label>
                       <Field type="text" name="name" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="Abhay" />
@@ -103,14 +100,14 @@ const AuthPage = () => {
                     </div>
                     <div className="flex flex-col gap-2">
                       <label className="text-xs text-[#A3A39E] font-semibold">Password</label>
-                      <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="fvewhgh" />
+                      <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="fsf@fff" />
                       <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
                     </div>
                     <AuthButtons width="100%" height="40px" color="black" value="Sign Up" backgroundColor="white" type="submit" />
                     <p className="text-sm text-gray-500">
                       Already have an account?{" "}
                       <span onClick={() => navigate.replace("/signin")} className="text-white cursor-pointer hover:text-gray-300">
-                        Sign in
+                        {otpIsPending?<ButtonLoading bg={{color:"black"}}/>:"Sign in"}
                       </span>
                     </p>
                   </div>

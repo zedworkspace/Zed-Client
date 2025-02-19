@@ -1,29 +1,26 @@
+import { registerApi, sendOtpApi, signinApi } from "@/services/authServices";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 
 export const useOtp = () => {
-    return useMutation({mutationFn:async(signupData)=>{
-        const res = await axios.post('http://localhost:5000/api/v1/otp-request',signupData);
-        return res.data;
+    return useMutation({mutationFn:async(signupData : IUser)=>{
+        return await sendOtpApi(signupData);
     },onSuccess:(data)=>{
     
     }})
 }
 export const useRegister = () => {
     const navigate = useRouter();
-    return useMutation({mutationFn:async(signupData)=>{
-        const res = await axios.post('http://localhost:5000/api/v1/register',signupData);
-        return res.data;
+    return useMutation({mutationFn:async(signupData : IUser)=>{
+        return await registerApi(signupData);
     },onSuccess:(data)=>{
         navigate.replace('/')
     }})
 }
 export const useSignin = () => {
     const navigate = useRouter();
-    return useMutation({mutationFn:async(signupData)=>{
-        const res = await axios.post('http://localhost:5000/api/v1/signin',signupData);
-        return res.data;
+    return useMutation({mutationFn:async(signinData : IUser)=>{
+        return await signinApi(signinData);
     },onSuccess:(data)=>{
         navigate.replace('/')
     }})

@@ -1,8 +1,9 @@
 const API_ROUTES = {
   AUTH: {
-    SIGNIN: "/api/v1/auth/sign-in",
-    SIGNUP: "/api/v1/auth/sign-up",
-    LOGOUT: "/api/v1/auth/logout",
+    SENT_OTP: "/api/v1/otp-request",
+    SIGNUP: "/api/v1/register",
+    SIGNIN: "/api/v1/signin",
+    LOGOUT: "/api/v1/logout",
   },
   PROJECT: {
     CREATE: "/api/v1/projects",
