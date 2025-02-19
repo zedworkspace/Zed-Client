@@ -53,7 +53,7 @@ const AuthPage = () => {
                     <div className="flex flex-col">
                   {isError && <p className="text-red-500 text-xs text-center">{error.message}</p> }
                       <h3 className="font-bold text-2xl">OTP sent to</h3>
-                      <span className="text-sm font-normal text-gray-500">abhay@gmail.com</span>
+                      <span className="text-sm font-normal text-gray-500">{otpRes.email}</span>
                     </div>
                   </div>
                   <div className="mid flex flex-col gap-5">
