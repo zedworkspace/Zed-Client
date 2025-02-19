@@ -6,7 +6,7 @@ import { useNewProjectStore } from "@/store/projectStore";
 import { useNewInviteStore } from "@/store/inviteStore";
 
 export default function LeftSection() {
-  const { onOpen: onProjectOpen } = useNewProjectStore();
+  const { onOpen } = useNewProjectStore();
   const { onOpen: onInviteOpen } = useNewInviteStore();
   return (
     <div className="p-2 space-y-2">
@@ -30,7 +30,7 @@ export default function LeftSection() {
         <AvatarImage src="https://cdn.shopify.com/app-store/listing_images/d4718e5822b10dc93891cc169d97f4e3/icon/CLnh6ejKhfkCEAE=.png" />
         <AvatarFallback>P</AvatarFallback>
       </Avatar>
-      <Button size="icon" className="border-non rounded-full" onClick={onProjectOpen}>
+      <Button size="icon" className="border-non rounded-full" onClick={onOpen}>
         <Plus />
       </Button>
       <Button size="icon" className="border-non rounded-full" onClick={onInviteOpen}>
