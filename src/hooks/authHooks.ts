@@ -9,7 +9,8 @@ export const useOtp = () => {
     
     }})
 }
-export const useRegister = () => {
+export const 
+useRegister = () => {
     const navigate = useRouter();
     return useMutation({mutationFn:async(signupData : IUser)=>{
         return await registerApi(signupData);
@@ -20,7 +21,9 @@ export const useRegister = () => {
 export const useSignin = () => {
     const navigate = useRouter();
     return useMutation({mutationFn:async(signinData : IUser)=>{
-        return await signinApi(signinData);
+        const res = await signinApi(signinData);
+        localStorage.setItem('user',JSON.stringify(res.data));
+        return res.data;
     },onSuccess:(data)=>{
         navigate.replace('/')
     }})
