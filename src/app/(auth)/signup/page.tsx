@@ -5,7 +5,7 @@ import Image from "next/image";
 import { FaGithub } from "react-icons/fa";
 import AuthButtons from "@/components/ui/AuthButtons";
 import { useRouter } from "next/navigation";
-import { useOtp, useRegister } from "@/hooks/authHooks";
+import { useOtp, useRegister } from "@/hooks/useAuth";
 import { signupSchema, otpSchema } from "@/validations/authValidation";
 import ButtonLoading from "@/components/ui/ButtonLoading";
 
