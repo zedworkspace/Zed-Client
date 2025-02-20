@@ -18,7 +18,7 @@ useRegister = () => {
     },onSuccess:(data)=>{
         localStorage.setItem('accessToken',data.accessToken);
         navigate.replace('/')
-    }})
+    }}) 
 }
 export const useSignin = () => {
     const navigate = useRouter();
