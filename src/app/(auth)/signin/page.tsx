@@ -23,7 +23,8 @@ const signinPage = () => {
   const handleOnSubmit = (signinData : any) => {
     mutate(signinData);
   };
-
+  console.log(data)
+  
   return (
     <div className="w-[100%] flex justify-center h-screen">
       <div className="w-[100%] md:w-[55%] lg:w-[35%] h-full flex justify-center p-5 items-center">

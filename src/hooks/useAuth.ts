@@ -14,9 +14,9 @@ useRegister = () => {
     const navigate = useRouter();
     return useMutation({mutationFn:async(signupData : IUser)=>{
         const res = await registerApi(signupData);
-        localStorage.setItem('user',JSON.stringify(res));
         return res;
     },onSuccess:(data)=>{
+        localStorage.setItem('accessToken',data.accessToken);
         navigate.replace('/')
     }})
 }
@@ -24,9 +24,9 @@ export const useSignin = () => {
     const navigate = useRouter();
     return useMutation({mutationFn:async(signinData : IUser)=>{
         const res = await signinApi(signinData);
-        localStorage.setItem('user',JSON.stringify(res));
-        return res.data;
+        return res;
     },onSuccess:(data)=>{
+        localStorage.setItem('accessToken',data.accessToken);
         navigate.replace('/')
     }})
 }
