@@ -15,13 +15,19 @@ import { useNewProjectStore } from "@/store/projectStore";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { z } from "zod";
+
+const createProjectSchema = z.object({
+  projectName: z.string().nonempty("Project name is required"),
+  projectDescription: z.string().nonempty("Project description is required"),
+  projectLogo: z.instanceof(File, { message: "Project logo is required" }),
+});
 
 export function CreateProject() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -48,9 +54,7 @@ export function CreateProject() {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[420px] border-none text-muted-foreground">
         <DialogHeader className="space-y-3">
-          <DialogTitle className="text-muted-foreground">
-            Create your Project
-          </DialogTitle>
+          <DialogTitle className="text-white">Create your Project</DialogTitle>
           <DialogDescription>
             Provide your project details and upload an image. Click
             &lsquo;Create&lsquo; to finalize your project setup.
@@ -60,7 +64,9 @@ export function CreateProject() {
           <div className="flex items-center justify-center gap-4">
             <label
               htmlFor="fileUpload"
-              className="relative flex items-center justify-center w-24 h-24 border rounded-full cursor-pointer overflow-hidden"
+              className={`relative flex items-center justify-center w-24 h-24 border-2 border-dashed rounded-full cursor-pointer overflow-hidden border-secondary ${
+                preview && "border-none"
+              }`}
             >
               {preview ? (
                 <Image
@@ -86,7 +92,7 @@ export function CreateProject() {
             </label>
           </div>
           <div className="space-y-2">
-            <div>
+            <div className="space-y-2">
               <Label
                 htmlFor="projectName"
                 className="text-right text-xs font-bold text-muted-foreground"
@@ -96,11 +102,12 @@ export function CreateProject() {
               <Input
                 id="projectName"
                 value={name}
-                className="col-span-3 border  focus-visible:ring-0"
+                className="col-span-3 border-secondary focus-visible:ring-0 focus-visible:border-white bg-transparent"
                 onChange={(e) => setName(e.target.value)}
+                autoComplete="off"
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label
                 htmlFor="projectName"
                 className="text-right text-xs font-bold text-muted-foreground"
@@ -110,14 +117,19 @@ export function CreateProject() {
               <textarea
                 id="projectDescription"
                 value={description}
-                className="col-span-3 border focus-visible:ring-0 h-28 resize-none  flex  w-full rounded-md  border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none  focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                className="col-span-3 border focus-visible:ring-0 h-28 resize-none  flex  w-full rounded-md  bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none  focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm  border-secondary  focus-visible:border-white"
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={handleSubmit}>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            className="font-semibold"
+            size="lg"
+          >
             Create
           </Button>
         </DialogFooter>
