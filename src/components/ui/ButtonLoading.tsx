@@ -1,8 +1,12 @@
 import { ThreeDot } from "react-loading-indicators"
 
-const ButtonLoading = ({bg}: any) => {
+interface IBg {
+  color:string
+}
+
+const ButtonLoading = ({color}:IBg) => {
   return (
-    <ThreeDot color={bg.color} size="small" text="" textColor={bg.color} />
+    <ThreeDot color={color} size="small" text="" textColor={color} />
   )
 }
 

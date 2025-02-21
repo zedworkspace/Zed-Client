@@ -3,6 +3,8 @@ const API_ROUTES = {
     SENT_OTP: "/v1/otp-request",
     SIGNUP: "/v1/register",
     SIGNIN: "/v1/signin",
+    RESET_OTP: "/v1/reset-otp-request",
+    RESET_PASSWORD: "/v1/reset-password",
     LOGOUT: "/v1/logout",
   },
   PROJECT: {

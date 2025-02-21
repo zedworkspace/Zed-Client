@@ -4,31 +4,29 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Image from "next/image";
 import { FaGithub } from "react-icons/fa";
 import AuthButtons from "@/components/ui/AuthButtons";
-import { useRouter } from "next/navigation";
-import { useOtp, useRegister } from "@/hooks/useAuth";
-import { signupSchema, otpSchema } from "@/validations/authValidation";
-import ButtonLoading from "@/components/ui/ButtonLoading";
+import { useResetOtp, useResetPassword } from "@/hooks/useAuth";
+import { emailSchema, resetPasswordShema } from "@/validations/authValidation";
 import { IUser } from "@/interface/userInterface";
 
 const AuthPage = () => {
   const [otpPage, setOtpPage] = useState(false);
-  const [formData, setFormData] = useState<IUser>({ name: "", email: "", password: "", otp: "" });
-  const navigate = useRouter();
+  const [formData, setFormData] = useState<IUser>({email: "", password: "", otp: "" });
   const [signupError, setSignupError] = useState("");
 
-  const { mutate: otpMutate, data: otpRes, error:otpError, isPending:otpIsPending, isSuccess } = useOtp();
-  const handleOtp = async (signupData: IUser) => {
-    otpMutate(signupData);
+  const { mutate: otpMutate, data: otpRes, error:otpError, isSuccess } = useResetOtp();
+  const handleResetOtp = async (restData: IUser) => {
+    otpMutate(restData);
   };
 
   useEffect(()=>{
     if(isSuccess) setOtpPage(true)
   },[isSuccess])
 
-  const { mutate, isError, error } = useRegister();
-  const handleOnSubmit = (signupData: IUser) => {
-    if (signupData.otp !== otpRes?.otp) return setSignupError("Invalid OTP");
-    mutate(signupData);
+  const { mutate, isError, error} = useResetPassword();
+  const handleOnSubmit = (restData: IUser) => {
+    if (restData.otp !== otpRes?.otp) return setSignupError("Invalid OTP");
+    console.log(restData)
+    mutate(restData);
   };
 
   return (
@@ -37,10 +35,11 @@ const AuthPage = () => {
         <div className="border lg:w-[90%] border-gray-700 rounded-xl w-[100%] bg-[#0A0A0A] p-10 xl:px-15 flex flex-col gap-5">
           {otpPage ? (
             <Formik
-              initialValues={{ otp: formData.otp || "" }}
-              validationSchema={otpSchema}
+              enableReinitialize
+              initialValues={formData}
+              validationSchema={resetPasswordShema}
               onSubmit={(values) => {
-                setFormData({ ...formData, otp: values.otp });
+                setFormData(values);
                 handleOnSubmit(values);
               }}
             >
@@ -54,7 +53,7 @@ const AuthPage = () => {
                     <div className="flex flex-col">
                   {isError && <p className="text-red-500 text-xs text-center">{error.message}</p> }
                       <h3 className="font-bold text-2xl">OTP sent to</h3>
-                      <span className="text-sm font-normal text-gray-500">{otpRes.email}</span>
+                      <span className="text-sm font-normal text-gray-500">{}</span>
                     </div>
                   </div>
                   <div className="mid flex flex-col gap-5">
@@ -64,18 +63,23 @@ const AuthPage = () => {
                       <ErrorMessage name="otp" component="div" className="text-red-500 text-xs" />
                       {signupError && <p className="text-red-500 text-xs">{signupError}</p>}
                     </div>
-                    <AuthButtons width="100%" height="40px" color="black" value="Verify" backgroundColor="white" type="submit" />
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs text-[#A3A39E] font-semibold">New Password</label>
+                      <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="fsf@fff" />
+                      <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
+                    </div>
+                    <AuthButtons width="100%" height="40px" color="black" value="Conform" backgroundColor="white" type="submit" />
                   </div>
                 </Form>
               )}
             </Formik>
           ) : (
             <Formik
-              initialValues={formData}
-              validationSchema={signupSchema}
+              initialValues={{email:formData.email || ""}}
+              validationSchema={emailSchema}
               onSubmit={(values) => {
-                setFormData(values);
-                handleOtp(values);
+                setFormData({...formData,email:values.email})
+                handleResetOtp(values);
               }}
             >
               {() => (
@@ -85,32 +89,16 @@ const AuthPage = () => {
                       <Image src="/Zed-White.png" alt="logo" width={30} height={30} />
                       <span>Zed</span>
                     </div>
-                    <h3 className="font-bold text-2xl">Signup for an account</h3>
+                    <h3 className="font-bold text-2xl">Enter your email</h3>
                   </div>
                   <div className="mid flex flex-col gap-5">
                   {otpError && <p className="text-red-500 text-xs text-center">{otpError.message}</p> }
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs text-[#A3A39E] font-semibold">Full Name</label>
-                      <Field type="text" name="name" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="Abhay" />
-                      <ErrorMessage name="name" component="div" className="text-red-500 text-xs" />
-                    </div>
                     <div className="flex flex-col gap-2">
                       <label className="text-xs text-[#A3A39E] font-semibold">Email</label>
                       <Field type="text" name="email" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="a@gmail.com" />
                       <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
                     </div>
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs text-[#A3A39E] font-semibold">Password</label>
-                      <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="fsf@fff" />
-                      <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
-                    </div>
-                    <AuthButtons width="100%" height="40px" color="black" value="Sign Up" backgroundColor="white" type="submit" />
-                    <p className="text-sm text-gray-500">
-                      Already have an account?{" "}
-                      <span onClick={() => navigate.replace("/signin")} className="text-white cursor-pointer hover:text-gray-300">
-                        {otpIsPending?<ButtonLoading color={"black"}/>:"Sign in"}
-                      </span>
-                    </p>
+                    <AuthButtons width="100%" height="40px" color="black" value="Verify" backgroundColor="white" type="submit" />
                   </div>
                 </Form>
               )}

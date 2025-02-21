@@ -9,22 +9,17 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useSignin } from "@/hooks/useAuth";
 import { loginSchema } from '@/validations/authValidation';
 import ButtonLoading from "@/components/ui/ButtonLoading";
+import { IUser } from "@/interface/userInterface";
 
-interface ILogin {
-  email: string;
-  password: string;
-}
-
-const signinPage = () => {
+const SigninPage = () => {
   const [emailPage, setEmailPage] = useState(false);
   const navigate = useRouter();
 
-  const {mutate, data, isError, isPending,  error} = useSignin();
-  const handleOnSubmit = (signinData : any) => {
+  const {mutate, isError, isPending,  error} = useSignin();
+  const handleOnSubmit = (signinData : IUser) => {
     mutate(signinData);
   };
-  console.log(data)
-  
+
   return (
     <div className="w-[100%] flex justify-center h-screen">
       <div className="w-[100%] md:w-[55%] lg:w-[35%] h-full flex justify-center p-5 items-center">
@@ -50,7 +45,7 @@ const signinPage = () => {
                   handleOnSubmit(values)
                 }}
               >
-                {({ isSubmitting }) => (
+                {() => (
                   <Form className="mid gap-5 flex flex-col">
                     <div className="flex flex-col gap-2">
                       <label className="text-xs text-[#A3A39E] font-semibold" htmlFor="email">Email</label>
@@ -64,9 +59,10 @@ const signinPage = () => {
                       </label>
                       <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="Enter password" />
                       <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
+                      <p onClick={()=>navigate.replace('/forgot-password')} className="text-xs cursor-pointer hover:text-gray-300 w-[30%]">Forgot Password ?</p>
                     </div>
 
-                    <AuthButtons width="100%" height="40px" color="black" value={isPending?<ButtonLoading bg={{color:"black"}}/>:"Sign In"} backgroundColor="white" type="submit" />
+                    <AuthButtons width="100%" height="40px" color="black" value={isPending?<ButtonLoading color={"black"} />:"Sign In"} backgroundColor="white" type="submit" />
                   </Form>
                 )}
               </Formik>
@@ -116,4 +112,4 @@ const signinPage = () => {
   );
 };
 
-export default signinPage;
+export default SigninPage;
