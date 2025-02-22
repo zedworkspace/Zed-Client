@@ -2,7 +2,7 @@
 import React from "react";
 import { GitBranch, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import HomeHeader from "../home/homeheader";
+import HomeHeader from "@/components/home/homeheader"; 
 import { useNewProjectStore } from "@/store/projectStore";
 
 export default function Page() {
