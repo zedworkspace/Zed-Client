@@ -8,7 +8,8 @@ const API_ROUTES = {
     CREATE: "/api/v1/projects",
   },
   PROFILE:{
-    GET:"/api/v1/profile"
+    GET:"/api/v1/profile",
+    UPDATE:"api/v1/profile/update"
   }
 };
 

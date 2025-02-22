@@ -11,28 +11,68 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Camera } from "lucide-react"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Textarea } from "../ui/textarea"
-import { useUpdateProfile } from "@/store/updateProfileStore"
+import { useGetProfile, useUpdateProfile } from "@/hooks/useProfile"
+import { useUpdateProfileStore } from "@/store/updateProfileStore"
 
-const myBio = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo distinctio autem nesciunt cumque at provident, facere laborum a eaque debitis expedita, beatae ipsa maxime tenetur soluta quaerat minima sunt placeat.'
-const profileImage = '/sampleProfile.jpg'
 
 export function UpdateProfileModal() {
+    
+    const [userId, setUserId] = useState("");
+    
+    const {data} = useGetProfile(userId)
 
-  const [name,setName] = useState("userName")
-  const [bio, setBio] = useState(myBio)
-  const [image, setImage] = useState<string >(profileImage);
+    const {mutate:updateProfile, isPending} = useUpdateProfile(userId)
+
+
+    const [bio, setBio] = useState(data?.bio)
+    const [image, setImage] = useState<string >(data?.profileImg);
+    const [name,setName] = useState(data?.name)
+    const [selectedFile, setSelectedFile] = useState<File | null>(null); // Store actual file
+  
+    const userDetails = async () => {
+      try {
+        const user = await JSON.parse(localStorage.getItem("user") as string);
+        setUserId(user?._id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    useEffect(() => {
+      userDetails();
+    }, []);
+
+  useEffect(() => {
+    if (data) {
+      setName(data.name || "");
+      setBio(data.bio || '');
+      setImage(data.profileImg || "/sampleProfile.jpg");
+    }
+  }, [data]);
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setSelectedFile(file); // Store the actual file
       const imageUrl = URL.createObjectURL(file);
       setImage(imageUrl);
     }
   };
+  
 
-  const {onClose, isOpen } = useUpdateProfile()
+  const handleUpdateProfile = () =>{
+    const formData = new FormData()
+    formData.append('name',name)
+    formData.append('bio',bio)
+    if(selectedFile) {
+      formData.append('profileImg',selectedFile)
+    }
+    updateProfile({userId,formData})
+  }
+
+  const {onClose, isOpen } = useUpdateProfileStore()
   return (
     <Dialog open={isOpen} onOpenChange={onClose} >
       <DialogContent className="sm:max-w-[420px] border-none text-white">
@@ -72,11 +112,11 @@ export function UpdateProfileModal() {
             <Label htmlFor="bio">
               Bio
             </Label>
-            <Textarea id="bio" value={bio} onChange={(e)=>setBio(e.target.value)}/>
+            <Textarea id="bio" placeholder="Add your bio" value={bio} onChange={(e)=>setBio(e.target.value)}/>
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit"onClick={()=>onClose()}>Edit</Button>
+          <Button type="submit"onClick={handleUpdateProfile}>{isPending?'Updating':"Edit"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
