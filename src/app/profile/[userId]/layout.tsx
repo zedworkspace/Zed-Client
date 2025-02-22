@@ -13,14 +13,16 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ children }) => {
     const { onOpen } = useUpdateProfileStore();
     const router = useRouter();
     const pathname = usePathname();
-    const userId = pathname.split("/")[1];
+    const userId = pathname.split("/")[2];
 
     const {data} = useGetProfile(userId)
 
+    console.log(data,'data from profile page');
+
     const navItems = [
-        { name: "My Tasks", path: `/${userId}` },
-        { name: "Activity", path: `/${userId}/activity` },
-        { name: "Settings", path: `/${userId}/settings` },
+        { name: "My Tasks", path: `/profile/${userId}` },
+        { name: "Activity", path: `/profile/${userId}/activity` },
+        { name: "Settings", path: `/profile/${userId}/settings` },
     ];
 
     return (

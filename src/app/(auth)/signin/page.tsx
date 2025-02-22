@@ -6,23 +6,19 @@ import { FaGithub } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useSignin } from "@/hooks/authHooks";
+import { useSignin } from "@/hooks/useAuth";
 import { loginSchema } from '@/validations/authValidation';
+import ButtonLoading from "@/components/ui/ButtonLoading";
+import { IUser } from "@/interface/userInterface";
 
-interface ILogin {
-  email: string;
-  password: string;
-}
-
-const signinPage = () => {
+const SigninPage = () => {
   const [emailPage, setEmailPage] = useState(false);
   const navigate = useRouter();
 
-  const {mutate,data,isError,isPending,isSuccess} = useSignin();
-  const handleOnSubmit = (signinData : any) => {
+  const {mutate, isError, isPending,  error} = useSignin();
+  const handleOnSubmit = (signinData : IUser) => {
     mutate(signinData);
-    console.log(signinData)
-  }
+  };
 
   return (
     <div className="w-[100%] flex justify-center h-screen">
@@ -40,6 +36,8 @@ const signinPage = () => {
                 </div>
               </div>
 
+             {isError && <p className="text-red-500 text-xs text-center">{error.message}</p> }
+
               <Formik
                 initialValues={{ email: "", password: "" }}
                 validationSchema={loginSchema}
@@ -47,11 +45,11 @@ const signinPage = () => {
                   handleOnSubmit(values)
                 }}
               >
-                {({ isSubmitting }) => (
+                {() => (
                   <Form className="mid gap-5 flex flex-col">
                     <div className="flex flex-col gap-2">
                       <label className="text-xs text-[#A3A39E] font-semibold" htmlFor="email">Email</label>
-                      <Field type="text" name="email" className="bg-[#171717] h-10 rounded-lg text-md px-3" placeholder="Enter email"/>
+                      <Field type="text" name="email" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="Enter email"/>
                       <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
                     </div>
 
@@ -59,11 +57,12 @@ const signinPage = () => {
                       <label className="text-xs text-[#A3A39E] font-semibold" htmlFor="password">
                         Password
                       </label>
-                      <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-md px-3" placeholder="Enter password" />
+                      <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="Enter password" />
                       <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
+                      <p onClick={()=>navigate.replace('/forgot-password')} className="text-xs cursor-pointer hover:text-gray-300 w-[30%]">Forgot Password ?</p>
                     </div>
 
-                    <AuthButtons width="100%" height="40px" color="black" value="Sign In" backgroundColor="white" type="submit" />
+                    <AuthButtons width="100%" height="40px" color="black" value={isPending?<ButtonLoading color={"black"} />:"Sign In"} backgroundColor="white" type="submit" />
                   </Form>
                 )}
               </Formik>
@@ -113,4 +112,4 @@ const signinPage = () => {
   );
 };
 
-export default signinPage;
+export default SigninPage;

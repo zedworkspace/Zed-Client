@@ -1,15 +1,18 @@
 const API_ROUTES = {
   AUTH: {
-    SIGNIN: "/api/v1/auth/sign-in",
-    SIGNUP: "/api/v1/auth/sign-up",
-    LOGOUT: "/api/v1/auth/logout",
+    SENT_OTP: "/v1/otp-request",
+    SIGNUP: "/v1/register",
+    SIGNIN: "/v1/signin",
+    RESET_OTP: "/v1/reset-otp-request",
+    RESET_PASSWORD: "/v1/reset-password",
+    LOGOUT: "/v1/logout",
   },
   PROJECT: {
-    CREATE: "/api/v1/projects",
+    CREATE: "/v1/projects",
   },
   PROFILE:{
-    GET:"/api/v1/profile",
-    UPDATE:"api/v1/profile/update"
+    GET:"/v1/profile",
+    UPDATE:"/v1/profile/update"
   }
 };
 

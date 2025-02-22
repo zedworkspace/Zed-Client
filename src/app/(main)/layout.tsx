@@ -14,7 +14,7 @@ function layout({ children }: Props) {
       <TopSection />
       <div className="flex">
         <LeftSection />
-        <main className="bg-primary w-full min-h-screen border-none rounded-tl-xl">
+        <main className="bg-primary w-full min-h-screen border-none mt-16 ml-20">
           {children}
         </main>
       </div>

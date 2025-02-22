@@ -19,7 +19,8 @@ import { useUpdateProfileStore } from "@/store/updateProfileStore"
 
 export function UpdateProfileModal() {
     
-    const [userId, setUserId] = useState("");
+  const userId = localStorage.getItem("userId") || "";
+
     
     const {data} = useGetProfile(userId)
 
@@ -30,18 +31,7 @@ export function UpdateProfileModal() {
     const [image, setImage] = useState<string >(data?.profileImg);
     const [name,setName] = useState(data?.name)
     const [selectedFile, setSelectedFile] = useState<File | null>(null); // Store actual file
-  
-    const userDetails = async () => {
-      try {
-        const user = await JSON.parse(localStorage.getItem("user") as string);
-        setUserId(user?._id);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    useEffect(() => {
-      userDetails();
-    }, []);
+
 
   useEffect(() => {
     if (data) {

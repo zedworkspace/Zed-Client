@@ -1,27 +1,20 @@
 "use client"
 import { Button } from '@/components/ui/button';
-import { useState } from 'react'
+import { JSX } from 'react/jsx-runtime';
 
 interface IButton {
     width:string;
     height:string;
     backgroundColor:string;
-    value:string;
+    value:JSX.Element | string;
     color:string;
-    icon?:any;
+    icon?:JSX.Element;
     type?: "button" | "submit";
 }
 
-const AuthButtons = ({width,height,backgroundColor,value,color,icon,type}:IButton) => {
-    const [isHovered, setIsHovered] = useState(false);
+const AuthButtons = ({value,icon,type}:IButton) => {
   return (
     <div>
-      {/* <button 
-      className='font-bold ' style={{backgroundColor: isHovered ? color : backgroundColor,color:,width,height,borderRadius:"10px"}} 
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)} 
-      >
-      {value}</button> */}
       <Button variant='authBtn' type={type} size='authBtn'>{icon}{value}</Button>
     </div>
   ) 

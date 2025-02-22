@@ -3,37 +3,30 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "next/navigation";
+import {Home, House, LucideHome} from 'lucide-react';
+
+
 const TopSection = () => {
-  const [userId, setUserId] = useState("");
+  const userId = localStorage.getItem("userId") || "";
 
-  const userDetails = async () => {
-    try {
-      const user = await JSON.parse(localStorage.getItem("user") as string);
-      setUserId(user?._id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    userDetails();
-  }, []);
 
-  console.log(userId);
+
 
   const router = useRouter();
   return (
-    <div className="w-full flex justify-between p-1">
-      <div>
-        <Image src="/logo.svg" width={40} height={0} alt="logo" />
+    <div className="w-[100%] h-16 flex gap-3 justify-between px-5 items-center rounded-none fixed z-10 bg-background">
+      <div className="flex items-center gap-3 text-xl">
+        <Image src="/logo.svg" width={40} height={40} alt="logo" />
+        {/* <span className="">Zed Space</span> */}
       </div>
       <Avatar
-        className="me-2 cursor-pointer"
+        className="me-2 cursor-pointer w-11 h-11"
         onClick={() => {
-          router.push(`/${userId}`);
+          router.push(`/profile/${userId}`);
         }}
       >
-        <AvatarImage src="" sizes="2" />
-        <AvatarFallback>P</AvatarFallback>
+        <AvatarImage src="" sizes="2"/>
+        <img src="https://avatars.githubusercontent.com/u/103447301?v=4" alt="profile" />
       </Avatar>
     </div>
   );
