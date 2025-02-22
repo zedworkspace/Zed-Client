@@ -31,7 +31,7 @@ import {
 export function CreateProject() {
   const { onClose, isOpen } = useNewProjectStore();
   const { mutate } = useCreateProject();
-  
+
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleFilePreview = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,18 +48,17 @@ export function CreateProject() {
   const form = useForm({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
-      projectName: "",
-      projectDescription: "",
-      projectLogo: undefined,
+      name: "",
+      description: "",
+      logo: undefined,
     },
   });
 
   const handleSubmit = (values: z.infer<typeof createProjectSchema>) => {
-    console.log("values", values);
     const formData = new FormData();
-    formData.append("projectName", values.projectName);
-    formData.append("projectDescription", values.projectDescription);
-    formData.append("projectLogo", values.projectLogo);
+    formData.append("name", values.name);
+    formData.append("description", values.description);
+    formData.append("logo", values.logo);
     mutate(formData);
   };
 
@@ -69,7 +68,8 @@ export function CreateProject() {
         <DialogHeader className="space-y-3">
           <DialogTitle className="text-white">Create your Project</DialogTitle>
           <DialogDescription>
-            Provide your project details and upload an image. Click &lsquo;Create&lsquo; to finalize your project setup.
+            Provide your project details and upload an image. Click
+            &lsquo;Create&lsquo; to finalize your project setup.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -79,7 +79,7 @@ export function CreateProject() {
           >
             <FormField
               control={form.control}
-              name="projectLogo"
+              name="logo"
               render={({ field }) => (
                 <FormItem className="flex flex-col items-center">
                   <FormLabel
@@ -125,7 +125,7 @@ export function CreateProject() {
 
             <FormField
               control={form.control}
-              name="projectName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-left text-xs font-bold text-muted-foreground">
@@ -145,7 +145,7 @@ export function CreateProject() {
 
             <FormField
               control={form.control}
-              name="projectDescription"
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-left text-xs font-bold text-muted-foreground">
