@@ -10,6 +10,8 @@ import { useSignin } from "@/hooks/useAuth";
 import { loginSchema } from '@/validations/authValidation';
 import ButtonLoading from "@/components/ui/ButtonLoading";
 import { IUser } from "@/interface/userInterface";
+import axios from "axios";
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
 const SigninPage = () => {
   const [emailPage, setEmailPage] = useState(false);
@@ -19,6 +21,28 @@ const SigninPage = () => {
   const handleOnSubmit = (signinData : IUser) => {
     mutate(signinData);
   };
+
+  const handleGoogleAuth = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const res = await axios.post("http://localhost:5000/api/v1/auth/google", {
+          credentialResponse
+        });
+        const { accessToken } = res.data;
+        localStorage.setItem("accessToken", accessToken);
+        if (accessToken) navigate.replace("/");
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+    },
+    onError: () => console.log("Login Failed"),
+  })
+
+  const handleGitHubAuth = () => {
+    const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+    const redirectUri = "http://localhost:3000/github/callback";
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
+  }
 
   return (
     <div className="w-[100%] flex justify-center h-screen">
@@ -87,15 +111,13 @@ const SigninPage = () => {
                   <h3 className="font-bold text-2xl text-white">Sign in to your account</h3>
                 </div>
               </div>
-
               <div className="mid gap-5 flex flex-col">
                 <div onClick={() => setEmailPage(true)}>
                   <AuthButtons width="100%" height="40px" color="black" value="Continue with Email" backgroundColor="white" />
                 </div>
-                <AuthButtons width="100%" height="40px" color="black" value="Login with GitHub" icon={<FaGithub />} backgroundColor="white" />
-                <AuthButtons width="100%" height="40px" color="black" value="Login with Google" icon={<IoLogoGoogle />} backgroundColor="white" />
+                <div onClick={()=>handleGitHubAuth()}><AuthButtons width="100%" height="40px" color="black" value="Login with GitHub" icon={<FaGithub />} backgroundColor="white" /></div>
+                <div onClick={()=>handleGoogleAuth()}><AuthButtons width="100%" height="40px" color="black" value="Login with Google" icon={<IoLogoGoogle/>} backgroundColor="white" /></div>
               </div>
-
               <div className="bottom flex flex-col">
                 <p className="text-sm text-gray-500">
                   Already have an account ?{" "}

@@ -31,6 +31,12 @@ const AuthPage = () => {
     mutate(signupData);
   };
 
+  const handleGitHubAuth = () => {
+    const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+    const redirectUri = "http://localhost:3000/github/callback";
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
+  }
+
   return (
     <div className="w-[100%] flex justify-center h-screen">
       <div className="w-[100%] md:w-[55%] lg:w-[35%] h-full flex justify-center p-5 items-center">
@@ -122,7 +128,7 @@ const AuthPage = () => {
             <div className="flex-1 h-px bg-gray-600"></div>
           </div>
           <div className="bottom flex flex-col gap-3">
-            <AuthButtons width="100%" height="40px" color="black" value="GitHub" icon={<FaGithub />} backgroundColor="white" type="submit" />
+            <div onClick={()=>handleGitHubAuth()}><AuthButtons width="100%" height="40px" color="black" value="GitHub" icon={<FaGithub />} backgroundColor="white" type="submit" /></div>
           </div>
         </div>
       </div>
