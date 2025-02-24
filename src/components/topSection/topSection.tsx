@@ -7,21 +7,10 @@ import {Home, House, LucideHome} from 'lucide-react';
 
 
 const TopSection = () => {
-  const [userId, setUserId] = useState("");
+  const userId = localStorage.getItem("userId") || "";
 
-  const userDetails = async () => {
-    try {
-      const user = await JSON.parse(localStorage.getItem("user") as string);
-      setUserId(user?._id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    userDetails();
-  }, []);
 
-  console.log(userId);
+
 
   const router = useRouter();
   return (
@@ -33,7 +22,7 @@ const TopSection = () => {
       <Avatar
         className="me-2 cursor-pointer w-11 h-11"
         onClick={() => {
-          router.push(`/${userId}`);
+          router.push(`/profile/${userId}`);
         }}
       >
         <AvatarImage src="" sizes="2"/>
