@@ -28,6 +28,7 @@ export const useSignin = () => {
         return res;
     },onSuccess:(data)=>{
         localStorage.setItem('accessToken',data.accessToken);
+        localStorage.setItem("userId", data._id)
         navigate.replace('/')
     }})
 }

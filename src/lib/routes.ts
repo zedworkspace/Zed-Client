@@ -11,9 +11,10 @@ const API_ROUTES = {
     CREATE_PROJECT: "/v1/projects",
     GET_PROJECTS: "/v1/projects",
   },
-  PROFILE: {
-    GET: "/v1/profile",
-  },
+  PROFILE:{
+    GET:"/v1/profile",
+    UPDATE:"/v1/profile/update"
+  }
 };
 
 export default API_ROUTES;
