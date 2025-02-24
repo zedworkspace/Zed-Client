@@ -11,7 +11,8 @@ const API_ROUTES = {
     CREATE: "/v1/projects",
   },
   PROFILE:{
-    GET:"/v1/profile"
+    GET:"/v1/profile",
+    UPDATE:"/v1/profile/update"
   }
 };
 
