@@ -8,11 +8,12 @@ const API_ROUTES = {
     LOGOUT: "/v1/logout",
   },
   PROJECT: {
-    CREATE: "/v1/projects",
+    CREATE_PROJECT: "/v1/projects",
+    GET_PROJECTS: "/v1/projects",
   },
-  PROFILE:{
-    GET:"/v1/profile"
-  }
+  PROFILE: {
+    GET: "/v1/profile",
+  },
 };
 
 export default API_ROUTES;

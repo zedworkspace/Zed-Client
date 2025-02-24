@@ -1,3 +1,5 @@
+import Sidebar from "@/components/project/sidebar";
+
 type Props = {
   children: React.ReactNode;
 };
@@ -5,10 +7,9 @@ type Props = {
 function layout({ children }: Props) {
   return (
     <>
-      <div className="flex">
-        <main className="bg-primary w-full min-h-screen border-none">
-          {children}
-        </main>
+      <div className="flex relative">
+        <Sidebar />
+        <main className="bg-secondary">{children}</main>
       </div>
     </>
   );

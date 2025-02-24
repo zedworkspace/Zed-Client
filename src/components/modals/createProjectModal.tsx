@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateProject } from "@/hooks/useProject";
 import { useNewProjectStore } from "@/store/projectStore";
-import { Camera } from "lucide-react";
+import { Camera, LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +30,7 @@ import {
 
 export function CreateProject() {
   const { onClose, isOpen } = useNewProjectStore();
-  const { mutate } = useCreateProject();
+  const { mutate, isPending } = useCreateProject();
 
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -167,11 +167,15 @@ export function CreateProject() {
             <DialogFooter>
               <Button
                 type="submit"
-                className="font-semibold"
+                className="font-semibold w-28"
                 size="lg"
-                disabled={!form.formState.isValid}
+                disabled={isPending || !form.formState.isValid}
               >
-                Create
+                {isPending ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  "Create"
+                )}
               </Button>
             </DialogFooter>
           </form>
