@@ -1,0 +1,28 @@
+interface IFetch {
+  status: string;
+  message: string;
+}
+
+export interface IProject {
+  _id: string;
+  name: string;
+  description: string;
+  logo: string;
+  owner: {
+    name: string;
+    email: string;
+    profileImg: string;
+    bannerImg: string;
+    gitId: string;
+    googleId: string;
+  };
+  repo: string[];
+}
+
+export interface IGetProjects extends IFetch {
+  data: IProject[];
+}
+
+export interface IGetProject extends IFetch {
+  data: IProject;
+}

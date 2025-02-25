@@ -8,11 +8,16 @@ const API_ROUTES = {
     LOGOUT: "/v1/logout",
   },
   PROJECT: {
-    CREATE: "/v1/projects",
+    CREATE_PROJECT: "/v1/projects",
+    GET_PROJECTS: "/v1/projects",
+    GET_PROJECT: "/v1/projects/",
   },
-  PROFILE:{
-    GET:"/v1/profile",
-    UPDATE:"/v1/profile/update"
+  PROFILE: {
+    GET: "/v1/profile",
+    UPDATE: "/v1/profile/update",
+  },
+  CHANNEL:{
+    GET_CHANNELS_PROJECT_ID:"/v1/channel/"
   }
 };
 
