@@ -44,7 +44,7 @@ export default function LeftSection() {
     }
   }, [channelsSuccess, router, projectId, channelsData]);
 
-  const isLoading = projectsLoading ;
+  const isLoading = projectsLoading;
   const isSuccess = channelsSuccess || projectSuccess;
   const isError = projectError || channelError;
 
