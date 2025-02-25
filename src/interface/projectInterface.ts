@@ -3,7 +3,7 @@ interface IFetch {
   message: string;
 }
 
-interface IProject {
+export interface IProject {
   _id: string;
   name: string;
   description: string;
@@ -21,4 +21,8 @@ interface IProject {
 
 export interface IGetProjects extends IFetch {
   data: IProject[];
+}
+
+export interface IGetProject extends IFetch {
+  data: IProject;
 }

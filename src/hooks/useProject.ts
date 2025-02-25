@@ -1,4 +1,9 @@
-import { createProject, getProjects } from "@/services/projectServices";
+"use client"
+import {
+  createProject,
+  getProject,
+  getProjects,
+} from "@/services/projectServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
 import { useNewProjectStore } from "@/store/projectStore";
@@ -24,5 +29,12 @@ export const useGetProjects = () => {
   return useQuery({
     queryKey: ["projects"],
     queryFn: getProjects,
+  });
+};
+
+export const useGetProject = (id: string) => {
+  return useQuery({
+    queryKey: ["project", id],
+    queryFn: () => getProject(id),
   });
 };

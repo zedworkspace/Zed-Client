@@ -1,4 +1,5 @@
-import Sidebar from "@/components/project/sidebar";
+import SideBar from "@/components/sidebar/sidebar";
+
 
 type Props = {
   children: React.ReactNode;
@@ -7,9 +8,9 @@ type Props = {
 function layout({ children }: Props) {
   return (
     <>
-      <div className="flex relative">
-        <Sidebar />
-        <main className="bg-secondary">{children}</main>
+      <div className="grid grid-cols-5 relative">
+        <SideBar />
+        <main className="bg-secondary w-full col-span-4">{children}</main>
       </div>
     </>
   );

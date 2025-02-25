@@ -1,4 +1,5 @@
-import { IGetProjects } from "@/interface/projectInterface";
+"use client";
+import { IGetProjects, IGetProject } from "@/interface/projectInterface";
 import apiClient from "@/lib/axios.config";
 import API_ROUTES from "@/lib/routes";
 
@@ -12,5 +13,10 @@ export const createProject = async (data: FormData) => {
 
 export const getProjects = async (): Promise<IGetProjects> => {
   const response = await apiClient.get(API_ROUTES.PROJECT.GET_PROJECTS);
+  return response.data;
+};
+
+export const getProject = async (id: string): Promise<IGetProject> => {
+  const response = await apiClient.get(API_ROUTES.PROJECT.GET_PROJECT + id);
   return response.data;
 };

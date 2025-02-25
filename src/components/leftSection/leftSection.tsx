@@ -1,42 +1,66 @@
-import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
-import { useNewProjectStore } from "@/store/projectStore";
+import { useNewProjectStore, useProjectStore } from "@/store/projectStore";
 import { useNewInviteStore } from "@/store/inviteStore";
 import { useGetProjects } from "@/hooks/useProject";
-import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
+import { useGetChannels } from "@/hooks/useChannel";
+import LeftSectionLoading from "./leftSectionLoading";
+import LeftSectionProjectAvatars from "./leftSectionProjectAvatars";
 
 export default function LeftSection() {
+  const router = useRouter();
+  const { projectId } = useProjectStore();
+  const [isEnabled, setIsEnabled] = useState(false);
+
   const { onOpen } = useNewProjectStore();
   const { onOpen: onInviteOpen } = useNewInviteStore();
-  const { data, isSuccess, isLoading } = useGetProjects();
-  const router = useRouter();
 
-  if (isLoading)
-    return (
-      <div className=" w-20 flex flex-col gap-3 items-center fixed h-screen bg-background mt-20">
-        <Skeleton className="w-12 h-12 border-none rounded-full bg-secondary-foreground" />
-        <Skeleton className="w-12 h-12 border-none rounded-full bg-secondary-foreground" />
-        <Skeleton className="w-12 h-12 border-none rounded-full bg-secondary-foreground" />
-      </div>
-    );
+  const {
+    data: projectsData,
+    isSuccess: projectSuccess,
+    isLoading: projectsLoading,
+    isError: projectError,
+  } = useGetProjects();
+
+  const {
+    data: channelsData,
+    isSuccess: channelsSuccess,
+    isLoading: channelsLoading,
+    isError: channelError,
+  } = useGetChannels({ projectId, isEnabled });
+
+  useEffect(() => {
+    if (channelsSuccess) {
+      const generalTextChannel = channelsData?.data.find(
+        (channel) => channel.type === "text" && channel.isDefault === true
+      );
+      if (generalTextChannel) {
+        router.replace(
+          `${process.env.NEXT_PUBLIC_FRONTEND_URL}/project/${projectId}/text-channel/${generalTextChannel?._id}`
+        );
+      }
+    }
+  }, [channelsSuccess, router, projectId, channelsData]);
+
+  const isLoading = projectsLoading ;
+  const isSuccess = channelsSuccess || projectSuccess;
+  const isError = projectError || channelError;
+
+  if (isLoading) return <LeftSectionLoading />;
+
+  if (isError) return <div>Something happened</div>;
 
   if (isSuccess)
     return (
       <div className=" w-20 flex flex-col gap-3 items-center fixed h-screen bg-background mt-20">
-        {data.data.map((project) => (
-          <Avatar
-            className="w-12 h-12 cursor-pointer"
+        {projectsData?.data.map((project) => (
+          <LeftSectionProjectAvatars
             key={project._id}
-            onClick={() => router.replace(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/project/${project._id}`)}
-          >
-            <AvatarImage src={project.logo} />
-            <AvatarFallback>
-              <Skeleton className="w-12 h-12 border-none rounded-full bg-secondary-foreground" />
-            </AvatarFallback>
-          </Avatar>
+            project={project}
+            setIsEnabled={setIsEnabled}
+          />
         ))}
         <Button
           size="icon"
