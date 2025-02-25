@@ -14,7 +14,7 @@ import { useCreateProject } from "@/hooks/useProject";
 import { useNewProjectStore } from "@/store/projectStore";
 import { Camera, LoaderCircle } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createProjectSchema } from "@/validations/projectValidation";
@@ -30,7 +30,7 @@ import {
 
 export function CreateProject() {
   const { onClose, isOpen } = useNewProjectStore();
-  const { mutate, isPending } = useCreateProject();
+  const { mutate, isPending, isSuccess } = useCreateProject();
 
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -62,6 +62,17 @@ export function CreateProject() {
     mutate(formData);
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset({
+        name: "",
+        description: "",
+        logo: undefined,
+      });
+      setPreview(null);
+    }
+  }, [isSuccess, form]);
+  
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md border-none text-muted-foreground">
