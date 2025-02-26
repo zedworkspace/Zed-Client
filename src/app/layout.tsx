@@ -4,6 +4,10 @@ import "./globals.css";
 import QueryProvider from "@/lib/query-provider";
 import ModalProvider from "@/providers/modalProviders";
 import { Toaster } from "@/components/ui/toaster";
+import {GoogleOAuthProvider} from '@react-oauth/google';
+
+const CLIENTID = process.env.NEXT_GOOGLE_CLIENT_ID!;
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +34,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <GoogleOAuthProvider clientId={CLIENTID}>
         <QueryProvider>
           <Toaster />
           <ModalProvider />
           {children}
         </QueryProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );
