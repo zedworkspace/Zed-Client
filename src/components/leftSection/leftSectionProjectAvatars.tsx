@@ -16,13 +16,13 @@ export default function LeftSectionProjectAvatars({
   return (
     <Avatar
       className="w-12 h-12 cursor-pointer"
-      key={project._id}
+      key={project.projectId._id}
       onClick={() => {
-        setProjectId(project._id);
+        setProjectId(project.projectId._id);
         setIsEnabled(true);
       }}
     >
-      <AvatarImage src={project.logo} />
+      <AvatarImage src={project.projectId.logo} />
       <AvatarFallback>
         <Skeleton className="w-12 h-12 border-none rounded-full bg-secondary-foreground" />
       </AvatarFallback>

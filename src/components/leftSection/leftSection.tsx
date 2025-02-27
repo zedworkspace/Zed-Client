@@ -24,6 +24,11 @@ export default function LeftSection() {
     isError: projectError,
   } = useGetProjects();
 
+  console.log(projectsData,'dataaaaaa');
+  console.log(projectId,'projectId');
+
+  
+
   const {
     data: channelsData,
     isSuccess: channelsSuccess,
@@ -57,7 +62,7 @@ export default function LeftSection() {
       <div className=" w-20 flex flex-col gap-3 items-center fixed h-screen bg-background mt-20">
         {projectsData?.data.map((project) => (
           <LeftSectionProjectAvatars
-            key={project._id}
+            key={project.projectId._id}
             project={project}
             setIsEnabled={setIsEnabled}
           />

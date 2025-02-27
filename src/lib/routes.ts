@@ -18,6 +18,10 @@ const API_ROUTES = {
   },
   CHANNEL:{
     GET_CHANNELS_PROJECT_ID:"/v1/channel/"
+  },
+  MESSAGE: {
+    SEND_MESSAGE: '/v1/messages/send',
+    GET_MESSAGE: '/v1/messages'
   }
 };
 
