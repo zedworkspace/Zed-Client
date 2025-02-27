@@ -33,7 +33,7 @@ export default function SideBarHead({ projectData }: Props) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   return (
     <SidebarHeader
-      className="h-1/4 w-full p-0 bg-cover bg-center"
+      className="h-1/4 w-full p-0 bg-cover bg-center bg-transparent"
       style={{ backgroundImage: `url(${projectData?.data.logo})` }}
     >
       <div className="flex justify-between items-center bg-black bg-opacity-20 p-4 w-full text-white text-xl font-semibold">
