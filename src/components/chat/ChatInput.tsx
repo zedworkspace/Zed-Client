@@ -42,7 +42,7 @@ const ChatInput = ({ channelId, userId, userProfileImg, userName }: { channelId:
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
       />
-      <SendHorizonalIcon onClick={handleSend} className="absolute right-3 w-8 h-8 top-1"/>
+      <SendHorizonalIcon onClick={handleSend} className="absolute right-3 w-5 h-5 top-2"/>
       {/* <button onClick={handleSend} className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md">
         Send
       </button> */}

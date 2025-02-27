@@ -35,7 +35,7 @@ export default function SideBar() {
 
   if (isSuccess)
     return (
-      <Sidebar className="absolute top-0 left-0 z-0 border-none">
+      <Sidebar className="absolute top-0 left-0 z-0 border-none pt-16">
         <SideBarHead projectData={data} />
         <SidebarContent className="bg-primary">
           <SidebarChannels channels={channels} />
