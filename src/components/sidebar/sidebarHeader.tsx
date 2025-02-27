@@ -17,23 +17,24 @@ import {
   User,
 } from "lucide-react";
 import { IGetProject } from "@/interface/projectInterface";
+import { useRouter } from "next/navigation";
 
 type Props = {
   projectData: IGetProject;
 };
 
 const dropdownItems = [
-  { icon: User, label: "Profile" },
   { icon: Trello, label: "Create board" },
   { icon: MessageCircle, label: "Create text channel" },
   { icon: AudioWaveform, label: "Create voice channel" },
 ];
 
 export default function SideBarHead({ projectData }: Props) {
+  const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   return (
     <SidebarHeader
-      className="h-1/4 w-full p-0 bg-cover bg-center"
+      className="h-1/4 w-full p-0 bg-cover bg-center bg-transparent"
       style={{ backgroundImage: `url(${projectData?.data.logo})` }}
     >
       <div className="flex justify-between items-center bg-black bg-opacity-20 p-4 w-full text-white text-xl font-semibold">
@@ -44,6 +45,13 @@ export default function SideBarHead({ projectData }: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 bg-background text-white border-none outline-none p-0">
             <DropdownMenuGroup>
+              <DropdownMenuItem
+                className="flex items-center space-x-2 p-2 focus:bg-secondary focus:text-white transition-colors duration-200"
+                onClick={() => router.push("#")}
+              >
+                <User className="size-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
               {dropdownItems.map((item, index) => (
                 <DropdownMenuItem
                   key={index}

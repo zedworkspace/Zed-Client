@@ -68,7 +68,7 @@ const ChatWindow = ({ channelId }: { channelId: string; userId: string }) => {
   }, [channelId, socket, data]);
 
   return (
-    <div className="h-[560px] rounded-md p-4 flex flex-col overflow-hidden ">
+    <div className="h-[560px] rounded-md p-4 flex flex-col overflow-hidden pt-16">
       {/* Chat Messages */}
       <div className="flex-1 pr-2 space-y-3 scrollbar-hide overflow-y-auto">
         {messages.map((msg, index) => (
