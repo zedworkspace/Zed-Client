@@ -42,7 +42,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const sendMessage = (message: MessagePayload) => {
     const messageData = {
       ...message,
-      sender: {
+      senderId: {
         _id: message.senderId._id,
         name: message.senderId.name,
         profileImg: message.senderId.profileImg 
