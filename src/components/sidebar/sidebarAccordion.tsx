@@ -14,6 +14,7 @@ type Props = {
   Icon: LucideIcon;
   accordianValue: string;
   title: string;
+  type: "text" | "voice" | "board";
 };
 
 export default function SidebarAccordion({
@@ -21,6 +22,7 @@ export default function SidebarAccordion({
   channelData,
   Icon,
   title,
+  type,
 }: Props) {
   const params = useParams();
   const channelId = params.channelId as string;
@@ -47,7 +49,10 @@ export default function SidebarAccordion({
             className={`w-full gap-2 cursor-pointer flex items-center p-2 text-muted-foreground hover:bg-secondary/50 hover:text-white transition-colors duration-200 rounded-md h-10 font-bold ${
               channelId === channel._id ? "bg-secondary/80" : ""
             }`}
-            onClick={() => router.replace(`${channel._id}`)}
+            onClick={() => {
+              sessionStorage.setItem("channelType", type);
+              router.replace(`${channel._id}`);
+            }}
           >
             <Icon className="size-5" />
             <span className="text-sm font-bold">{channel.name}</span>

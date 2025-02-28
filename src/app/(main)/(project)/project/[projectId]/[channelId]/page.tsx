@@ -1,24 +1,14 @@
 "use client";
-import ChatHeader from "@/components/chat/ChatHeader";
-import ChatInput from "@/components/chat/ChatInput";
-import ChatWindow from "@/components/chat/ChatWindow";
-import { SocketProvider } from "@/context/SocketProvider";
+import TextChannel from "@/components/chat/TextChannel";
 import { useGetProfile } from "@/hooks/useProfile";
-import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ChatPage() {
   const [userId, setUserId] = useState("");
-  const pathname = usePathname();
-
-  const pathSegments = pathname.split("/");
-  const channelId = pathSegments[pathSegments.length - 1];
-  console.log(channelId, "channelId");
-
+  const { channelId } = useParams() as { channelId: string };
   const { data } = useGetProfile(userId);
-
-  const userProfile = data?.profileImg;
-  const userName = data?.name;
+  const channelType = sessionStorage.getItem("channelType");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -27,20 +17,16 @@ export default function ChatPage() {
     }
   }, []);
 
-  console.log(userId, "userIddded");
+  if (channelType === "voice") return <div>THis is voice channel</div>; // here we render video based component
+
+  if (channelType === "board") return <div>This is Board</div>; // here we render based based component
 
   return (
-    <SocketProvider>
-      <div className="pb-4 w-full h-[calc(100vh-4rem)] flex flex-col justify-between">
-        <ChatHeader />
-        <ChatWindow channelId={channelId} userId={userId} />
-        <ChatInput
-          channelId={channelId}
-          userId={userId}
-          userProfileImg={userProfile}
-          userName={userName}
-        />
-      </div>
-    </SocketProvider>
+    <TextChannel
+      channelId={channelId}
+      userId={userId}
+      userName={data?.name}
+      userProfileImg={data?.profileImg}
+    />
   );
 }

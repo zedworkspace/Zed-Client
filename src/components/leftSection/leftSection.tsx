@@ -40,6 +40,7 @@ export default function LeftSection() {
         (channel) => channel.type === "text" && channel.isDefault === true
       );
       if (generalTextChannel) {
+        sessionStorage.setItem("channelType", "text");
         router.replace(
           `/project/${projectId}/${generalTextChannel?._id}`
         );
