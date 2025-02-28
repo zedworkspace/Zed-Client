@@ -37,7 +37,7 @@ export default function Sidebar() {
   if (isError) return <div>Something happened</div>;
 
   return (
-    <div className="w-1/4 h-full">
+    <div className="w-64 h-full">
       <SideBarHead projectData={projectData} />
       <SidebarContents channelData={channelsData} boardData={boardData} />
     </div>

@@ -6,9 +6,11 @@ type Props = {
 
 function layout({ children }: Props) {
   return (
-    <div className="flex h-full">
+    <div className="flex h-full w-full">
       <Sidebar />
-      <main className="bg-secondary w-full h-full">{children}</main>
+      <main className="bg-secondary flex-1 overflow-auto h-full scrollbar-hide ">
+        {children}
+      </main>
     </div>
   );
 }

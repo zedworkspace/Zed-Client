@@ -14,7 +14,7 @@ function layout({ children }: Props) {
       <TopSection />
       <div className="flex">
         <LeftSection />
-        <main className="bg-primary w-full mt-16 ml-20 min-h-[calc(100vh-4rem)] ">
+        <main className="bg-primary w-[calc(100vw-4rem)] mt-16 ml-20 h-[calc(100vh-4rem)] overflow-scroll scrollbar-hide">
           {children}
         </main>
       </div>
