@@ -24,10 +24,8 @@ export default function LeftSection() {
     isError: projectError,
   } = useGetProjects();
 
-  console.log(projectsData,'dataaaaaa');
-  console.log(projectId,'projectId');
-
-  
+  console.log(projectsData, "dataaaaaa");
+  console.log(projectId, "projectId");
 
   const {
     data: channelsData,
@@ -38,12 +36,12 @@ export default function LeftSection() {
 
   useEffect(() => {
     if (channelsSuccess) {
-      const generalTextChannel = channelsData?.data.find(
+      const generalTextChannel = channelsData?.data.textChannels.find(
         (channel) => channel.type === "text" && channel.isDefault === true
       );
       if (generalTextChannel) {
         router.replace(
-          `${process.env.NEXT_PUBLIC_FRONTEND_URL}/project/${projectId}/text-channel/${generalTextChannel?._id}`
+          `/project/${projectId}/${generalTextChannel?._id}`
         );
       }
     }
