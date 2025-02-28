@@ -16,13 +16,16 @@ const API_ROUTES = {
     GET: "/v1/profile",
     UPDATE: "/v1/profile/update",
   },
-  CHANNEL:{
-    GET_CHANNELS_PROJECT_ID:"/v1/channel/"
+  CHANNEL: {
+    GET_CHANNELS_PROJECT_ID: "/v1/channel/",
   },
   MESSAGE: {
-    SEND_MESSAGE: '/v1/messages/send',
-    GET_MESSAGE: '/v1/messages'
-  }
+    SEND_MESSAGE: "/v1/messages/send",
+    GET_MESSAGE: "/v1/messages",
+  },
+  BOARD: {
+    GET_BOARDS: "/v1/boards/",
+  },
 };
 
 export default API_ROUTES;
