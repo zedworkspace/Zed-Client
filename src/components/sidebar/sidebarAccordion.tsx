@@ -8,9 +8,10 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import { IChannel } from "@/interface/channelInterface";
 import { LucideIcon } from "lucide-react";
+import { IBoard } from "@/interface/boardInterface";
 
 type Props = {
-  channelData?: IChannel[];
+  channelData?: IChannel[] | IBoard[];
   Icon: LucideIcon;
   accordianValue: string;
   title: string;

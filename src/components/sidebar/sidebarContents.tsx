@@ -2,12 +2,14 @@ import React from "react";
 import { Kanban, MessagesSquare, Volume2 } from "lucide-react";
 import { IGetChannels } from "@/interface/channelInterface";
 import SidebarAccordion from "./sidebarAccordion";
+import { IGetBoards } from "@/interface/boardInterface";
 
 type Props = {
   channelData?: IGetChannels;
+  boardData?: IGetBoards;
 };
-
-export default function SidebarContents({ channelData }: Props) {
+  
+export default function SidebarContents({ channelData, boardData }: Props) {
   return (
     <div className="h-3/4 bg-primary pt-4 space-y-2">
       {/* Text channels  */}
@@ -31,7 +33,7 @@ export default function SidebarContents({ channelData }: Props) {
         Icon={Kanban}
         accordianValue="item-3"
         title="YOUR BOARDS"
-        channelData={[]}
+        channelData={boardData?.data}
         type="board"
       />
     </div>
