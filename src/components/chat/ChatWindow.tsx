@@ -68,13 +68,13 @@ const ChatWindow = ({ channelId }: { channelId: string; userId: string }) => {
   }, [channelId, socket, data]);
 
   return (
-    <div className="h-[560px] rounded-md p-4 flex flex-col overflow-hidden pt-16">
+    <div className=" flex flex-col overflow-y-scroll scrollbar-hide mx-5 ">
       {/* Chat Messages */}
       <div className="flex-1 pr-2 space-y-3 scrollbar-hide overflow-y-auto">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className="flex items-start gap-3 p-2 hover:bg-[#1111] rounded-lg"
+            className="flex items-start gap-3 py-2 hover:bg-[#1111] rounded-lg"
           >{
             msg.senderId.profileImg?
             <Image
