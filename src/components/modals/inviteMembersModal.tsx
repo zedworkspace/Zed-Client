@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Copy, Check } from "lucide-react";
-import { useNewInviteStore } from '@/store/inviteStore'
+import { useInviteStore } from '@/store/inviteStore'
 export function InviteMembers() {
     const [email, setEmail] = useState("");
     const [copied, setCopied] = useState(false);
@@ -15,9 +15,9 @@ export function InviteMembers() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     };
-    const { onClose, isOpen } = useNewInviteStore();
+    const { closeGenerateModal, isGenerateModalOpen } = useInviteStore();
     return(
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog open={isGenerateModalOpen} onOpenChange={closeGenerateModal}>
             <DialogContent className="max-w-md border-none text-muted-foreground">
             <DialogHeader>
                 <DialogTitle className="text-lg font-semibold text-muted-foreground">Invite Members</DialogTitle>
