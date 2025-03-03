@@ -88,6 +88,7 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ children }) => {
 
             {/* Page Content */}
             <div className="mt-10">{children}</div>
+            <button onClick={()=>router.push('/message')}>Message</button>
         </div>
     );
 };

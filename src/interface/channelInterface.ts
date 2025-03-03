@@ -17,7 +17,7 @@ export interface IChannel {
   updatedAt: Date;
 }
 export interface IGetChannels extends IFetch {
-  data: IChannel[];
+  data: { textChannels: IChannel[]; voiceChannels: IChannel[] };
 }
 
 export interface IMapChannels extends IChannel {

@@ -1,47 +1,45 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { AudioWaveform, MessageCircle } from "lucide-react";
-import { Sidebar, SidebarContent, SidebarProvider } from "../ui/sidebar";
-import { useGetProject } from "@/hooks/useProject";
-import { useParams } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
-import { IGetChannels, IMapChannels } from "@/interface/channelInterface";
-import SidebarLoading from "./sidebarLoading";
+import React from "react";
 import SideBarHead from "./sidebarHeader";
-import SidebarChannels from "./sidebarChannels";
+import { useParams } from "next/navigation";
+import { useGetProject } from "@/hooks/useProject";
+import { useGetChannels } from "@/hooks/useChannel";
+import SidebarLoading from "./sidebarLoading";
+import SidebarContents from "./sidebarContents";
+import { useGetBoards } from "@/hooks/useBoard";
 
-export default function SideBar() {
-  const queryClient = useQueryClient();
+export default function Sidebar() {
   const { projectId } = useParams() as { projectId: string };
-  const { data, isSuccess, isLoading, isError } = useGetProject(projectId);
 
-  const cachedChannels = queryClient.getQueryData<IGetChannels>([
-    "channels",
-    projectId,
-  ]);
+  const {
+    data: projectData,
+    isLoading: projectLoading,
+    isError: projectError,
+  } = useGetProject(projectId);
 
-  const channels =
-    cachedChannels?.data.map((channel) => ({
-      ...channel,
-      url: `/project/${channel.projectId}/${
-        channel.type === "text" ? "text-channel" : "voice-channel"
-      }/${channel._id}`,
-      icon: channel.type === "text" ? MessageCircle : AudioWaveform,
-    })) || [];
+  const {
+    data: channelsData,
+    isLoading: channelsLoading,
+    isError: channelsError,
+  } = useGetChannels({ projectId, isEnabled: true });
+
+  const {
+    data: boardData,
+    isLoading: boardLoading,
+    isError: boardError,
+  } = useGetBoards({ projectId });
+
+  const isLoading = projectLoading || channelsLoading || boardLoading;
+  const isError = projectError || channelsError || boardError;
 
   if (isLoading) return <SidebarLoading />;
 
   if (isError) return <div>Something happened</div>;
 
-  if (isSuccess)
-    return (
-      <SidebarProvider>
-        <Sidebar className="absolute col-span-1 top-0 left-0 z-0 border-none bg-primary">
-          <SideBarHead projectData={data} />
-          <SidebarContent className="bg-primary">
-            <SidebarChannels channels={channels} />
-          </SidebarContent>
-        </Sidebar>
-      </SidebarProvider>
-    );
+  return (
+    <div className="w-64 h-full">
+      <SideBarHead projectData={projectData} />
+      <SidebarContents channelData={channelsData} boardData={boardData} />
+    </div>
+  );
 }

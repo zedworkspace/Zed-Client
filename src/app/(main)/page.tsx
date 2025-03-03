@@ -68,7 +68,7 @@ export default function Page() {
   ];
 
   return (
-    <div className="flex flex-col justify-center">
+    <div className="flex flex-col justify-center ">
       <HomeHeader />
 
       <div className="p-6">
