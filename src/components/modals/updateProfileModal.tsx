@@ -19,7 +19,14 @@ import { useUpdateProfileStore } from "@/store/updateProfileStore"
 
 export function UpdateProfileModal() {
     
-  const userId = localStorage.getItem("userId") || "";
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId") || "";
+      setUserId(storedUserId);
+    }
+  }, []);
 
     
     const {data} = useGetProfile(userId)

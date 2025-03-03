@@ -7,9 +7,14 @@ import {Home, House, LucideHome} from 'lucide-react';
 
 
 const TopSection = () => {
-  const userId = localStorage.getItem("userId") || "";
+  const [userId, setUserId] = useState("");
 
-
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId") || "";
+      setUserId(storedUserId);
+    }
+  }, []);
 
 
   const router = useRouter();

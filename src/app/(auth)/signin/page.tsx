@@ -11,7 +11,7 @@ import { loginSchema } from '@/validations/authValidation';
 import ButtonLoading from "@/components/ui/ButtonLoading";
 import { IUser } from "@/interface/userInterface";
 import axios from "axios";
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import {useGoogleLogin } from '@react-oauth/google';
 
 const SigninPage = () => {
   const [emailPage, setEmailPage] = useState(false);
@@ -24,6 +24,7 @@ const SigninPage = () => {
 
   const handleGoogleAuth = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
+      console.log(credentialResponse)
       try {
         const res = await axios.post("http://localhost:5000/api/v1/auth/google", {
           credentialResponse
