@@ -1,6 +1,7 @@
 "use client";
 import Board from "@/components/board/board";
 import TextChannel from "@/components/chat/TextChannel";
+import { useGetBoardById } from "@/hooks/useBoard";
 import { useGetProfile } from "@/hooks/useProfile";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,8 +9,11 @@ import { useEffect, useState } from "react";
 export default function ChatPage() {
   const [userId, setUserId] = useState("");
   const [channelType, setChannelType] = useState("");
-  const { channelId } = useParams() as { channelId: string };
-  const { data } = useGetProfile(userId);
+  const { channelId, projectId } = useParams() as {
+    channelId: string;
+    projectId: string;
+  };
+  const { data: profileData } = useGetProfile(userId);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -20,16 +24,21 @@ export default function ChatPage() {
     }
   }, []);
 
+  const { data: boardData } = useGetBoardById({
+    boardId: channelId,
+    projectId,
+  });
+
   if (channelType === "voice") return <div>This is voice channel</div>; // here we render video based component
-  
-  if (channelType === "board") return <Board  />
+
+  if (channelType === "board") return <Board data={boardData?.data} />;
 
   return (
     <TextChannel
       channelId={channelId}
       userId={userId}
-      userName={data?.name}
-      userProfileImg={data?.profileImg}
+      userName={profileData?.name}
+      userProfileImg={profileData?.profileImg}
     />
   );
 }

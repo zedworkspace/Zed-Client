@@ -25,6 +25,10 @@ const API_ROUTES = {
   },
   BOARD: {
     GET_BOARDS: "/v1/boards/",
+    GET_BOARD: "/v1/boards/",
+  },
+  LIST: {
+    CREATE_LIST: "/v1/lists/",
   },
 };
 
