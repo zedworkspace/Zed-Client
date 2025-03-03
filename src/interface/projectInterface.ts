@@ -27,5 +27,19 @@ export interface IGetProjects extends IFetch {
 }
 
 export interface IGetProject extends IFetch {
-  data: IProject;
+  data: {
+    _id: string;
+    name: string;
+    description: string;
+    logo: string;
+    owner: {
+      name: string;
+      email: string;
+      profileImg: string;
+      bannerImg: string;
+      gitId: string;
+      googleId: string;
+    };
+    repo: string[];
+  }
 }

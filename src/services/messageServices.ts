@@ -6,6 +6,11 @@ export const sendMessage = async( data:{senderId:string,channelId:string,content
     return res.data
 }
 
+export const sendFile = async (data:FormData) =>{
+    const res = await apiClient.post(API_ROUTES.MESSAGE.SEND_FILE,data)
+    return res.data
+}
+
 export const getMessages = async(channelId:string) => {
     const res = await apiClient.get(`${API_ROUTES.MESSAGE.GET_MESSAGE}/${channelId}`)
     return res.data

@@ -1,5 +1,5 @@
 import SideBar from "@/components/sidebar/sidebar";
-
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 type Props = {
   children: React.ReactNode;
@@ -7,12 +7,12 @@ type Props = {
 
 function layout({ children }: Props) {
   return (
-    <>
-      <div className="grid grid-cols-5 relative">
-        <SideBar />
-        <main className="bg-secondary w-full col-span-4">{children}</main>
-      </div>
-    </>
+    <SidebarProvider className="relative">
+      <SideBar />
+      <SidebarInset>
+        <main className="bg-secondary w-full h-full">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
 

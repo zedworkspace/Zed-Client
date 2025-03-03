@@ -7,6 +7,7 @@ import {
 } from "../ui/sidebar";
 import { IMapChannels } from "@/interface/channelInterface";
 import { useParams, useRouter } from "next/navigation";
+import { Github, Trello } from "lucide-react";
 
 type Props = {
   channels: IMapChannels[];
@@ -16,7 +17,7 @@ export default function SidebarChannels({ channels }: Props) {
   const router = useRouter();
   const params = useParams();
   const channelId = params.channelId as string;
-  
+
   return (
     <SidebarGroup>
       <SidebarMenu className="space-y-1">
@@ -40,6 +41,26 @@ export default function SidebarChannels({ channels }: Props) {
             </SidebarMenuItem>
           );
         })}
+        <SidebarMenuItem onClick={() => {}}>
+          <SidebarMenuButton
+            className={`w-full flex items-center p-2 text-muted-foreground hover:bg-secondary/50 hover:text-white transition-colors duration-200 rounded-md h-10 font-bold`}
+          >
+            <div className="flex items-center space-x-3">
+              <Trello className="size-5" />
+              <span className="text-sm font-bold">Git Hub</span>
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+        <SidebarMenuItem onClick={() => {}}>
+          <SidebarMenuButton
+            className={`w-full flex items-center p-2 text-muted-foreground hover:bg-secondary/50 hover:text-white transition-colors duration-200 rounded-md h-10 font-bold`}
+          >
+            <div className="flex items-center space-x-3">
+              <Github className="size-5" />
+              <span className="text-sm font-bold">Git Hub</span>
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   );

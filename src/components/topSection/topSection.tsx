@@ -3,14 +3,19 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "next/navigation";
-import {Home, House, LucideHome} from 'lucide-react';
-
+import { Home, House, LucideHome } from "lucide-react";
+import { useGetProfile } from "@/hooks/useProfile";
 
 const TopSection = () => {
-  const userId = localStorage.getItem("userId") || "";
+  const [userId, setUserId] = useState("");
 
-
-
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId") || "";
+      setUserId(storedUserId);
+    }
+  }, []);
+  const { data } = useGetProfile(userId);
 
   const router = useRouter();
   return (
@@ -25,8 +30,12 @@ const TopSection = () => {
           router.push(`/profile/${userId}`);
         }}
       >
-        <AvatarImage src="" sizes="2"/>
-        <img src="https://avatars.githubusercontent.com/u/103447301?v=4" alt="profile" />
+        {data?.profileImg ? (
+          <AvatarImage src={data?.profileImg} sizes="2" />
+        ) : (
+          <AvatarFallback className="bg-secondary text-white">P</AvatarFallback>
+        )}
+        {/* <img src="https://avatars.githubusercontent.com/u/103447301?v=4" alt="profile" /> */}
       </Avatar>
     </div>
   );

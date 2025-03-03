@@ -21,7 +21,8 @@ const API_ROUTES = {
   },
   MESSAGE: {
     SEND_MESSAGE: '/v1/messages/send',
-    GET_MESSAGE: '/v1/messages'
+    GET_MESSAGE: '/v1/messages',
+    SEND_FILE: 'v1/messages/file',
   }
 };
 
