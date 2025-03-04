@@ -22,9 +22,6 @@ export default function LeftSection() {
     isError: projectError,
   } = useGetProjects();
 
-  console.log(projectsData, "dataaaaaa");
-  console.log(projectId, "projectId");
-
   const {
     data: channelsData,
     isSuccess: channelsSuccess,
@@ -39,9 +36,7 @@ export default function LeftSection() {
       );
       if (generalTextChannel) {
         sessionStorage.setItem("channelType", "text");
-        router.replace(
-          `/project/${projectId}/${generalTextChannel?._id}`
-        );
+        router.replace(`/project/${projectId}/${generalTextChannel?._id}`);
       }
     }
   }, [channelsSuccess, router, projectId, channelsData]);
