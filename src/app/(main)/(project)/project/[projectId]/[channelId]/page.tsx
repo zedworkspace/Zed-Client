@@ -1,6 +1,7 @@
 "use client";
 import Board from "@/components/board/board";
 import TextChannel from "@/components/chat/TextChannel";
+import VoiceChannel from "@/components/voiceChannel/VoiceChannel";
 import { useGetProfile } from "@/hooks/useProfile";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,7 +21,7 @@ export default function ChatPage() {
     }
   }, []);
 
-  if (channelType === "voice") return <div>This is voice channel</div>; // here we render video based component
+  if (channelType === "voice") return <VoiceChannel/> // here we render video based component
   
   if (channelType === "board") return <Board  />
 
