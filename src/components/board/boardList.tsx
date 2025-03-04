@@ -1,14 +1,15 @@
 import React from "react";
 import BoardCard from "./boardCard";
-import CreateTask from "./createTask";
+import AddCard from "./addCard";
+import { IList } from "@/interface/listInterface";
+import { ICard } from "@/interface/cardInterface";
 
-export default function BoardList({
-  list,
-  index,
-}: {
-  list: any;
+type Props = {
+  list: IList;
   index: number;
-}) {
+};
+
+export default function BoardList({ list, index }: Props) {
   const colors = [
     "border-l-red-400",
     "border-l-blue-400",
@@ -16,7 +17,7 @@ export default function BoardList({
     "border-l-yellow-400",
     "border-l-purple-400",
   ];
-  
+
   return (
     <div className="w-72 p-3 h-min space-y-2">
       <div
@@ -29,10 +30,10 @@ export default function BoardList({
           {list.cards.length}
         </span>
       </div>
-      {list.cards.map((card: any) => (
-        <BoardCard key={card.id} card={card} />
+      {list.cards.map((card: ICard) => (
+        <BoardCard key={card._id} card={card} />
       ))}
-      <CreateTask />
+      <AddCard listId={list._id} boardId={list.boardId} />
     </div>
   );
 }

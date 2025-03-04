@@ -1,3 +1,4 @@
+import { IGetLists } from "@/interface/listInterface";
 import apiClient from "@/lib/axios.config";
 import API_ROUTES from "@/lib/routes";
 import { createListSchema } from "@/validations/listValidation";
@@ -9,11 +10,18 @@ type CreateList = {
 };
 
 export const createList = async ({ boardId, data }: CreateList) => {
-  console.log("boardId", boardId);
-  console.log("data", data);
   const response = await apiClient.post(
     API_ROUTES.LIST.CREATE_LIST + boardId,
     data
   );
+  return response.data;
+};
+
+export const getLists = async ({
+  boardId,
+}: {
+  boardId: string;
+}): Promise<IGetLists> => {
+  const response = await apiClient.get(API_ROUTES.LIST.CREATE_LIST + boardId);
   return response.data;
 };

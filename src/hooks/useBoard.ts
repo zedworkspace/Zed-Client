@@ -20,3 +20,4 @@ export const useGetBoardById = ({
     queryFn: () => getBoardById({ boardId, projectId }),
   });
 };
+

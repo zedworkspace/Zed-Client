@@ -1,11 +1,4 @@
-import { useCreateList } from "@/hooks/useList";
 import React, { useEffect, useRef, useState } from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Check, Plus, X } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -13,12 +6,23 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/form";
-import { createListSchema } from "../../validations/listValidation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Check, Plus, X } from "lucide-react";
+import { createCardSchema } from "@/validations/cardValidation";
+import { useCreateCard } from "@/hooks/useCard";
 
-export default function AddList({ boardId }: { boardId: string }) {
+type Props = {
+  listId: string;
+  boardId: string;
+};
+
+export default function AddCard({ listId, boardId }: Props) {
   const [isShowInput, setIsShowInput] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { mutate, isSuccess } = useCreateList({ boardId });
 
   useEffect(() => {
     if (isShowInput && inputRef.current) {
@@ -26,19 +30,17 @@ export default function AddList({ boardId }: { boardId: string }) {
     }
   }, [inputRef, isShowInput]);
 
-  const handleAddList = () => {
-    setIsShowInput(true);
-  };
-
   const form = useForm({
-    resolver: zodResolver(createListSchema),
+    resolver: zodResolver(createCardSchema),
     defaultValues: {
-      name: "",
+      title: "",
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof createListSchema>) => {
-    mutate({ boardId, data: values });
+  const { mutate, isSuccess } = useCreateCard({ boardId });
+
+  const handleSubmit = (values: z.infer<typeof createCardSchema>) => {
+    mutate({ data: values, listId });
   };
 
   useEffect(() => {
@@ -46,23 +48,22 @@ export default function AddList({ boardId }: { boardId: string }) {
       form.reset();
     }
   }, [isSuccess]);
-
   return (
-    <div className="w-72 p-3 h-min space-y-2">
+    <>
       {isShowInput ? (
-        <div className="p-2 bg-primary/30 flex flex-col gap-3 rounded-md">
+        <div className="p-3 bg-primary/30 transition-colors duration-300  rounded-md flex flex-col justify-evenly gap-3 cursor-pointer text-muted-foreground hover:text-white">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
               <FormField
                 control={form.control}
-                name="name"
+                name="title"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
                       <Input
                         type="text"
                         className="w-full bg-secondary border-none focus-visible:ring-primary transition-all duration-300 focus-visible:ring-1 focus-visible:ring-offset-0"
-                        placeholder="Enter list name"
+                        placeholder="Enter title"
                         {...field}
                         autoComplete="off"
                         ref={inputRef}
@@ -80,7 +81,7 @@ export default function AddList({ boardId }: { boardId: string }) {
                   type="submit"
                   disabled={!form.formState.isValid}
                 >
-                  <Check className="w-4 h-4" /> Add List
+                  <Check className="w-4 h-4" /> Add Card
                 </Button>
                 <Button
                   className="w-10 h-10 bg-transparent hover:bg-secondary flex items-center justify-center p-2"
@@ -94,14 +95,14 @@ export default function AddList({ boardId }: { boardId: string }) {
         </div>
       ) : (
         <div
-          className="p-3 bg-primary/30 flex justify-start items-center rounded-md cursor-pointer text-muted-foreground"
-          onClick={handleAddList}
+          className="p-3 hover:bg-primary/10 transition-colors duration-300  rounded-md flex flex-col justify-evenly gap-3 cursor-pointer text-muted-foreground hover:text-white"
+          onClick={() => setIsShowInput(true)}
         >
           <h1 className="text-sm font-bold flex justify-center items-center gap-2 ">
-            <Plus className="w-5 h-5" /> Add New List
+            <Plus className="w-5 h-5" /> Add New Card
           </h1>
         </div>
       )}
-    </div>
+    </>
   );
 }

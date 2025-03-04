@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { Badge } from "../ui/badge";
+import { ICard } from "@/interface/cardInterface";
+import { IUser } from "@/interface/userInterface";
 
-export default function BoardCard({ card }: { card: any }) {
+export default function BoardCard({ card }: { card: ICard }) {
   const colors = [
     "bg-red-400 text-red-900 hover:bg-red-500",
     "bg-blue-400 text-blue-900 hover:bg-blue-500",
@@ -15,16 +17,19 @@ export default function BoardCard({ card }: { card: any }) {
 
   return (
     <div className="p-3 bg-primary/20 hover:bg-primary/30 transition-colors duration-300 border border-primary/30 rounded-md flex flex-col justify-evenly gap-3 cursor-pointer">
-      {card.labels && (
+      {card.labels.length > 0 && (
         <div
           className="flex gap-2 overflow-scroll scrollbar-hide rounded-full"
           onClick={() => setIsLabelHide((p) => !p)}
         >
-          {card.labels.map((label: any, index: number) => (
+          {card.labels.map((label: string, index: number) => (
             <Badge
               className={`${
                 colors[index % colors.length]
-              } transition-all duration-500 whitespace-nowrap ${isLabelHide ? "px-5 py-1" : ""}`}
+              } transition-all duration-500 whitespace-nowrap ${
+                isLabelHide ? "px-5 py-1" : ""
+              }`}
+              key={index}
             >
               <span className={`${isLabelHide ? "hidden" : "inline"}`}>
                 {label}
@@ -37,15 +42,15 @@ export default function BoardCard({ card }: { card: any }) {
         <h1 className="font-semibold text-white/85">{card.title}</h1>
       </div>
 
-      {(card.dueDate || card.assignees) && (
+      {(card.dueDate || card.assignees.length > 0) && (
         <div className="flex justify-evenly items-center ">
           <div className="w-1/2">
             <h1 className="text-xs text-muted-foreground">{card.dueDate}</h1>
           </div>
           <div className="flex flex-row-reverse -space-x-1 overflow-scroll scrollbar-hide  w-1/2 rounded-full">
-            {card.assignees.map((member: any) => (
+            {card.assignees.map((member: IUser) => (
               <img
-                key={member.id}
+                key={member._id}
                 src={member.profileImg}
                 className="w-6 h-6 rounded-full object-cover"
               />

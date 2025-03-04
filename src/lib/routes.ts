@@ -30,6 +30,9 @@ const API_ROUTES = {
   LIST: {
     CREATE_LIST: "/v1/lists/",
   },
+  CARD: {
+    CREATE_CARD: "/v1/cards/",
+  },
 };
 
 export default API_ROUTES;
