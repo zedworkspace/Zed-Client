@@ -14,3 +14,7 @@ export interface IBoard {
 export interface IGetBoards extends IFetch {
   data: IBoard[];
 }
+
+export interface IGetBoard extends IFetch {
+  data: IBoard;
+}
