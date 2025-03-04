@@ -18,13 +18,15 @@ import { createListSchema } from "../../validations/listValidation";
 export default function AddList({ boardId }: { boardId: string }) {
   const [isShowInput, setIsShowInput] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
+
   const { mutate, isSuccess } = useCreateList({ boardId });
 
   useEffect(() => {
     if (isShowInput && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [inputRef, isShowInput]);
+  }, [inputRef, isShowInput, handleSubmit]);
 
   const handleAddList = () => {
     setIsShowInput(true);
@@ -37,15 +39,27 @@ export default function AddList({ boardId }: { boardId: string }) {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof createListSchema>) => {
+  function handleSubmit(values: z.infer<typeof createListSchema>) {
     mutate({ boardId, data: values });
-  };
+  }
 
   useEffect(() => {
     if (isSuccess) {
       form.reset();
     }
   }, [isSuccess]);
+
+  const handleBlur = (e: React.FocusEvent) => {
+    setTimeout(() => {
+      const activeElement = document.activeElement;
+      if (
+        activeElement !== submitRef.current &&
+        activeElement?.tagName !== "BUTTON"
+      ) {
+        setIsShowInput(false);
+      }
+    }, 0);
+  };
 
   return (
     <div className="w-72 p-3 h-min space-y-2">
@@ -66,7 +80,7 @@ export default function AddList({ boardId }: { boardId: string }) {
                         {...field}
                         autoComplete="off"
                         ref={inputRef}
-                        onBlur={() => setIsShowInput(false)}
+                        onBlur={handleBlur}
                       />
                     </FormControl>
                     <FormMessage />
@@ -79,6 +93,7 @@ export default function AddList({ boardId }: { boardId: string }) {
                   className="flex-1 text-muted-foreground flex items-center gap-2"
                   type="submit"
                   disabled={!form.formState.isValid}
+                  ref={submitRef}
                 >
                   <Check className="w-4 h-4" /> Add List
                 </Button>

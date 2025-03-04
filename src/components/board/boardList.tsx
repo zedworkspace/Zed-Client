@@ -19,7 +19,7 @@ export default function BoardList({ list, index }: Props) {
   ];
 
   return (
-    <div className="w-72 p-3 h-min space-y-2">
+    <div className="w-72 p-3 h-full space-y-2 group">
       <div
         className={`p-3 bg-primary/50 flex gap-2 items-center rounded-md border-l-4 ${
           colors[index % colors.length]
@@ -30,6 +30,7 @@ export default function BoardList({ list, index }: Props) {
           {list.cards.length}
         </span>
       </div>
+
       {list.cards.map((card: ICard) => (
         <BoardCard key={card._id} card={card} />
       ))}

@@ -23,12 +23,13 @@ type Props = {
 export default function AddCard({ listId, boardId }: Props) {
   const [isShowInput, setIsShowInput] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isShowInput && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [inputRef, isShowInput]);
+  }, [inputRef, isShowInput, handleSubmit]);
 
   const form = useForm({
     resolver: zodResolver(createCardSchema),
@@ -39,15 +40,28 @@ export default function AddCard({ listId, boardId }: Props) {
 
   const { mutate, isSuccess } = useCreateCard({ boardId });
 
-  const handleSubmit = (values: z.infer<typeof createCardSchema>) => {
+  function handleSubmit(values: z.infer<typeof createCardSchema>) {
     mutate({ data: values, listId });
-  };
+  }
 
   useEffect(() => {
     if (isSuccess) {
       form.reset();
     }
   }, [isSuccess]);
+
+  const handleBlur = (e: React.FocusEvent) => {
+    setTimeout(() => {
+      const activeElement = document.activeElement;
+      if (
+        activeElement !== submitRef.current &&
+        activeElement?.tagName !== "BUTTON"
+      ) {
+        setIsShowInput(false);
+      }
+    }, 0);
+  };
+
   return (
     <>
       {isShowInput ? (
@@ -67,7 +81,7 @@ export default function AddCard({ listId, boardId }: Props) {
                         {...field}
                         autoComplete="off"
                         ref={inputRef}
-                        onBlur={() => setIsShowInput(false)}
+                        onBlur={handleBlur}
                       />
                     </FormControl>
                     <FormMessage />
@@ -80,6 +94,7 @@ export default function AddCard({ listId, boardId }: Props) {
                   className="flex-1 text-muted-foreground flex items-center gap-2"
                   type="submit"
                   disabled={!form.formState.isValid}
+                  ref={submitRef}
                 >
                   <Check className="w-4 h-4" /> Add Card
                 </Button>
@@ -95,7 +110,7 @@ export default function AddCard({ listId, boardId }: Props) {
         </div>
       ) : (
         <div
-          className="p-3 hover:bg-primary/10 transition-colors duration-300  rounded-md flex flex-col justify-evenly gap-3 cursor-pointer text-muted-foreground hover:text-white"
+          className="p-3 hover:bg-primary/10 hidden group-hover:flex transition-colors duration-300  rounded-md  flex-col justify-evenly gap-3 cursor-pointer text-muted-foreground hover:text-white"
           onClick={() => setIsShowInput(true)}
         >
           <h1 className="text-sm font-bold flex justify-center items-center gap-2 ">
