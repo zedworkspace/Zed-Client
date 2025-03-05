@@ -33,6 +33,12 @@ const API_ROUTES = {
   CARD: {
     CREATE_CARD: "/v1/cards/",
   },
+  INVITE:{
+    GET_INVITE_INFO: "/v1/invite",
+    GENERATE_INVITE: "/v1/invite/generate-invite/",
+    SEND_INVITE: "/v1/invite/send-invite",
+    ACCEPT_INVITE: "/v1/invite/accept-invite",
+  },
 };
 
 export default API_ROUTES;
