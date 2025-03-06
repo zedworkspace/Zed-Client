@@ -22,7 +22,7 @@ export default function LeftSectionProjectAvatars({
         setIsEnabled(true);
       }}
     >
-      <AvatarImage src={project.projectId.logo} />
+      <AvatarImage src={project?.projectId?.logo} />
       <AvatarFallback>
         <Skeleton className="w-12 h-12 border-none rounded-full bg-secondary-foreground" />
       </AvatarFallback>
