@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Badge } from "../ui/badge";
 import { ICard } from "@/interface/cardInterface";
 import { IUser } from "@/interface/userInterface";
+import { useCardStore } from "@/store/cardStore";
 
 export default function BoardCard({ card }: { card: ICard }) {
   const colors = [
@@ -14,9 +15,10 @@ export default function BoardCard({ card }: { card: ICard }) {
   ];
 
   const [isLabelHide, setIsLabelHide] = useState(true);
+  const { onOpen, setCardid } = useCardStore();
 
   return (
-    <div className="p-3 bg-primary/20 hover:bg-primary/30 transition-colors duration-300 border border-primary/30 rounded-md flex flex-col justify-evenly gap-3 cursor-pointer">
+    <div className="p-3 bg-primary/20 hover:bg-primary/30 transition-colors duration-300 border border-primary/30 rounded-md flex flex-col justify-evenly gap-3 cursor-pointer ">
       {card.labels.length > 0 && (
         <div
           className="flex gap-2 overflow-scroll scrollbar-hide rounded-full"
@@ -38,7 +40,12 @@ export default function BoardCard({ card }: { card: ICard }) {
           ))}
         </div>
       )}
-      <div>
+      <div
+        onClick={() => {
+          setCardid(card._id);
+          onOpen();
+        }}
+      >
         <h1 className="font-semibold text-white/85">{card.title}</h1>
       </div>
 

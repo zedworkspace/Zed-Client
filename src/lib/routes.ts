@@ -35,6 +35,8 @@ const API_ROUTES = {
   },
   CARD: {
     CREATE_CARD: "/v1/cards/",
+    GET_CARDBY_ID :"/v1/cards/",
+    UPDATE_CARD_BYID:"/v1/cards/"
   },
   INVITE:{
     GET_INVITE_INFO: "/v1/invite",
