@@ -17,8 +17,6 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ children }) => {
 
     const {data} = useGetProfile(userId)
 
-    console.log(data,'data from profile page');
-
     const navItems = [
         { name: "My Tasks", path: `/profile/${userId}` },
         { name: "Activity", path: `/profile/${userId}/activity` },

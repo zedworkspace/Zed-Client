@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { useNewProjectStore, useProjectStore } from "@/store/projectStore";
-import { useNewInviteStore } from "@/store/inviteStore";
 import { useGetProjects } from "@/hooks/useProject";
 import { useRouter } from "next/navigation";
 import { useGetChannels } from "@/hooks/useChannel";
@@ -15,7 +14,6 @@ export default function LeftSection() {
   const [isEnabled, setIsEnabled] = useState(false);
 
   const { onOpen } = useNewProjectStore();
-  const { onOpen: onInviteOpen } = useNewInviteStore();
 
   const {
     data: projectsData,
@@ -68,9 +66,6 @@ export default function LeftSection() {
         >
           <Plus />
         </Button>
-        {/* <Button size="icon" className="border-non rounded-full w-14 h-14" onClick={onInviteOpen}>
-        <Plus />
-      </Button> */}
       </div>
     );
 }

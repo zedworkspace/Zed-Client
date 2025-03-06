@@ -8,7 +8,7 @@ export default function ModalProvider() {
   return (
     <>
       <CreateProject />
-      <InviteMembers />
+      {/* <InviteMembers /> */}
       <UpdateProfileModal />
       <CardModal/>
     </>

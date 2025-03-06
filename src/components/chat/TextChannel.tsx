@@ -1,3 +1,4 @@
+"use client";
 import { SocketProvider } from "@/context/SocketProvider";
 import React from "react";
 import ChatHeader from "./ChatHeader";
@@ -19,15 +20,20 @@ export default function TextChannel({
 }: Props) {
   return (
     <SocketProvider>
-      <div className="pb-4 w-full h-[calc(100vh-4rem)] flex flex-col justify-between">
+      <div className="pb-4 w-full h-full flex flex-col justify-between ">
         <ChatHeader />
-        <ChatWindow channelId={channelId} userId={userId} />
-        <ChatInput
-          channelId={channelId}
-          userId={userId}
-          userProfileImg={userProfileImg}
-          userName={userName}
-        />
+        
+        <div className="flex flex-col justify-between">
+          <ChatWindow channelId={channelId} userId={userId}/>
+          <div className="fixed bottom-0  w-[50vw] md:w-[65vw] lg:w-[78vw] px-4">
+            <ChatInput
+              channelId={channelId}
+              userId={userId}
+              userProfileImg={userProfileImg}
+              userName={userName}
+            />
+            </div>
+        </div>
       </div>
     </SocketProvider>
   );

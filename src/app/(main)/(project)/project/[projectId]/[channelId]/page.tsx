@@ -8,23 +8,23 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ChatPage() {
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState(""); 
   const [channelType, setChannelType] = useState("");
   const { channelId, projectId } = useParams() as {
     channelId: string;
     projectId: string;
   };
-  const { data: profileData } = useGetProfile(userId);
 
   const { data: listsData } = useGetLists({ boardId: channelId });
 
+  const {data} = useGetProfile(userId)
+
+  // ✅ Fetch only client-side data inside useEffect
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUserId = localStorage.getItem("userId") || "";
-      setUserId(storedUserId);
-      const type = sessionStorage.getItem("channelType") || "";
-      setChannelType(type);
-    }
+    const storedUserId = localStorage.getItem("userId") || "";
+    const type = sessionStorage.getItem("channelType") || "";
+    setUserId(storedUserId);
+    setChannelType(type);
   }, []);
 
   const { data: boardData } = useGetBoardById({
@@ -41,8 +41,8 @@ export default function ChatPage() {
     <TextChannel
       channelId={channelId}
       userId={userId}
-      userName={profileData?.name}
-      userProfileImg={profileData?.profileImg}
+      userName={data?.name || "Anonymous"}
+      userProfileImg={data?.profileImg || ""}
     />
   );
 }

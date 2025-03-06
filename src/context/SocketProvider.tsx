@@ -6,7 +6,7 @@ import { Socket } from "socket.io-client";
 
 interface SocketContextProps {
   socket:Socket |null ;
-  joinRoom: (channelId: string) => void;
+  joinRoom: (channelId: string, userId:string) => void;
   sendMessage: (message: MessagePayload) => void;
 }
 
@@ -25,6 +25,7 @@ interface MessagePayload {
 const SocketContext = createContext<SocketContextProps | undefined>(undefined);
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
+  
   const [socket, setSocket] = useState(getSocket());
 
   useEffect(() => {
@@ -34,22 +35,21 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const joinRoom = (channelId: string) => {
-    socket?.emit("joinRoom", channelId);
+  const joinRoom = (channelId: string, userId:string) => {
+    socket?.emit("joinRoom", channelId, userId);
   };
 
 
   const sendMessage = (message: MessagePayload) => {
     const messageData = {
       ...message,
-      sender: {
+      senderId: {
         _id: message.senderId._id,
         name: message.senderId.name,
         profileImg: message.senderId.profileImg 
       },
     };
 
-    console.log("Sending message:", messageData);
     socket?.emit("sendMessage", messageData);
   };
   

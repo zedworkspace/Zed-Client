@@ -28,7 +28,12 @@
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+<<<<<<< HEAD
     "date-fns": "^3.6.0",
+=======
+    "date-fns": "^4.1.0",
+    "emoji-picker-react": "^4.12.0",
+>>>>>>> beta
     "formik": "^2.4.6",
     "lucide-react": "^0.475.0",
     "next": "^15.1.7",

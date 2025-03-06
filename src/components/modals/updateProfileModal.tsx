@@ -17,6 +17,7 @@ import { useGetProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { useUpdateProfileStore } from "@/store/updateProfileStore";
 
 export function UpdateProfileModal() {
+    
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
@@ -25,14 +26,17 @@ export function UpdateProfileModal() {
       setUserId(storedUserId);
     }
   }, []);
-  const { data } = useGetProfile(userId);
 
-  const { mutate: updateProfile, isPending } = useUpdateProfile(userId);
+    
+    const {data} = useGetProfile(userId)
 
-  const [bio, setBio] = useState(data?.bio);
-  const [image, setImage] = useState<string>(data?.profileImg);
-  const [name, setName] = useState(data?.name);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null); // Store actual file
+    const {mutate:updateProfile, isPending} = useUpdateProfile(userId)
+
+
+    const [bio, setBio] = useState(data?.bio)
+    const [image, setImage] = useState<string >(data?.profileImg);
+    const [name,setName] = useState(data?.name)
+    const [selectedFile, setSelectedFile] = useState<File | null>(null); // Store actual file
 
   useEffect(() => {
     if (data) {
@@ -58,7 +62,7 @@ export function UpdateProfileModal() {
     if (selectedFile) {
       formData.append("profileImg", selectedFile);
     }
-    updateProfile({ userId, formData });
+    updateProfile( formData );
   };
 
   const { onClose, isOpen } = useUpdateProfileStore();
