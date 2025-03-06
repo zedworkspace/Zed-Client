@@ -3,7 +3,7 @@ import BoardCard from "./boardCard";
 import AddCard from "./addCard";
 import { IList } from "@/interface/listInterface";
 import { ICard } from "@/interface/cardInterface";
-
+import { useDroppable } from "@dnd-kit/core";
 type Props = {
   list: IList;
   index: number;
@@ -18,8 +18,10 @@ export default function BoardList({ list, index }: Props) {
     "border-l-purple-400",
   ];
 
+  const { setNodeRef } = useDroppable({ id: list._id });
+  
   return (
-    <div className="w-72 p-3 h-full space-y-2 group">
+    <div className="w-72 p-3 h-full space-y-2 group" ref={setNodeRef}>
       <div
         className={`p-3 bg-primary/50 flex gap-2 items-center rounded-md border-l-4 ${
           colors[index % colors.length]
