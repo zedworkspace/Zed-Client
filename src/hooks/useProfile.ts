@@ -7,7 +7,7 @@ export const useGetProfile = (userId:string) => {
     return useQuery({
         queryKey:['profile',userId],
         queryFn: async()=>{
-            return await getProfile(userId)
+            return await getProfile()
         },
         enabled:!!userId
     })
