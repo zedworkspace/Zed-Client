@@ -1,3 +1,4 @@
+import { CardModal } from "@/components/board/cardModal";
 import { CreateProject } from "@/components/modals/createProjectModal";
 import { InviteMembers } from "@/components/modals/inviteMembersModal";
 import { UpdateProfileModal } from "@/components/modals/updateProfileModal";
@@ -9,6 +10,7 @@ export default function ModalProvider() {
       <CreateProject />
       {/* <InviteMembers /> */}
       <UpdateProfileModal />
+      <CardModal/>
     </>
   );
 }
