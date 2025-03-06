@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import {
   createContext,
@@ -6,12 +5,11 @@ import {
   useEffect,
   useState,
   ReactNode,
-  use,
-  SetStateAction,
 } from "react";
 import { connectSocket, getSocket } from "../utils/socket";
 import { Socket } from "socket.io-client";
-import { IList } from "@/interface/listInterface";
+import { IGetLists } from "@/interface/listInterface";
+import { QueryClient } from "@tanstack/react-query";
 
 interface OnCardDrop {
   fromListId: string;
@@ -23,17 +21,13 @@ interface OnCardDrop {
 interface SocketContextProps {
   socket: Socket | null;
   onCardDrop: ({ fromListId, cardId, toListId }: OnCardDrop) => void;
-  updatedBoard: (
-    setData: React.Dispatch<React.SetStateAction<IList[]>>
-  ) => void;
-  // updatedBoard: () => IList[];
+  updatedListsHandler: (queryClient: QueryClient, boardId: string) => void;
 }
 
 const SocketContext = createContext<SocketContextProps | undefined>(undefined);
 
 export const BoardSocketProvider = ({ children }: { children: ReactNode }) => {
   const [socket, setSocket] = useState(getSocket());
-  const [updatedLists, setUpdatedLists] = useState<IList[]>([]);
 
   useEffect(() => {
     if (!socket) {
@@ -51,14 +45,12 @@ export const BoardSocketProvider = ({ children }: { children: ReactNode }) => {
     socket?.emit("onCardDrop", fromListId, cardId, toListId, boardId);
   };
 
-  const updatedBoard = (
-    setData: React.Dispatch<React.SetStateAction<IList[]>>
-  ) => {
-    socket?.on("updatedBoard", (data) => {
-      // setUpdatedLists(data);
-      setData(data);
+  const updatedListsHandler = (queryClient: QueryClient, boardId: string) => {
+    socket?.on("onUpdateList", (updatedData) => {
+      queryClient.setQueryData(["lists", boardId], (oldData: IGetLists) => {
+        return { ...oldData, data: updatedData };
+      });
     });
-    // return updatedLists;
   };
 
   return (
@@ -66,7 +58,7 @@ export const BoardSocketProvider = ({ children }: { children: ReactNode }) => {
       value={{
         socket,
         onCardDrop,
-        updatedBoard,
+        updatedListsHandler,
       }}
     >
       {children}

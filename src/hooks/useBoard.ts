@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useGetBoards = ({ projectId }: { projectId: string }) => {
   return useQuery({
-    queryKey: ["boards"],
-    queryFn: () => getBoards(projectId),
+    queryKey: ["boards", projectId],
+    queryFn: async () => await getBoards(projectId),
   });
 };
 
@@ -17,7 +17,6 @@ export const useGetBoardById = ({
 }) => {
   return useQuery({
     queryKey: ["board" + boardId],
-    queryFn: () => getBoardById({ boardId, projectId }),
+    queryFn: async () => await getBoardById({ boardId, projectId }),
   });
 };
-

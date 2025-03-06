@@ -2,10 +2,7 @@
 import Board from "@/components/board/board";
 import TextChannel from "@/components/chat/TextChannel";
 import { BoardSocketProvider } from "@/context/boardSocketProvider";
-import { useGetBoardById } from "@/hooks/useBoard";
-import { useGetLists } from "@/hooks/useList";
 import { useGetProfile } from "@/hooks/useProfile";
-import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -18,12 +15,8 @@ export default function ChatPage() {
     projectId: string;
   };
 
-  const queryClient = useQueryClient()
-  const { data: listsData, isSuccess } = useGetLists({ boardId: channelId,isEnabled:channelType === "board" });
-
   const { data } = useGetProfile(userId);
 
-  
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId") || "";
     const type = sessionStorage.getItem("channelType") || "";
@@ -31,17 +24,12 @@ export default function ChatPage() {
     setChannelType(type);
   }, []);
 
-  const { data: boardData } = useGetBoardById({
-    boardId: channelId,
-    projectId,
-  });
-
   if (channelType === "voice") return <div>This is voice channel</div>; // here we render video based component
 
-  if (channelType === "board" && isSuccess)
+  if (channelType === "board")
     return (
       <BoardSocketProvider>
-        <Board board={boardData?.data} lists={listsData?.data} />
+        <Board boardId={channelId} projectId={projectId} />
       </BoardSocketProvider>
     );
 

@@ -11,16 +11,9 @@ export const useCreateList = ({ boardId }: { boardId: string }) => {
   });
 };
 
-export const useGetLists = ({
-  boardId,
-  isEnabled,
-}: {
-  boardId: string;
-  isEnabled: boolean;
-}) => {
+export const useGetLists = ({ boardId }: { boardId: string }) => {
   return useQuery({
     queryKey: ["lists", boardId],
     queryFn: () => getLists({ boardId }),
-    enabled: isEnabled,
   });
 };

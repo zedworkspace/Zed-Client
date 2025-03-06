@@ -1,29 +1,47 @@
-import { IBoard } from "@/interface/boardInterface";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import BoardHeader from "./boardHeader";
 import BoardContents from "./boardContents";
 import { useParams } from "next/navigation";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { IList } from "@/interface/listInterface";
 import { useBoardSocket } from "@/context/boardSocketProvider";
+import { useGetBoardById } from "@/hooks/useBoard";
+import { useGetLists } from "@/hooks/useList";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
-  board?: IBoard;
-  lists: IList[];
+  boardId: string;
+  projectId: string;
 };
 
-export default function Board({ lists, board }: Props) {
+export default function Board({}: Props) {
   const { channelId, projectId } = useParams() as {
     channelId: string;
     projectId: string;
   };
 
-  const { onCardDrop, updatedBoard } = useBoardSocket();
+  const {
+    data: BoardData,
+    isSuccess: boardSuccess,
+    isLoading: boardLoading,
+  } = useGetBoardById({
+    boardId: channelId,
+    projectId,
+  });
 
-  const [data, setData] = useState<IList[]>(lists);
+  const {
+    data: boardLists,
+    isSuccess: listSuccess,
+    isLoading: listLoading,
+  } = useGetLists({
+    boardId: channelId,
+  });
+
+  const queryClient = useQueryClient();
+
+  const { onCardDrop, updatedListsHandler } = useBoardSocket();
 
   useEffect(() => {
-    updatedBoard(setData);
+    updatedListsHandler(queryClient, channelId);
   }, []);
 
   const handleDragEnd = (e: DragEndEvent) => {
@@ -42,12 +60,18 @@ export default function Board({ lists, board }: Props) {
     onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
   };
 
-  return (
-    <div className="h-full flex flex-col">
-      <BoardHeader board={board} />
-      <DndContext onDragEnd={handleDragEnd}>
-        <BoardContents lists={data} boardId={channelId} />
-      </DndContext>
-    </div>
-  );
+  const isLoading = boardLoading || listLoading;
+  const isSuccess = boardSuccess || listSuccess;
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (isSuccess)
+    return (
+      <div className="h-full flex flex-col">
+        <BoardHeader board={BoardData?.data} />
+        <DndContext onDragEnd={handleDragEnd}>
+          <BoardContents lists={boardLists?.data} boardId={channelId} />
+        </DndContext>
+      </div>
+    );
 }
