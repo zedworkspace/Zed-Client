@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
+import { useInviteStore } from "@/store/inviteStore";
+import { InviteMembers } from "../modals/inviteMembersModal";
 
 type Props = {
   projectData: any;
@@ -25,13 +27,14 @@ type Props = {
 export default function SideBarHead({ projectData }: Props) {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { openGenerateModal } = useInviteStore();
   const dropdownItems = [
     {
       icon: FolderKanban,
       label: "Project Profile",
       onClick: () => router.push("#"),
     },
-    { icon: UserRoundPlus, label: "Invite People", onclick: () => {} },
+    { icon: UserRoundPlus, label: "Invite People", onclick: openGenerateModal},
     { icon: Kanban, label: "Create board", onclick: () => {} },
     { icon: Plus, label: "Create channel", onclick: () => {} },
   ];
@@ -41,6 +44,7 @@ export default function SideBarHead({ projectData }: Props) {
       className="h-1/4 w-full p-0 bg-cover bg-center bg-transparent"
       style={{ backgroundImage: `url(${projectData?.data.logo})` }}
     >
+      <InviteMembers/>
       <div className="flex justify-between items-center bg-black bg-opacity-20 p-3 w-full text-white text-base font-semibold">
         <h1>{projectData?.data.name}</h1>
         <DropdownMenu onOpenChange={setIsDropdownOpen}>
@@ -59,6 +63,13 @@ export default function SideBarHead({ projectData }: Props) {
                   <span>{item.label}</span>
                 </DropdownMenuItem>
               ))}
+                <DropdownMenuItem
+                  className="flex items-center cursor-pointer space-x-2 p-2 focus:bg-secondary focus:text-white transition-colors duration-200"
+                  onClick={openGenerateModal}
+                >
+                  <UserRoundPlus className="size-4" />
+                  <span>Invite People</span>
+                </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

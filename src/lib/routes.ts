@@ -28,6 +28,19 @@ const API_ROUTES = {
   },
   BOARD: {
     GET_BOARDS: "/v1/boards/",
+    GET_BOARD: "/v1/boards/",
+  },
+  LIST: {
+    CREATE_LIST: "/v1/lists/",
+  },
+  CARD: {
+    CREATE_CARD: "/v1/cards/",
+  },
+  INVITE:{
+    GET_INVITE_INFO: "/v1/invite",
+    GENERATE_INVITE: "/v1/invite/generate-invite/",
+    SEND_INVITE: "/v1/invite/send-invite",
+    ACCEPT_INVITE: "/v1/invite/accept-invite",
   },
 };
 

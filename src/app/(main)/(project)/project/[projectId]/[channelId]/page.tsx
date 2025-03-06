@@ -1,14 +1,21 @@
 "use client";
 import Board from "@/components/board/board";
 import TextChannel from "@/components/chat/TextChannel";
+import { useGetBoardById } from "@/hooks/useBoard";
+import { useGetLists } from "@/hooks/useList";
 import { useGetProfile } from "@/hooks/useProfile";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ChatPage() {
-  const { channelId } = useParams() as { channelId: string }; // ✅ No need to delay this
   const [userId, setUserId] = useState(""); 
   const [channelType, setChannelType] = useState("");
+  const { channelId, projectId } = useParams() as {
+    channelId: string;
+    projectId: string;
+  };
+
+  const { data: listsData } = useGetLists({ boardId: channelId });
 
   const {data} = useGetProfile(userId)
 
@@ -20,11 +27,15 @@ export default function ChatPage() {
     setChannelType(type);
   }, []);
 
-  // ✅ Render placeholder while client-side data is loading (prevents hydration mismatch)
-  if (!userId || !channelType) return <div>Loading...</div>;
+  const { data: boardData } = useGetBoardById({
+    boardId: channelId,
+    projectId,
+  });
 
-  if (channelType === "voice") return <div>This is voice channel</div>;
-  if (channelType === "board") return <Board />;
+  if (channelType === "voice") return <div>This is voice channel</div>; // here we render video based component
+
+  if (channelType === "board")
+    return <Board board={boardData?.data} lists={listsData?.data} />;
 
   return (
     <TextChannel
