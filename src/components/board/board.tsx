@@ -59,11 +59,11 @@ export default function Board({}: Props) {
 
     if (!sourceList || !targerList || sourceList === targerList) return;
 
-    onCardDrop(fromListId,
-      cardId,
-      toListId,
-      boardId,)
-   
+    const cardId = active.id as string;
+    const fromListId = active.data.current?.list as string;
+    const toListId = over.id as string;
+
+    onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
   };
 
   const sensors = useSensors(
