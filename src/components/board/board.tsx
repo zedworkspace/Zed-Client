@@ -2,12 +2,17 @@ import React, { useEffect } from "react";
 import BoardHeader from "./boardHeader";
 import BoardContents from "./boardContents";
 import { useParams } from "next/navigation";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { IList } from "@/interface/listInterface";
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { useBoardSocket } from "@/context/boardSocketProvider";
 import { useGetBoardById } from "@/hooks/useBoard";
 import { useGetLists } from "@/hooks/useList";
 import { useQueryClient } from "@tanstack/react-query";
-import { useBoardSocket } from "@/context/boardSocketProvider";
 
 type Props = {
   boardId: string;
@@ -61,12 +66,26 @@ export default function Board({}: Props) {
    
   };
 
-  return (
-    <div className="h-full flex flex-col">
-      <BoardHeader board={BoardData?.data} />
-      <DndContext onDragEnd={handleDragEnd}>
-        <BoardContents lists={boardLists?.data} boardId={channelId} />
-      </DndContext>
-    </div>
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
   );
+
+  const isLoading = boardLoading || listLoading;
+  const isSuccess = boardSuccess || listSuccess;
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (isSuccess)
+    return (
+      <div className="h-full flex flex-col">
+        <BoardHeader board={BoardData?.data} />
+        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          <BoardContents lists={boardLists?.data} boardId={channelId} />
+        </DndContext>
+      </div>
+    );
 }

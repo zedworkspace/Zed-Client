@@ -4,6 +4,7 @@ import { Badge } from "../ui/badge";
 import { ICard } from "@/interface/cardInterface";
 import { IUser } from "@/interface/userInterface";
 import { useDraggable } from "@dnd-kit/core";
+import { useCardStore } from "@/store/cardStore";
 
 export default function BoardCard({ card }: { card: ICard }) {
   const colors = [
@@ -14,6 +15,7 @@ export default function BoardCard({ card }: { card: ICard }) {
     "bg-purple-400 text-purple-900 hover:bg-purple-500",
   ];
 
+  const { setCardid, onOpen } = useCardStore();
   const [isLabelHide, setIsLabelHide] = useState(true);
 
   const { setNodeRef, transform, listeners, attributes, isDragging } =
@@ -25,7 +27,8 @@ export default function BoardCard({ card }: { card: ICard }) {
   const style = transform
     ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px,0)`,
-        transition: "transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease",
+        transition:
+          "transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease",
         zIndex: 50,
         opacity: 0.8,
         boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
