@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { SidebarHeader } from "../ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,53 +8,52 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import {
-  AudioWaveform,
   ChevronDown,
   ChevronUp,
-  MessageCircle,
-  Trello,
-  User,
+  FolderKanban,
+  Kanban,
+  Plus,
+  UserRoundPlus,
 } from "lucide-react";
-import { IGetProject } from "@/interface/projectInterface";
+
 import { useRouter } from "next/navigation";
 
 type Props = {
-  projectData: IGetProject;
+  projectData: any;
 };
-
-const dropdownItems = [
-  { icon: Trello, label: "Create board" },
-  { icon: MessageCircle, label: "Create text channel" },
-  { icon: AudioWaveform, label: "Create voice channel" },
-];
 
 export default function SideBarHead({ projectData }: Props) {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownItems = [
+    {
+      icon: FolderKanban,
+      label: "Project Profile",
+      onClick: () => router.push("#"),
+    },
+    { icon: UserRoundPlus, label: "Invite People", onclick: () => {} },
+    { icon: Kanban, label: "Create board", onclick: () => {} },
+    { icon: Plus, label: "Create channel", onclick: () => {} },
+  ];
+
   return (
-    <SidebarHeader
+    <div
       className="h-1/4 w-full p-0 bg-cover bg-center bg-transparent"
       style={{ backgroundImage: `url(${projectData?.data.logo})` }}
     >
-      <div className="flex justify-between items-center bg-black bg-opacity-20 p-4 w-full text-white text-xl font-semibold">
+      <div className="flex justify-between items-center bg-black bg-opacity-20 p-3 w-full text-white text-base font-semibold">
         <h1>{projectData?.data.name}</h1>
         <DropdownMenu onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger className="border-none outline-none">
             {isDropdownOpen ? <ChevronUp /> : <ChevronDown />}
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56 bg-background text-white border-none outline-none p-0">
+          <DropdownMenuContent className="w-56 bg-background text-white border-none outline-none p-2">
             <DropdownMenuGroup>
-              <DropdownMenuItem
-                className="flex items-center space-x-2 p-2 focus:bg-secondary focus:text-white transition-colors duration-200"
-                onClick={() => router.push("#")}
-              >
-                <User className="size-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
               {dropdownItems.map((item, index) => (
                 <DropdownMenuItem
                   key={index}
-                  className="flex items-center space-x-2 p-2 focus:bg-secondary focus:text-white transition-colors duration-200"
+                  className="flex items-center cursor-pointer space-x-2 p-2 focus:bg-secondary focus:text-white transition-colors duration-200"
+                  onClick={item.onClick}
                 >
                   <item.icon className="size-4" />
                   <span>{item.label}</span>
@@ -65,6 +63,6 @@ export default function SideBarHead({ projectData }: Props) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </SidebarHeader>
+    </div>
   );
 }

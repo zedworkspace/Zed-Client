@@ -5,6 +5,7 @@ export interface Message {
       name: string;
       profileImg?: string;
     };
+    readBy:string[]
     content: string;
     fileUrl:string
     type: string;

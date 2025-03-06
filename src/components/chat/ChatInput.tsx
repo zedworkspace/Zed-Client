@@ -3,8 +3,11 @@ import { useState } from "react";
 import { useSocket } from "@/context/SocketProvider";
 import { Input } from "../ui/input";
 import { SendHorizonalIcon, PaperclipIcon, XIcon } from "lucide-react";
-import { sendFile } from "@/services/messageServices";
 import Image from "next/image";
+import { useSendFile } from "@/hooks/useMessage";
+import EmojiPicker from "emoji-picker-react";
+import { BsEmojiSmile } from "react-icons/bs";
+
 
 const ChatInput = ({
   channelId,
@@ -21,31 +24,25 @@ const ChatInput = ({
   const [newMessage, setNewMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+
+  const {mutateAsync } = useSendFile(channelId)
 
   const handleSend = async () => {
-    if (!newMessage.trim() && !file) return; // Prevent empty messages
+    if (!newMessage.trim() && !file) return; 
 
-    setIsUploading(true);
     let fileUrl = "";
 
     if (file) {
-      // Upload file first
       const formData = new FormData();
       formData.append("channelId", channelId);
       formData.append("fileMessage", file);
 
-      try {
-        const response = await sendFile(formData);
-        fileUrl = response?.fileUrl || ""; // Get the file URL from the API response
-      } catch (error) {
-        console.error("File upload failed:", error);
-        setIsUploading(false);
-        return;
-      }
+       const res = await mutateAsync(formData);
+       fileUrl = res.fileUrl
+
     }
 
-    // Prepare message data
     const messageData = {
       channelId,
       senderId: {
@@ -53,18 +50,17 @@ const ChatInput = ({
         _id: userId,
         profileImg: userProfileImg,
       },
-      content: newMessage || "", // Send text if available
-      fileUrl: fileUrl || "", // Send file URL if available
+      content: newMessage || "", 
+      fileUrl, 
       type: fileUrl ? "image" : "text",
+      // readBy:[userId]
     };
 
-    sendMessage(messageData); // Send message via socket
+    sendMessage(messageData); 
 
-    // Reset input fields
     setNewMessage("");
     setFile(null);
     setFilePreview(null);
-    setIsUploading(false);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,18 +73,23 @@ const ChatInput = ({
     }
   };
 
+  const addEmoji = (emojiObject: { emoji: string }) => {
+    setNewMessage((prev) => prev + emojiObject.emoji);
+    setShowPicker(false);
+  };
+
   return (
-    <div className="relative flex flex-col gap-3 mt-2">
-      {/* Image Preview Outside ChatInput */}
+    <div className="relative flex flex-col gap-3 mt-2 mx-5">
+       {/* Image Preview Outside ChatInput   */}
       {filePreview && (
-        <div className="absolute bottom-0 left-0  flex justify-center">
+        <div className="absolute -bottom-2 left-0  flex justify-center">
           <div className="relative w-40 h-40   rounded-lg shadow-md">
             <Image
               src={filePreview}
               alt="Selected Image"
               width={160}
               height={160}
-              className="rounded-lg object-cover"
+              className="rounded-lg object-cover "
             />
             <button
               onClick={() => {
@@ -103,24 +104,38 @@ const ChatInput = ({
         </div>
       )}
 
-      <div className="flex items-center gap-3">
-        <Input
-          type="text"
-          className="flex-1 p-2 border-none focus-visible:ring-0 rounded-md"
-          placeholder="Type a message..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          disabled={isUploading}
-        />
-        <label className="cursor-pointer">
+      <div className="flex items-center gap-3 relative">
+      <Input
+        type="text"
+        className="flex-1 pl-24 ps-10 border-none focus-visible:ring-0 rounded-md bg-primary outline-none focus-visible:border-none focus-visible:outline-none focus-visible:ring-offset-0"
+        placeholder="Type a message..."
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+      />
+        <label className="cursor-pointer absolute left-14">
           <PaperclipIcon className="w-5 h-5 text-gray-500" />
           <input type="file" className="hidden" onChange={handleFileChange} />
         </label>
         <SendHorizonalIcon
           onClick={handleSend}
-          className={`w-5 h-5 cursor-pointer ${isUploading ? "text-gray-400" : "text-blue-500"}`}
+          className={`w-5 h-5 cursor-pointer absolute right-5 text-gray-500 `}
         />
+           {/* <button
+          onClick={() => setShowPicker(!showPicker)}
+          className="absolute left-5 "
+        >
+          😀
+        </button> */}
+        <BsEmojiSmile onClick={() => setShowPicker(!showPicker)}
+          className="absolute left-5 "/>
+        
       </div>
+      {showPicker && (
+        <div className="absolute bottom-0 mt-2">
+          <EmojiPicker onEmojiClick={addEmoji} />
+        </div>
+      )}
+
     </div>
   );
 };

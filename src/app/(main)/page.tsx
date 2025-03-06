@@ -68,10 +68,10 @@ export default function Page() {
   ];
 
   return (
-    <div className="flex flex-col justify-center overflow-auto">
+    <div className="flex flex-col justify-center ">
       <HomeHeader />
 
-      <div className="p-6 scrollbar-hide overflow-y">
+      <div className="p-6">
         <div className="bg- rounded-lg p-6">
           <h2 className="text-2xl font-semibold text-muted-foreground mb-6">
             Projects
