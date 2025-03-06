@@ -2,7 +2,13 @@ import React, { useEffect } from "react";
 import BoardHeader from "./boardHeader";
 import BoardContents from "./boardContents";
 import { useParams } from "next/navigation";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { useBoardSocket } from "@/context/boardSocketProvider";
 import { useGetBoardById } from "@/hooks/useBoard";
 import { useGetLists } from "@/hooks/useList";
@@ -60,6 +66,14 @@ export default function Board({}: Props) {
     onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
   const isLoading = boardLoading || listLoading;
   const isSuccess = boardSuccess || listSuccess;
 
@@ -69,7 +83,7 @@ export default function Board({}: Props) {
     return (
       <div className="h-full flex flex-col">
         <BoardHeader board={BoardData?.data} />
-        <DndContext onDragEnd={handleDragEnd}>
+        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
           <BoardContents lists={boardLists?.data} boardId={channelId} />
         </DndContext>
       </div>
