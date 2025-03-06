@@ -1,29 +1,48 @@
-import { IBoard } from "@/interface/boardInterface";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import BoardHeader from "./boardHeader";
 import BoardContents from "./boardContents";
 import { useParams } from "next/navigation";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { IList } from "@/interface/listInterface";
+import { useGetBoardById } from "@/hooks/useBoard";
+import { useGetLists } from "@/hooks/useList";
+import { useQueryClient } from "@tanstack/react-query";
 import { useBoardSocket } from "@/context/boardSocketProvider";
 
 type Props = {
-  board?: IBoard;
-  lists: IList[];
+  boardId: string;
+  projectId: string;
 };
 
-export default function Board({ lists, board }: Props) {
+export default function Board({}: Props) {
   const { channelId, projectId } = useParams() as {
     channelId: string;
     projectId: string;
   };
 
-  const { onCardDrop, updatedBoard } = useBoardSocket();
+  const {
+    data: BoardData,
+    isSuccess: boardSuccess,
+    isLoading: boardLoading,
+  } = useGetBoardById({
+    boardId: channelId,
+    projectId,
+  });
 
-  const [data, setData] = useState<IList[]>(lists);
+  const {
+    data: boardLists,
+    isSuccess: listSuccess,
+    isLoading: listLoading,
+  } = useGetLists({
+    boardId: channelId,
+  });
+
+  const queryClient = useQueryClient();
+
+  const { onCardDrop, updatedListsHandler } = useBoardSocket();
 
   useEffect(() => {
-    updatedBoard(setData);
+    updatedListsHandler(queryClient, channelId);
   }, []);
 
   const handleDragEnd = (e: DragEndEvent) => {
@@ -35,18 +54,18 @@ export default function Board({ lists, board }: Props) {
 
     if (!sourceList || !targerList || sourceList === targerList) return;
 
-    const cardId = active.id as string;
-    const fromListId = active.data.current?.list as string;
-    const toListId = over.id as string;
-
-    onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
+    onCardDrop(fromListId,
+      cardId,
+      toListId,
+      boardId,)
+   
   };
 
   return (
     <div className="h-full flex flex-col">
-      <BoardHeader board={board} />
+      <BoardHeader board={BoardData?.data} />
       <DndContext onDragEnd={handleDragEnd}>
-        <BoardContents lists={data} boardId={channelId} />
+        <BoardContents lists={boardLists?.data} boardId={channelId} />
       </DndContext>
     </div>
   );
