@@ -5,6 +5,7 @@ import BoardContents from "./boardContents";
 import { useParams } from "next/navigation";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { IList } from "@/interface/listInterface";
+import { CardModal } from "./cardModal";
 
 type Props = {
   board?: IBoard;
@@ -89,6 +90,7 @@ export default function Board({ lists, board }: Props) {
 
   return (
     <div className="h-full flex flex-col">
+      
       <BoardHeader board={board} />
       <DndContext onDragEnd={handleDragEnd}>
         <BoardContents lists={lists} boardId={channelId} />

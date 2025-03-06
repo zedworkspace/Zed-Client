@@ -71,7 +71,12 @@ export default function BoardCard({ card }: { card: ICard }) {
           ))}
         </div>
       )}
-      <div>
+      <div
+        onClick={() => {
+          setCardid(card._id);
+          onOpen();
+        }}
+      >
         <h1 className="font-semibold text-white/85">{card.title}</h1>
       </div>
 
