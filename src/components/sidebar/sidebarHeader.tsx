@@ -34,7 +34,7 @@ export default function SideBarHead({ projectData }: Props) {
       label: "Project Profile",
       onClick: () => router.push("#"),
     },
-    { icon: UserRoundPlus, label: "Invite People", onclick: openGenerateModal},
+    { icon: UserRoundPlus, label: "Invite People", onclick: () => {}},
     { icon: Kanban, label: "Create board", onclick: () => {} },
     { icon: Plus, label: "Create channel", onclick: () => {} },
   ];

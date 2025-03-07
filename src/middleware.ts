@@ -2,11 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 export default function middleware(req: NextRequest) {
   const refreshToken = req.cookies.get("refreshToken");
+
   if (!refreshToken?.value) {
-    return NextResponse.redirect(new URL("/signin", req.url));
+    const redirectUrl = new URL("/signin", req.url);
+    redirectUrl.searchParams.set("redirect", req.nextUrl.pathname);
+    return NextResponse.redirect(redirectUrl);
   }
+
   return NextResponse.next();
 }
+
 export const config = {
-  matcher: ["/"],
+  matcher: ["/", "/invite/:path*"],
 };

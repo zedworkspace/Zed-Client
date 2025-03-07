@@ -1,7 +1,7 @@
 import { IUser } from "@/interface/userInterface";
 import { registerApi, resetOtpApi, resetPasswordApi, sendOtpApi, signinApi } from "@/services/authServices";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export const useOtp = () => {
     return useMutation({mutationFn:async(signupData : IUser)=>{
@@ -13,13 +13,21 @@ export const useOtp = () => {
 export const 
 useRegister = () => {
     const navigate = useRouter();
+    const searchParams = useSearchParams();
+    const redirect = searchParams.get("redirect");
     return useMutation({mutationFn:async(signupData : IUser)=>{
         const res = await registerApi(signupData);
         return res;
     },onSuccess:(data)=>{
         localStorage.setItem('accessToken',data.accessToken);
         localStorage.setItem("userId", data._id)
-        navigate.replace('/')
+        if (data?.accessToken) {
+            if(redirect){
+              navigate.push(redirect);
+            }else{
+              navigate.replace("/");
+            }
+          }
     }}) 
 }
 export const useSignin = () => {
