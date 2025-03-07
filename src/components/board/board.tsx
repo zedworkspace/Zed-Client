@@ -13,6 +13,7 @@ import { useBoardSocket } from "@/context/boardSocketProvider";
 import { useGetBoardById } from "@/hooks/useBoard";
 import { useGetLists } from "@/hooks/useList";
 import { useQueryClient } from "@tanstack/react-query";
+import { useCardSocket } from "@/hooks/useCardSocket";
 
 type Props = {
   boardId: string;
@@ -44,10 +45,13 @@ export default function Board({}: Props) {
 
   const queryClient = useQueryClient();
 
-  const { onCardDrop, updatedListsHandler } = useBoardSocket();
+  const { onCardDrop, updatedListsHandler, socket } = useBoardSocket();
+
+  const { onUpdateCard } = useCardSocket({ socket });
 
   useEffect(() => {
     updatedListsHandler(queryClient, channelId);
+    onUpdateCard(queryClient, channelId);
   }, []);
 
   const handleDragEnd = (e: DragEndEvent) => {
