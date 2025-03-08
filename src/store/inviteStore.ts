@@ -21,12 +21,12 @@
 import { create } from "zustand";
 
 type InviteStore = {
-    // Generate Invite Modal State
+    // Generate
     isGenerateModalOpen: boolean;
     openGenerateModal: () => void;
     closeGenerateModal: () => void;
 
-    // Accept/Reject Invite Modal State
+    // Accept/Reject
     isAcceptModalOpen: boolean;
     inviteId: string | null;
     setInvite: (inviteId: string | null) => void;
@@ -35,15 +35,18 @@ type InviteStore = {
 };
 
 export const useInviteStore = create<InviteStore>((set) => ({
-    // Generate Invite Modal
+    // Generate
     isGenerateModalOpen: false,
     openGenerateModal: () => set({ isGenerateModalOpen: true }),
     closeGenerateModal: () => set({ isGenerateModalOpen: false }),
 
-    // Accept/Reject Invite Modal
+    // Accept/Reject
     isAcceptModalOpen: false,
     inviteId: null,
-    setInvite: (inviteId) => set({ inviteId }),
+    setInvite: (inviteId) => {
+        set({ inviteId })
+        console.log(inviteId);
+    },
     openAcceptModal: () => set({ isAcceptModalOpen: true }),
     closeAcceptModal: () => set({ isAcceptModalOpen: false, inviteId: null }),
 }));

@@ -47,7 +47,7 @@ const ChatInput = ({
   }
 
   return (
-    <div className="relative flex flex-col gap-3 -mt-2 mx-5">
+    <div className="relative flex flex-col gap-3 -mt-2 mx-5 ">
       {filePreview && (
         <FilePreview
           filePreview={filePreview}

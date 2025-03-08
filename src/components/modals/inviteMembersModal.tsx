@@ -10,8 +10,9 @@ import { useGenerateInvite, useSendInvite } from "@/hooks/useInvite";
 export function InviteMembers() {
     const [email, setEmail] = useState("");
     const [copied, setCopied] = useState(false);
+    const { closeGenerateModal, isGenerateModalOpen } = useInviteStore();
     const { projectId } = useParams() as { projectId: string };
-    const { data, isSuccess, isError, isLoading } = useGenerateInvite(projectId);
+    const { data, isSuccess, isError, isLoading } = useGenerateInvite(projectId, isGenerateModalOpen);
     const { mutate } = useSendInvite()
 
     const handleSendEmail = ()=>{
@@ -23,7 +24,6 @@ export function InviteMembers() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     };
-    const { closeGenerateModal, isGenerateModalOpen } = useInviteStore();
     if(isLoading) <div>loading</div>
     return(
         <Dialog open={isGenerateModalOpen} onOpenChange={closeGenerateModal}>
