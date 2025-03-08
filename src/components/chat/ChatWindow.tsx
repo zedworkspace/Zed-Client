@@ -1,4 +1,3 @@
-// File: /components/chat/ChatWindow.tsx
 "use client";
 import { useEffect } from "react";
 import { useChatMessages } from "@/hooks/useChatMessages";
@@ -11,6 +10,8 @@ const ChatWindow = ({ channelId, userId }: { channelId: string; userId: string }
   useEffect(() => {
     chatRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, chatRef]);
+
+
 
   return (
     <div className="flex flex-col overflow-y-scroll scrollbar-hide mx-5 pb-16 mt-14">

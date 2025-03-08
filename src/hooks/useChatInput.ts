@@ -1,4 +1,4 @@
-// File: /hooks/useChatInput.ts
+'use client'
 import { useState } from "react";
 import { useSocket } from "@/context/SocketProvider";
 import { useSendFile } from "@/hooks/useMessage";
@@ -22,7 +22,7 @@ export const useChatInput = ({
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [showPicker, setShowPicker] = useState(false);
 
-  const { mutateAsync } = useSendFile(channelId);
+  const { mutateAsync, isPending } = useSendFile(channelId);
 
   const handleSend = async () => {
     if (!newMessage.trim() && !file) return;
@@ -83,6 +83,7 @@ export const useChatInput = ({
     setShowPicker,
     handleSend,
     handleFileChange,
-    addEmoji
+    addEmoji,
+    isPending
   };
 };

@@ -1,4 +1,5 @@
 // File: /hooks/useChatMessages.ts
+'use client'
 import { useEffect, useRef, useState } from "react";
 import { useSocket } from "@/context/SocketProvider";
 import { useGetMessages } from "@/hooks/useMessage";

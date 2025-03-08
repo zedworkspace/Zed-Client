@@ -1,4 +1,3 @@
-// File: /components/chat/ChatInput.tsx
 "use client";
 import { useChatInput } from "@/hooks/useChatInput";
 import MessageField from "./input/MessageField";
@@ -23,7 +22,6 @@ const ChatInput = ({
   const {
     newMessage,
     setNewMessage,
-    file,
     setFile,
     filePreview,
     setFilePreview,
@@ -32,12 +30,21 @@ const ChatInput = ({
     handleSend,
     handleFileChange,
     addEmoji,
+    isPending
   } = useChatInput({
     channelId,
     userId,
     userProfileImg,
     userName,
   });
+
+  
+  const handleEnter = (e:React.KeyboardEvent<HTMLInputElement>) =>{
+      if (e.key === "Enter" && !e.shiftKey) {  
+        e.preventDefault();
+        handleSend();
+      }
+  }
 
   return (
     <div className="relative flex flex-col gap-3 -mt-2 mx-5">
@@ -55,6 +62,7 @@ const ChatInput = ({
         <MessageField
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={handleEnter}
         />
 
         <EmojiPickerButton
@@ -63,11 +71,14 @@ const ChatInput = ({
           addEmoji={addEmoji}
         />
 
-        <FileUploadButton onChange={handleFileChange} />
+        <FileUploadButton 
+          onChange={handleFileChange} 
+          onKeyDown = {handleEnter}
+        />
 
         <SendButton
           onClick={handleSend}
-          isDisabled={!newMessage.trim() && !file}
+          isPending ={isPending}
         />
       </div>
     </div>

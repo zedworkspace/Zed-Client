@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "next/navigation";
 import { useGetProfile } from "@/hooks/useProfile";
+import { useProfileStore } from "@/store/profileStore";
 
 const TopSection = () => {
   const [userId, setUserId] = useState("");
@@ -14,6 +15,7 @@ const TopSection = () => {
       setUserId(storedUserId);
     }
   }, []);
+  const { onOpen, setProfileId } = useProfileStore()
   const { data } = useGetProfile(userId);
 
   const router = useRouter();
@@ -34,6 +36,11 @@ const TopSection = () => {
         onClick={() => {
           router.push(`/profile/${userId}`);
         }}
+        // onClick={()=>{
+        //   setProfileId(userId)
+        //   onOpen() 
+        //   }}
+        
       >
         {data?.profileImg ? (
           <AvatarImage src={data?.profileImg} sizes="2" />
