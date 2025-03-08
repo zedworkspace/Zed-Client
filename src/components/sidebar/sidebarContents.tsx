@@ -21,7 +21,7 @@ export default function SidebarContents({ channelData, boardData }: Props) {
   const { channelId }: { channelId: string } = useParams();
 
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
-  const [socketChannelId, setSocketChannelId] = useState('')
+  const [socketChannelId, setSocketChannelId] = useState("");
   const { data } = useGetNotification(channelId);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function SidebarContents({ channelData, boardData }: Props) {
       count: number;
       senderId: string;
     }) => {
-      setSocketChannelId(channelId)
+      setSocketChannelId(channelId);
       console.log(channelId, newChannelId, "idsss");
       if (userId !== senderId) {
         setUnreadCounts((prevCounts) => ({
@@ -84,6 +84,15 @@ export default function SidebarContents({ channelData, boardData }: Props) {
 
   return (
     <div className="h-3/4 bg-primary pt-4 space-y-2">
+      {/* board */}
+      <SidebarAccordion
+        Icon={Kanban}
+        accordianValue="item-3"
+        title="YOUR BOARDS"
+        channelData={boardData?.data}
+        type="board"
+        handleClick={voiceHandleClick}
+      />
       {/* Text channels  */}
       <SidebarAccordion
         Icon={MessagesSquare}
@@ -102,15 +111,6 @@ export default function SidebarContents({ channelData, boardData }: Props) {
         title="VOICE CHANNELS"
         channelData={channelData?.data.voiceChannels}
         type="voice"
-        handleClick={voiceHandleClick}
-      />
-      {/* board */}
-      <SidebarAccordion
-        Icon={Kanban}
-        accordianValue="item-3"
-        title="YOUR BOARDS"
-        channelData={boardData?.data}
-        type="board"
         handleClick={voiceHandleClick}
       />
     </div>
