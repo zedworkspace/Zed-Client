@@ -65,12 +65,11 @@ export default function SidebarContents({ channelData, boardData }: Props) {
   }, []);
 
   const textHandleClick = (channelId: string, type: string) => {
-    socket.emit("readMessage", { channelId, userId }); // Send read event
+    // socket.emit("readMessage", { channelId, userId }); // Send read event
 
     sessionStorage.setItem("channelType", type);
     router.replace(`${channelId}`);
 
-    // 🔄 Update unread count immediately in the UI
     setUnreadCounts((prevCounts) => ({
       ...prevCounts,
       [channelId]: 0,
