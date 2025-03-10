@@ -137,7 +137,7 @@ const SigninPage = () => {
               <div className="bottom flex flex-col">
                 <p className="text-sm text-gray-500">
                   Already have an account ?{" "}
-                  <span onClick={() => navigate.replace("/signup")} className="text-white cursor-pointer hover:text-gray-300">
+                  <span onClick={() => navigate.replace(`/signup${redirect ? `?redirect=${redirect}` : ""}`)} className="text-white cursor-pointer hover:text-gray-300">
                     Sign up
                   </span>
                 </p>
