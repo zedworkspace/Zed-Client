@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import BoardHeader from "./boardHeader";
 import BoardContents from "./boardContents";
 import { useParams } from "next/navigation";
@@ -8,14 +8,14 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  KeyboardSensor,
 } from "@dnd-kit/core";
 import { useBoardSocket } from "@/context/boardSocketProvider";
 import { useGetBoardById } from "@/hooks/useBoard";
 import { useGetLists } from "@/hooks/useList";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCardSocket } from "@/hooks/useCardSocket";
-import { useListSocket } from "@/hooks/useListSocket";
-
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { IGetLists, IList } from "@/interface/listInterface";
 type Props = {
   boardId: string;
   projectId: string;
@@ -44,6 +44,49 @@ export default function Board({}: Props) {
     boardId: channelId,
   });
 
+  const dummyData: IList[] = [
+    {
+      _id: "list_1",
+      boardId: "1",
+      cards: [
+        {
+          _id: "card_1",
+          assignees: [{ _id: "user_1", profileImg: "sample", name: "sample" }],
+          description: "fasd",
+          dueDate: "fasd",
+          labels: ["fD"],
+          listId: "list_1",
+          title: "Card 1",
+        },
+        {
+          _id: "card_2",
+          assignees: [{ _id: "user_1", profileImg: "sample", name: "sample" }],
+          description: "fasd",
+          dueDate: "fasd",
+          labels: ["fD"],
+          listId: "list_1",
+          title: "Card 2",
+        },
+      ],
+      name: "List 1",
+    },
+    {
+      _id: "list_2",
+      boardId: "1",
+      cards: [
+        {
+          _id: "card_3",
+          assignees: [{ _id: "user_1", profileImg: "sample", name: "sample" }],
+          description: "fasd",
+          dueDate: "fasd",
+          labels: ["fD"],
+          listId: "list_2",
+          title: "Card 3",
+        },
+      ],
+      name: "List 1",
+    },
+  ];
   const queryClient = useQueryClient();
 
   const { onCardDrop, updatedListsHandler, socket } = useBoardSocket();
@@ -54,18 +97,22 @@ export default function Board({}: Props) {
 
   const handleDragEnd = (e: DragEndEvent) => {
     const { active, over } = e;
+    // console.log({ active, over });
     if (!active || !over) return;
-
-    const sourceList = active.id; //card id
-    const targerList = over.id; // list id
-
-    if (!sourceList || !targerList || sourceList === targerList) return;
 
     const cardId = active.id as string;
     const fromListId = active.data.current?.list as string;
     const toListId = over.id as string;
 
-    onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
+    // console.log({ cardId, fromListId, toListId });
+    if (!cardId || !toListId || !fromListId) return;
+
+    if (fromListId === toListId) {
+      console.log("same list");
+    } else {
+      console.log("not same list");
+      onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
+    }
   };
 
   const sensors = useSensors(
@@ -73,6 +120,9 @@ export default function Board({}: Props) {
       activationConstraint: {
         distance: 8,
       },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
     })
   );
 
@@ -86,6 +136,7 @@ export default function Board({}: Props) {
       <div className="h-full flex flex-col">
         <BoardHeader board={BoardData?.data} />
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          {/* <BoardContents lists={dummyData} boardId={channelId} /> */}
           <BoardContents lists={boardLists?.data} boardId={channelId} />
         </DndContext>
       </div>

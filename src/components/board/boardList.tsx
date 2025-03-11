@@ -4,6 +4,12 @@ import AddCard from "./addCard";
 import { IList } from "@/interface/listInterface";
 import { ICard } from "@/interface/cardInterface";
 import { useDroppable } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { Card } from "../ui/card";
 type Props = {
   list: IList;
   index: number;
@@ -19,7 +25,9 @@ export default function BoardList({ list, index }: Props) {
   ];
 
   const { setNodeRef } = useDroppable({ id: list._id });
-  
+
+  const items = list.cards.map((card) => ({ ...card, id: card._id }));
+
   return (
     <div className="w-72 p-3 h-full space-y-2 group" ref={setNodeRef}>
       <div
@@ -32,10 +40,11 @@ export default function BoardList({ list, index }: Props) {
           {list.cards.length}
         </span>
       </div>
-
-      {list.cards.map((card: ICard) => (
-        <BoardCard key={card._id} card={card} />
-      ))}
+      <SortableContext items={items} strategy={verticalListSortingStrategy}>
+        {list.cards.map((card: ICard) => (
+          <BoardCard key={card._id} card={card} />
+        ))}
+      </SortableContext>
       <AddCard listId={list._id} boardId={list.boardId} />
     </div>
   );

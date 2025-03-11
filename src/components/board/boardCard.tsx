@@ -5,6 +5,7 @@ import { ICard } from "@/interface/cardInterface";
 import { IUser } from "@/interface/userInterface";
 import { useDraggable } from "@dnd-kit/core";
 import { useCardStore } from "@/store/cardStore";
+import { useSortable } from "@dnd-kit/sortable";
 
 export default function BoardCard({ card }: { card: ICard }) {
   const colors = [
@@ -39,11 +40,19 @@ export default function BoardCard({ card }: { card: ICard }) {
           "transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease",
       };
 
+  const { setNodeRef: sortableNodeRef } = useSortable({
+    id: card._id,
+    data: { list: card.listId },
+  });
+
   return (
     <div
       {...attributes}
       {...listeners}
-      ref={setNodeRef}
+      ref={(node) => {
+        setNodeRef(node);
+        sortableNodeRef(node);
+      }}
       style={style}
       className={`p-3 border rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing
         ${
