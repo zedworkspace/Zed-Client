@@ -38,25 +38,27 @@ export default function AcceptInviteModal({ project }: AcceptInviteModalProps) {
 
   return (
     <Dialog open={isAcceptModalOpen} onOpenChange={handleReject}>
-      <DialogContent>
+      <DialogContent className="max-w-md border-none text-muted-foreground">
         <DialogHeader>
-          <DialogTitle>Join Project</DialogTitle>
+          <DialogTitle className="text-lg font-semibold text-muted-foreground">Join Project</DialogTitle>
         </DialogHeader>
-        
-        <div className="flex flex-col items-center text-center">
+        <div className="flex justify-center w-full gap-5">
+          <div className="flex justify-center items-center w-3/4">
+            <img src={project?.logo} alt="Project Logo" className="w-full h-3/4 rounded-xl mb-4 object-cover" />
+          </div>
+          <div className="flex flex-col items-center text-center">
 
-          <img src={project?.logo} alt="Project Logo" className="w-16 h-16 rounded-full mb-4" />
+            <h2 className="text-lg font-semibold">{project?.name}</h2>
+            <p className="text-gray-500">{project?.description}</p>
 
-          <h2 className="text-lg font-semibold">{project?.name}</h2>
-          <p className="text-gray-500">{project?.description}</p>
-
-          <div className="mt-4 flex gap-3">
-            <Button onClick={handleAccept} className="bg-green-600 hover:bg-green-700">
-              Accept
-            </Button>
-            <Button variant="outline" onClick={handleReject}>
-              Reject
-            </Button>
+            <div className="mt-4 flex gap-3">
+              <Button onClick={handleAccept} className="bg-green-600 hover:bg-green-700">
+                Accept
+              </Button>
+              <Button variant="outline" onClick={handleReject}>
+                Reject
+              </Button>
+            </div>
           </div>
         </div>
       </DialogContent>
