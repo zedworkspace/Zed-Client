@@ -41,7 +41,6 @@ export default function Board({}: Props) {
   } = useGetLists({
     boardId: channelId,
   });
-
   const queryClient = useQueryClient();
 
   const { onCardDrop, updatedListsHandler } = useBoardSocket();

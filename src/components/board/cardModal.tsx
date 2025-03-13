@@ -54,6 +54,7 @@ import {
 } from "@/components/ui/form";
 import { ICard } from "@/interface/cardInterface";
 import { useParams } from "next/navigation";
+import { useGetProjectMembers } from "@/hooks/useMembers";
 
 // Type definitions
 type ChecklistItem = {
@@ -62,13 +63,13 @@ type ChecklistItem = {
   completed: boolean;
 };
 
-type Assignee = {
+export type Assignee = {
   id: string;
-  name: string;
-  avatar?: string;
+  name?: string;
+  profileImg: string;
 };
 
-type ActivityLog = {
+export type ActivityLog = {
   id: string;
   type: "assignee" | "label";
   action: "added" | "removed";
@@ -101,7 +102,11 @@ type CardModalProps = {
 };
 
 export function CardModal({ initialData }: CardModalProps) {
-  const { channelId } = useParams() as { channelId: string };
+  const { isOpen, onClose, cardId } = useCardStore();
+  const { channelId, projectId } = useParams() as {
+    channelId: string;
+    projectId: string;
+  };
   // React Hook Form with shadcn/ui Form setup
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -138,43 +143,41 @@ export function CardModal({ initialData }: CardModalProps) {
     "bg-pink-100 text-pink-800",
   ];
 
-  // Status options
   const statusOptions = ["To Do", "In Progress", "Review", "Done"];
 
-  // Sample assignees for the demo
-  const availableAssignees = [
-    {
-      id: "1",
-      name: "Abhay",
-      avatar:
-        "https://static.vecteezy.com/system/resources/previews/024/183/525/non_2x/avatar-of-a-man-portrait-of-a-young-guy-illustration-of-male-character-in-modern-color-style-vector.jpg",
-    },
-    {
-      id: "2",
-      name: "Muhammed Jasim",
-      avatar:
-        "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg",
-    },
-    {
-      id: "3",
-      name: "Shanoof",
-      avatar:
-        "https://img.freepik.com/premium-vector/een-man-met-een-paars-hemd-en-een-blauw-hemd-met-een-paarse-kraag_969863-208745.jpg?semt=ais_hybrid",
-    },
-  ];
+  const { data: membersData } = useGetProjectMembers({
+    projectId,
+    enabled: isOpen,
+  });
+
+  // Map IProjectmember to Assignee
+  const mappedAssignees =
+    membersData?.data.map((member) => ({
+      id: member._id, // Use the member's _id as the id
+      name: member.userId.name, // Use the userId's name
+      profileImg: member.userId.profileImg, // Use the userId's profileImg
+    })) || [];
+
 
   // Handle assignee add
   const handleAddAssignee = (assigneeId: string) => {
-    const assignee = availableAssignees.find((a) => a.id === assigneeId);
+    const assignee = membersData?.data.find((a) => a._id === assigneeId);
+
     if (assignee && !assignees.some((a) => a.id === assigneeId)) {
-      setAssignees([...assignees, assignee]);
+      const newAssignee = {
+        id: assignee._id,
+        name: assignee.userId.name,
+        profileImg: assignee.userId.profileImg,
+      };
+
+      setAssignees([...assignees, newAssignee]);
       setActivityLogs([
         ...activityLogs,
         {
           id: Date.now().toString(),
           type: "assignee",
           action: "added",
-          assignee: assignee,
+          assignee: newAssignee,
           timestamp: new Date(),
         },
       ]);
@@ -182,9 +185,10 @@ export function CardModal({ initialData }: CardModalProps) {
     setNewAssignee("");
   };
 
-  // Handle assignee remove
+  // Handle assignee removea
   const handleRemoveAssignee = (assigneeId: string) => {
     const assignee = assignees.find((a) => a.id === assigneeId);
+
     if (assignee) {
       setAssignees(assignees.filter((a) => a.id !== assigneeId));
       setActivityLogs([
@@ -235,37 +239,37 @@ export function CardModal({ initialData }: CardModalProps) {
     ]);
   };
 
-  // Form submission handler
   const onSubmit = (data: FormValues) => {
-    // Combine form data with other state
     const formData: ICard = {
       ...data,
+      projectId,
       assignees,
       labels,
       activityLogs,
     };
 
     console.log("Form submitted:", formData);
-    mutate({ cardId, formData });
-    // Here you would typically save the data or dispatch an action
-    // onClose();
+    mutate({ cardId, projectId, formData });
   };
 
-  const { isOpen, onClose, cardId } = useCardStore();
   const { data, isSuccess, isLoading } = useGetCard({ cardId, isOpen });
+  console.log(data?.data, "data");
   const { mutate, isPending } = useUpdateCard(channelId);
+
   // Update form when data is loaded
   React.useEffect(() => {
     if (isSuccess && data?.data) {
       form.reset({
         title: data.data.title,
         description: data.data.description || "",
-        status: data.data.status || "To Do",
+        status: "To Do",
         dueDate: data.data.dueDate,
       });
-      // Handle other fields if needed
+      setAssignees(mappedAssignees);
+      setLabels(data.data.labels || []);
+      setActivityLogs(data.data.activityLogs || []);
     }
-  }, [isSuccess, data, form]);
+  }, [isSuccess, form]);
 
   if (isLoading) return <div>Loading.....</div>;
 
@@ -318,8 +322,6 @@ export function CardModal({ initialData }: CardModalProps) {
                                   {...field}
                                   placeholder="Add a more detailed description"
                                   className="px-0 border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                  multiline
-                                  rows={3}
                                 />
                               </FormControl>
                             </FormItem>
@@ -422,10 +424,6 @@ export function CardModal({ initialData }: CardModalProps) {
 
                     {/* Assignees */}
                     <div className="grid gap-2">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-gray-500" />
-                        <Label>Assignees</Label>
-                      </div>
                       <div className="flex flex-wrap gap-2 mb-2">
                         {assignees.map((assignee) => (
                           <Badge
@@ -434,7 +432,7 @@ export function CardModal({ initialData }: CardModalProps) {
                             className="flex items-center gap-1"
                           >
                             <img
-                              src={assignee.avatar}
+                              src={assignee.profileImg}
                               alt={assignee.name}
                               width={24}
                               height={24}
@@ -456,24 +454,27 @@ export function CardModal({ initialData }: CardModalProps) {
                           <SelectValue placeholder="Add assignee" />
                         </SelectTrigger>
                         <SelectContent>
-                          {availableAssignees
+                          {membersData?.data
                             .filter(
                               (a) =>
                                 !assignees.some(
-                                  (assigned) => assigned.id === a.id
+                                  (assigned) => assigned.id === a._id
                                 )
                             )
                             .map((assignee) => (
-                              <SelectItem key={assignee.id} value={assignee.id}>
+                              <SelectItem
+                                key={assignee._id}
+                                value={assignee._id}
+                              >
                                 <div className="flex items-center gap-2">
                                   <img
-                                    src={assignee.avatar}
-                                    alt={assignee.name}
+                                    src={assignee.userId.profileImg}
+                                    alt={assignee.userId.name}
                                     width={24}
                                     height={24}
                                     className="rounded-full"
                                   />
-                                  {assignee.name}
+                                  {assignee.userId.name}
                                 </div>
                               </SelectItem>
                             ))}

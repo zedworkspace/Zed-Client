@@ -14,6 +14,7 @@ export default function BoardCard({ card }: { card: ICard }) {
     "bg-yellow-400 text-yellow-900 hover:bg-yellow-500",
     "bg-purple-400 text-purple-900 hover:bg-purple-500",
   ];
+  
 
   const { setCardid, onOpen } = useCardStore();
   const [isLabelHide, setIsLabelHide] = useState(true);
@@ -53,6 +54,7 @@ export default function BoardCard({ card }: { card: ICard }) {
         }
         transition-all duration-300`}
     >
+      
       {card.labels.length > 0 && (
         <div
           className="flex gap-2 overflow-scroll scrollbar-hide rounded-full"
@@ -82,6 +84,7 @@ export default function BoardCard({ card }: { card: ICard }) {
       >
         <h1 className="font-semibold text-white/85">{card.title}</h1>
       </div>
+     
 
       {(card.dueDate || card.assignees.length > 0) && (
         <div className="flex justify-evenly items-center ">
