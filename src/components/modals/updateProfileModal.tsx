@@ -14,7 +14,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { useGetProfile, useUpdateProfile } from "@/hooks/useProfile";
-import { useUpdateProfileStore } from "@/store/updateProfileStore";
+import { useUpdateProfileStore } from "@/store/profileStore";
 
 export function UpdateProfileModal() {
     

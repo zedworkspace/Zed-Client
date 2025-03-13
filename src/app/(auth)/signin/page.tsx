@@ -3,7 +3,7 @@ import Image from "next/image";
 import AuthButtons from "@/components/ui/AuthButtons";
 import { IoLogoGoogle } from "react-icons/io";
 import { FaGithub } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useSignin } from "@/hooks/useAuth";
@@ -16,10 +16,20 @@ import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 const SigninPage = () => {
   const [emailPage, setEmailPage] = useState(false);
   const navigate = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
-  const {mutate, isError, isPending,  error} = useSignin();
+  const {mutate, isSuccess, isError, isPending,  error} = useSignin();
   const handleOnSubmit = (signinData : IUser) => {
-    mutate(signinData);
+    mutate(signinData, {
+      onSuccess: () => {
+        if (redirect) {
+          navigate.push(redirect);
+        } else {
+          navigate.push("/");
+        }
+      }
+    });
   };
 
   const handleGoogleAuth = useGoogleLogin({
@@ -30,8 +40,14 @@ const SigninPage = () => {
         });
         const { accessToken } = res.data;
         localStorage.setItem("accessToken", accessToken);
-        if (accessToken) navigate.replace("/");
-      } catch (error) {
+        if (accessToken) {
+          if(redirect){
+            navigate.push(redirect);
+          }else{
+            navigate.push("/");
+          }
+        }
+        } catch (error) {
         console.error("Login failed:", error);
       }
     },
@@ -121,7 +137,7 @@ const SigninPage = () => {
               <div className="bottom flex flex-col">
                 <p className="text-sm text-gray-500">
                   Already have an account ?{" "}
-                  <span onClick={() => navigate.replace("/signup")} className="text-white cursor-pointer hover:text-gray-300">
+                  <span onClick={() => navigate.replace(`/signup${redirect ? `?redirect=${redirect}` : ""}`)} className="text-white cursor-pointer hover:text-gray-300">
                     Sign up
                   </span>
                 </p>

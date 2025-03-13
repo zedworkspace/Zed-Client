@@ -1,7 +1,7 @@
 import { getProfile, updateProfile } from "@/services/profileServices"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useToast } from "./use-toast"
-import { useUpdateProfileStore } from "@/store/updateProfileStore"
+import { useUpdateProfileStore } from "@/store/profileStore"
 
 export const useGetProfile = (userId:string) => {
     return useQuery({

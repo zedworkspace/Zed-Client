@@ -1,6 +1,6 @@
 'use client'
 import { useGetProfile } from "@/hooks/useProfile";
-import { useUpdateProfileStore } from "@/store/updateProfileStore";
+import { useUpdateProfileStore } from "@/store/profileStore";
 import { User2Icon, UserPen } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
