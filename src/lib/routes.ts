@@ -44,6 +44,9 @@ const API_ROUTES = {
     SEND_INVITE: "/v1/invite/send-invite",
     ACCEPT_INVITE: "/v1/invite/accept-invite",
   },
+  MEMBERS:{
+    GET_MEMBERS :"/v1/project/members/",
+  }
 };
 
 export default API_ROUTES;
