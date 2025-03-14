@@ -6,7 +6,9 @@ import { ICard } from "@/interface/cardInterface";
 import { useDroppable } from "@dnd-kit/core";
 import {
   arrayMove,
+  horizontalListSortingStrategy,
   SortableContext,
+  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { Card } from "../ui/card";
@@ -25,11 +27,22 @@ export default function BoardList({ list, index }: Props) {
   ];
 
   const { setNodeRef } = useDroppable({ id: list._id });
+  // const { attributes, listeners, setNodeRef } = useSortable({
+  //   id: list._id,
+  //   data: {
+  //     type: "container",
+  //   },
+  // });
 
-  const items = list.cards.map((card) => ({ ...card, id: card._id }));
+  const items = list.cards.map((list) => ({ ...list, id: list._id }));
 
   return (
-    <div className="w-72 p-3 h-full space-y-2 group" ref={setNodeRef}>
+    <div
+      className="w-72 p-3 h-full space-y-2 group"
+      ref={setNodeRef}
+      // {...attributes}
+      // {...listeners}
+    >
       <div
         className={`p-3 bg-primary/50 flex gap-2 items-center rounded-md border-l-4 ${
           colors[index % colors.length]

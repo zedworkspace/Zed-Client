@@ -14,9 +14,9 @@ import { useGetProfile } from "@/hooks/useProfile";
 export const ProfileSheet = () => {
 
     const {isOpen, onClose, profileId} = useProfileStore()
-    console.log(profileId,'userId');
+    
     const {data} = useGetProfile(profileId)
-    console.log(data,'data from profile sheet');
+    
   return (
         <Sheet open={isOpen} onOpenChange={onClose}>
           <SheetContent>

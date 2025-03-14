@@ -6,7 +6,7 @@ import { IUser } from "@/interface/userInterface";
 import { useDraggable } from "@dnd-kit/core";
 import { useCardStore } from "@/store/cardStore";
 import { useSortable } from "@dnd-kit/sortable";
-
+import { CSS } from "@dnd-kit/utilities";
 export default function BoardCard({ card }: { card: ICard }) {
   const colors = [
     "bg-red-400 text-red-900 hover:bg-red-500",
@@ -19,15 +19,29 @@ export default function BoardCard({ card }: { card: ICard }) {
   const { setCardid, onOpen } = useCardStore();
   const [isLabelHide, setIsLabelHide] = useState(true);
 
-  const { setNodeRef, transform, listeners, attributes, isDragging } =
-    useDraggable({
-      id: card._id,
-      data: { list: card.listId },
-    });
+  // const { setNodeRef, transform, listeners, attributes, isDragging } =
+  //   useDraggable({
+  //     id: card._id,
+  //     data: { list: card.listId },
+  //   });
+  const {
+    setNodeRef,
+    transform,
+    transition,
+    listeners,
+    attributes,
+    isDragging,
+    isSorting,
+  } = useSortable({
+    id: card._id,
+    data: { list: card.listId, isSorting: true },
+  });
 
   const style = transform
     ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px,0)`,
+        transform: `translate3d(${transform.x || 0}px, ${
+          transform.y || 0
+        }px,0)`,
         transition:
           "transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease",
         zIndex: 50,
@@ -40,10 +54,16 @@ export default function BoardCard({ card }: { card: ICard }) {
           "transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease",
       };
 
-  const { setNodeRef: sortableNodeRef } = useSortable({
-    id: card._id,
-    data: { list: card.listId },
-  });
+  // const style = {
+  //   transform: CSS.Transform.toString(transform),
+  //   transition,
+  //   // border: "1px solid #ddd",
+  //   // padding: "10px",
+  //   // margin: "5px 0",
+  //   // backgroundColor: "white",
+  //   // borderRadius: "4px",
+  //   // cursor: "grab",
+  // };
 
   return (
     <div
@@ -51,7 +71,7 @@ export default function BoardCard({ card }: { card: ICard }) {
       {...listeners}
       ref={(node) => {
         setNodeRef(node);
-        sortableNodeRef(node);
+        // sortableNodeRef(node);
       }}
       style={style}
       className={`p-3 border rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing
