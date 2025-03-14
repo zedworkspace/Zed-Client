@@ -1,4 +1,4 @@
-import { ProfileSheet } from '@/components/profile/profileSheet'
+import { ProfileSheet } from '@/components/profile/ProfileSheet'
 import React from 'react'
 
 export const SheetProvider = () => {
