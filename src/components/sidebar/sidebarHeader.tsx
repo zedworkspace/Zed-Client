@@ -16,24 +16,29 @@ import {
   UserRoundPlus,
 } from "lucide-react";
 
-import { useRouter } from "next/navigation";
+import { useInviteStore } from "@/store/inviteStore";
+import { InviteMembers } from "../modals/inviteMembersModal";
+import { useCreateChannelStore } from "@/store/channelStore";
+import { useCreateBoardStore } from "@/store/boardStore";
 
 type Props = {
   projectData: any;
 };
 
 export default function SideBarHead({ projectData }: Props) {
-  const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { openGenerateModal } = useInviteStore();
+  const { onOpen } = useCreateChannelStore()
+  const { onCreateBoardOpen } = useCreateBoardStore()
   const dropdownItems = [
     {
       icon: FolderKanban,
       label: "Project Profile",
-      onClick: () => router.push("#"),
+      onClick: () => {},
     },
-    { icon: UserRoundPlus, label: "Invite People", onclick: () => {} },
-    { icon: Kanban, label: "Create board", onclick: () => {} },
-    { icon: Plus, label: "Create channel", onclick: () => {} },
+    { icon: UserRoundPlus, label: "Invite People", onClick: () => {}},
+    { icon: Kanban, label: "Create board", onClick: () => {onCreateBoardOpen()} },
+    { icon: Plus, label: "Create channel", onClick: () => {onOpen()} },
   ];
 
   return (
@@ -41,6 +46,7 @@ export default function SideBarHead({ projectData }: Props) {
       className="h-1/4 w-full p-0 bg-cover bg-center bg-transparent"
       style={{ backgroundImage: `url(${projectData?.data.logo})` }}
     >
+      <InviteMembers />
       <div className="flex justify-between items-center bg-black bg-opacity-20 p-3 w-full text-white text-base font-semibold">
         <h1>{projectData?.data.name}</h1>
         <DropdownMenu onOpenChange={setIsDropdownOpen}>

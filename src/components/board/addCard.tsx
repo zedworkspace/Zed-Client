@@ -13,7 +13,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Check, Plus, X } from "lucide-react";
 import { createCardSchema } from "@/validations/cardValidation";
-import { useCreateCard } from "@/hooks/useCard";
+import { useCardSocket } from "@/hooks/useCardSocket";
+import { useBoardSocket } from "@/context/boardSocketProvider";
 
 type Props = {
   listId: string;
@@ -38,17 +39,13 @@ export default function AddCard({ listId, boardId }: Props) {
     },
   });
 
-  const { mutate, isSuccess } = useCreateCard({ boardId });
+  const { socket } = useBoardSocket();
+
+  const { onCreateCard } = useCardSocket({ socket, form });
 
   function handleSubmit(values: z.infer<typeof createCardSchema>) {
-    mutate({ data: values, listId });
+    onCreateCard({ data: values, listId, boardId });
   }
-
-  useEffect(() => {
-    if (isSuccess) {
-      form.reset();
-    }
-  }, [isSuccess]);
 
   const handleBlur = (e: React.FocusEvent) => {
     setTimeout(() => {

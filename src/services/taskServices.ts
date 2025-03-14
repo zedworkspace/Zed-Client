@@ -1,3 +1,4 @@
+import { GetCard, ICard } from "@/interface/cardInterface";
 import apiClient from "@/lib/axios.config";
 import API_ROUTES from "@/lib/routes";
 import { createCardSchema } from "@/validations/cardValidation";
@@ -14,5 +15,31 @@ export const createCard = async ({ data, listId }: CreateCard) => {
     data
   );
 
+  return response.data;
+};
+
+export const getCard = async ({
+  cardId,
+}: {
+  cardId: string;
+}): Promise<GetCard> => {
+  const response = await apiClient.get(API_ROUTES.CARD.GET_CARDBY_ID + cardId);
+  return response.data;
+};
+
+export const updatedCard = async ({
+  cardId,
+  projectId,
+  formData,
+}: {
+  cardId: string;
+  projectId:string;
+  formData: ICard;
+}) => {
+  console.log(projectId,'ppp')
+  const response = await apiClient.put(
+    API_ROUTES.CARD.UPDATE_CARD_BYID + cardId + "/edit/" + projectId,
+    formData
+  );
   return response.data;
 };

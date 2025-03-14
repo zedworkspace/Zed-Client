@@ -5,6 +5,7 @@ import QueryProvider from "@/lib/query-provider";
 import ModalProvider from "@/providers/modalProviders";
 import { Toaster } from "@/components/ui/toaster";
 import {GoogleOAuthProvider} from '@react-oauth/google';
+import { SheetProvider } from "@/providers/sheetProvider";
 
 const CLIENTID = process.env.NEXT_GOOGLE_CLIENT_ID!;
 
@@ -38,6 +39,7 @@ export default function RootLayout({
         <QueryProvider>
           <Toaster />
           <ModalProvider />
+          <SheetProvider/>
           {children}
         </QueryProvider>
         </GoogleOAuthProvider>

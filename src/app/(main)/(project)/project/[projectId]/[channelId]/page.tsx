@@ -4,6 +4,7 @@ import TextChannel from "@/components/chat/TextChannel";
 import { useGetBoardById } from "@/hooks/useBoard";
 import { useGetLists } from "@/hooks/useList";
 import VoiceChannel from "@/components/voiceChannel/VoiceChannel";
+import { BoardSocketProvider } from "@/context/boardSocketProvider";
 import { useGetProfile } from "@/hooks/useProfile";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,22 +12,21 @@ import { useEffect, useState } from "react";
 export default function ChatPage() {
   const [userId, setUserId] = useState("");
   const [channelType, setChannelType] = useState("");
+
   const { channelId, projectId } = useParams() as {
     channelId: string;
     projectId: string;
   };
-  const { data: profileData } = useGetProfile(userId);
 
-  const { data: listsData } = useGetLists({ boardId: channelId });
+  const { data } = useGetProfile(userId);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUserId = localStorage.getItem("userId") || "";
-      setUserId(storedUserId);
-      const type = sessionStorage.getItem("channelType") || "";
-      setChannelType(type);
-    }
+    const storedUserId = localStorage.getItem("userId") || "";
+    const type = sessionStorage.getItem("channelType") || "";
+    setUserId(storedUserId);
+    setChannelType(type);
   }, []);
+
 
   const { data: boardData } = useGetBoardById({
     boardId: channelId,
@@ -36,14 +36,18 @@ export default function ChatPage() {
   if (channelType === "voice") return <VoiceChannel/>; // here we render video based component
 
   if (channelType === "board")
-    return <Board board={boardData?.data} lists={listsData?.data} />;
+    return (
+      <BoardSocketProvider>
+        <Board boardId={channelId} projectId={projectId} />
+      </BoardSocketProvider>
+    );
 
   return (
     <TextChannel
       channelId={channelId}
       userId={userId}
-      userName={profileData?.name}
-      userProfileImg={profileData?.profileImg}
+      userName={data?.name || "Anonymous"}
+      userProfileImg={data?.profileImg || ""}
     />
   );
 }

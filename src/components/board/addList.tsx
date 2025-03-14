@@ -14,6 +14,8 @@ import {
   FormMessage,
 } from "../ui/form";
 import { createListSchema } from "../../validations/listValidation";
+import { useListSocket } from "@/hooks/useListSocket";
+import { useBoardSocket } from "@/context/boardSocketProvider";
 
 export default function AddList({ boardId }: { boardId: string }) {
   const [isShowInput, setIsShowInput] = useState(false);
@@ -39,8 +41,12 @@ export default function AddList({ boardId }: { boardId: string }) {
     },
   });
 
+  const { socket } = useBoardSocket();
+
+  const { onCreateList } = useListSocket({ socket, form });
+
   function handleSubmit(values: z.infer<typeof createListSchema>) {
-    mutate({ boardId, data: values });
+    onCreateList({ data: values, boardId });
   }
 
   useEffect(() => {

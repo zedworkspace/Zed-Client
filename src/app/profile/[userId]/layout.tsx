@@ -1,6 +1,6 @@
 'use client'
 import { useGetProfile } from "@/hooks/useProfile";
-import { useUpdateProfileStore } from "@/store/updateProfileStore";
+import { useUpdateProfileStore } from "@/store/profileStore";
 import { User2Icon, UserPen } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -16,8 +16,6 @@ const UserProfileLayout: React.FC<UserProfileLayoutProps> = ({ children }) => {
     const userId = pathname.split("/")[2];
 
     const {data} = useGetProfile(userId)
-
-    console.log(data,'data from profile page');
 
     const navItems = [
         { name: "My Tasks", path: `/profile/${userId}` },

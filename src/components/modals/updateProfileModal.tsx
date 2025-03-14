@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Camera } from "lucide-react";
+import { Camera, LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { useGetProfile, useUpdateProfile } from "@/hooks/useProfile";
-import { useUpdateProfileStore } from "@/store/updateProfileStore";
+import { useUpdateProfileStore } from "@/store/profileStore";
 
 export function UpdateProfileModal() {
   const [userId, setUserId] = useState("");
@@ -25,6 +25,7 @@ export function UpdateProfileModal() {
       setUserId(storedUserId);
     }
   }, []);
+
   const { data } = useGetProfile(userId);
 
   const { mutate: updateProfile, isPending } = useUpdateProfile(userId);
@@ -58,7 +59,7 @@ export function UpdateProfileModal() {
     if (selectedFile) {
       formData.append("profileImg", selectedFile);
     }
-    updateProfile({ userId, formData });
+    updateProfile(formData);
   };
 
   const { onClose, isOpen } = useUpdateProfileStore();
@@ -120,7 +121,7 @@ export function UpdateProfileModal() {
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleUpdateProfile}>
-            {isPending ? "Updating" : "Edit"}
+            {isPending ? <LoaderCircle className="animate-spin" /> : "Update"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,10 +1,11 @@
-import { getBoardById, getBoards } from "@/services/boardServices";
-import { useQuery } from "@tanstack/react-query";
+import { createBoard, getBoardById, getBoards } from "@/services/boardServices";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "./use-toast";
 
 export const useGetBoards = ({ projectId }: { projectId: string }) => {
   return useQuery({
-    queryKey: ["boards"],
-    queryFn: () => getBoards(projectId),
+    queryKey: ["board", projectId],
+    queryFn: async () => await getBoards(projectId),
   });
 };
 
@@ -16,8 +17,19 @@ export const useGetBoardById = ({
   projectId: string;
 }) => {
   return useQuery({
-    queryKey: ["board" + boardId],
-    queryFn: () => getBoardById({ boardId, projectId }),
+    queryKey: ["board" + projectId],
+    queryFn: async () => await getBoardById({ boardId, projectId }),
   });
 };
 
+export const useCreateBoard = (projectId:string) => {
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+  return useMutation({
+    mutationFn:createBoard,
+    onSuccess: (data)=>{
+      toast({description:data.message})
+      queryClient.invalidateQueries({queryKey:['board',projectId]})
+    }
+  })
+}
