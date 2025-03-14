@@ -47,13 +47,13 @@ export default function BoardCard({ card }: { card: ICard }) {
 
   return (
     <div
-      {...attributes}
-      {...listeners}
-      ref={(node) => {
-        setNodeRef(node);
-        sortableNodeRef(node);
-      }}
-      style={style}
+      // {...attributes}
+      // {...listeners}
+      // ref={(node) => {
+      //   setNodeRef(node);
+      //   sortableNodeRef(node);
+      // }}
+      // style={style}
       className={`p-3 border rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing
         ${
           isDragging

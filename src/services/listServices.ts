@@ -25,3 +25,16 @@ export const getLists = async ({
   const response = await apiClient.get(API_ROUTES.LIST.CREATE_LIST + boardId);
   return response.data;
 };
+
+type UpdateListPosition = {
+  activeListId: string;
+  overListId: string;
+  boardId: string;
+};
+export const updateListPosition = async (data: UpdateListPosition) => {
+  const response = await apiClient.post(
+    API_ROUTES.LIST.UPDATE_LIST_POSITION,
+    data
+  );
+  return { ...response.data, boardId: data.boardId };
+};

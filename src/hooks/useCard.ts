@@ -19,7 +19,6 @@ export const useGetCard = ({
   cardId: string;
   isOpen: boolean;
 }) => {
-  console.log("cardid", cardId);
   return useQuery({
     queryKey: ["card", cardId],
     queryFn: async () => {
