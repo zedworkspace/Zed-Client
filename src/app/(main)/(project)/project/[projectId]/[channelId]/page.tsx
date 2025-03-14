@@ -33,13 +33,10 @@ export default function ChatPage() {
     projectId,
   });
 
-  if (channelType === "voice") return <div>This is voice channel</div>; // here we render video based component
+  if (channelType === "voice") return <VoiceChannel/>; // here we render video based component
 
   if (channelType === "board")
     return <Board board={boardData?.data} lists={listsData?.data} />;
-  if (channelType === "voice") return <VoiceChannel/> // here we render video based component
-  
-  if (channelType === "board") return <Board  />
 
   return (
     <TextChannel
