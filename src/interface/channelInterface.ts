@@ -16,6 +16,11 @@ export interface IChannel {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ICreateChannel {
+  message:string
+}
+
 export interface IGetChannels extends IFetch {
   data: { textChannels: IChannel[]; voiceChannels: IChannel[] };
 }

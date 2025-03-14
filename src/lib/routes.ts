@@ -18,6 +18,7 @@ const API_ROUTES = {
   },
   CHANNEL: {
     GET_CHANNELS_PROJECT_ID: "/v1/channel/",
+    CREATE_CHANNEL:"/v1/channel"
   },
   MESSAGE: {
     SEND_MESSAGE: '/v1/messages/send',
@@ -29,6 +30,7 @@ const API_ROUTES = {
   BOARD: {
     GET_BOARDS: "/v1/boards/",
     GET_BOARD: "/v1/boards/",
+    CREATE_BOARDS: "v1/boards/create"
   },
   LIST: {
     CREATE_LIST: "/v1/lists/",
