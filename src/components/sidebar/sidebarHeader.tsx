@@ -46,7 +46,7 @@ export default function SideBarHead({ projectData }: Props) {
       className="h-1/4 w-full p-0 bg-cover bg-center bg-transparent"
       style={{ backgroundImage: `url(${projectData?.data.logo})` }}
     >
-      <InviteMembers/>
+      <InviteMembers />
       <div className="flex justify-between items-center bg-black bg-opacity-20 p-3 w-full text-white text-base font-semibold">
         <h1>{projectData?.data.name}</h1>
         <DropdownMenu onOpenChange={setIsDropdownOpen}>
@@ -65,13 +65,6 @@ export default function SideBarHead({ projectData }: Props) {
                   <span>{item.label}</span>
                 </DropdownMenuItem>
               ))}
-                <DropdownMenuItem
-                  className="flex items-center cursor-pointer space-x-2 p-2 focus:bg-secondary focus:text-white transition-colors duration-200"
-                  onClick={openGenerateModal}
-                >
-                  <UserRoundPlus className="size-4" />
-                  <span>Invite People</span>
-                </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -8,12 +8,12 @@ export const useGetChannels = ({
   isEnabled,
 }: {
   projectId: string;
-  isEnabled: boolean;
+  isEnabled?: boolean;
 }) => {
   return useQuery({
     queryKey: ["channels", projectId],
     queryFn: () => getChannels(projectId),
-    enabled: isEnabled,
+    // enabled: isEnabled,
     staleTime: 1000 * 60 * 60 * 24 * 7,
   });
 };

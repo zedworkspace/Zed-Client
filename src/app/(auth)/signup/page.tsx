@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Image from "next/image";
 import { FaGithub } from "react-icons/fa";
 import AuthButtons from "@/components/ui/AuthButtons";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useOtp, useRegister } from "@/hooks/useAuth";
 import { signupSchema, otpSchema } from "@/validations/authValidation";
 import ButtonLoading from "@/components/ui/ButtonLoading";
@@ -15,7 +15,8 @@ const AuthPage = () => {
   const [formData, setFormData] = useState<IUser>({ name: "", email: "", password: "", otp: "" });
   const navigate = useRouter();
   const [signupError, setSignupError] = useState("");
-
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const { mutate: otpMutate, data: otpRes, error:otpError, isPending:otpIsPending, isSuccess } = useOtp();
   const handleOtp = async (signupData: IUser) => {
     otpMutate(signupData);
@@ -113,7 +114,7 @@ const AuthPage = () => {
                     <AuthButtons width="100%" height="40px" color="black" value="Sign Up" backgroundColor="white" type="submit" />
                     <p className="text-sm text-gray-500">
                       Already have an account?{" "}
-                      <span onClick={() => navigate.replace("/signin")} className="text-white cursor-pointer hover:text-gray-300">
+                      <span onClick={() => navigate.replace(`/signin${redirect ? `?redirect=${redirect}` : ""}`)} className="text-white cursor-pointer hover:text-gray-300">
                         {otpIsPending?<ButtonLoading color={"black"}/>:"Sign in"}
                       </span>
                     </p>
