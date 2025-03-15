@@ -124,10 +124,13 @@ export default function Board({}: Props) {
     console.log({ active, over });
     if (!active || !over) return;
 
+    const activeId = active.id as string
+    const overId = over.id as string
+    // SCENARIO-1 : lists sorting
     if (
       active.data.current?.type === "list" &&
       over.data.current?.type === "list" &&
-      active.id !== over.id
+      activeId !== overId
     ) {
       const activeListId = active.id as string;
       const overListId = over.id as string;
@@ -143,6 +146,31 @@ export default function Board({}: Props) {
       });
       updateListPositions({ activeListId, overListId, boardId: channelId });
     }
+
+    // SCENARIO-2 : different lists card dnd
+    if (
+      active.data.current?.type === "card" &&
+      over.data.current?.type === "list"
+    ) {
+      console.log("implement the drag and drop");
+      const cardId = activeId 
+      const fromListId = active.data.current?.card.listId;
+      const toListId = overId;
+
+      console.log({ cardId, fromListId, toListId });
+      onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
+    }
+
+    // SCENARIO-3 : same lists card sorting
+    if (
+      active.data.current?.type === "card" &&
+      over.data.current?.type === "card"
+    ) {
+      console.log("implement sorting");
+    }
+
+    // SCENARIO-4 : different lists card sorting
+
     // const cardId = active.id as string;
     // const fromListId = active.data.current?.list as string;
     // const toListId = over.id as string;
@@ -159,7 +187,7 @@ export default function Board({}: Props) {
   };
 
   const handleDragStart = (e: DragStartEvent) => {
-    console.log("ON DRAG START:", e);
+    // console.log("ON DRAG START:", e);
     if (!e.active) return;
 
     if (e.active.data.current?.type === "list") {
@@ -173,7 +201,7 @@ export default function Board({}: Props) {
 
   const handleDragOver = (e: DragOverEvent) => {
     const { active, over } = e;
-    console.log("ON DRAG OVER:", { active, over });
+    // console.log("ON DRAG OVER:", { active, over });
     if (!active || !over) return;
 
     const activeId = active.id;
@@ -267,7 +295,6 @@ export default function Board({}: Props) {
     [boardLists?.data]
   );
 
-  // console.log("items", items);
   const isLoading = boardLoading || listLoading;
   const isSuccess = boardSuccess || listSuccess;
 
