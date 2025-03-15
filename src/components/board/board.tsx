@@ -118,6 +118,8 @@ export default function Board({}: Props) {
   const [activeCard, setActiveCard] = useState<ICard | null>(null);
 
   const handleDragEnd = (e: DragEndEvent) => {
+    setActiveCard(null);
+    setActiveList(null);
     const { active, over } = e;
     console.log({ active, over });
     if (!active || !over) return;
@@ -184,6 +186,7 @@ export default function Board({}: Props) {
     if (isActiveCard && isOverCard) {
       const activeListId = active.data.current?.card.listId;
       const overListId = over.data.current?.card.listId;
+      if (!activeListId || !overListId) return;
 
       queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
         const newData: IGetLists = {
@@ -213,6 +216,36 @@ export default function Board({}: Props) {
 
         overList.cards.splice(overCardIndex, 0, movedCard);
 
+        return newData;
+      });
+    }
+
+    if (isActiveCard && isOverList) {
+      const activeListId = active.data.current?.card.listId;
+      const overListId = overId;
+      if (!activeListId || !overListId) return;
+      queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
+        const newData: IGetLists = {
+          ...oldData,
+          data: JSON.parse(JSON.stringify(oldData.data)),
+        };
+        const activeList = newData.data.find(
+          (list) => list._id === activeListId
+        );
+        const overList = newData.data.find((list) => list._id === overListId);
+
+        if (!activeList || !overList) return oldData;
+
+        const activeCardIndex = activeList?.cards.findIndex(
+          (card) => card._id === activeId
+        );
+
+        if (activeCardIndex < 0) return oldData;
+
+        const [movedCard] = activeList.cards.splice(activeCardIndex, 1);
+
+        movedCard.listId = overListId as string;
+        overList.cards.push(movedCard);
         return newData;
       });
     }
