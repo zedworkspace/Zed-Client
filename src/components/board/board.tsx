@@ -27,6 +27,7 @@ import BoardList from "./boardList";
 import { createPortal } from "react-dom";
 import { ICard } from "@/interface/cardInterface";
 import BoardCard from "./boardCard";
+import { useUpdateCardPositionWithInList } from "@/hooks/useCard";
 type Props = {
   boardId: string;
   projectId: string;
@@ -56,56 +57,9 @@ export default function Board({}: Props) {
   });
 
   const { mutate: updateListPositions } = useUpdateListPosition();
+  const { mutate: updateCardPositionWithInListMutate } =
+    useUpdateCardPositionWithInList();
 
-  const dummyData: IList[] = [
-    {
-      _id: "list1",
-      name: "To Do",
-      boardId: "board1",
-      cards: [
-        {
-          _id: "card1",
-          listId: "list1",
-          title: "Set up project",
-          description: "Initialize the project with necessary dependencies.",
-          labels: ["Setup", "High Priority"],
-          dueDate: "2025-04-01T10:00:00Z",
-          assignees: [
-            {
-              _id: "user1",
-              name: "John Doe",
-              email: "john@example.com",
-              profileImg: "https://randomuser.me/api/portraits/men/1.jpg",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      _id: "list2",
-      name: "In Progress",
-      boardId: "board1",
-      cards: [
-        {
-          _id: "card2",
-          listId: "list2",
-          title: "Develop authentication",
-          description:
-            "Implement login and registration with JWT authentication.",
-          labels: ["Backend", "Security"],
-          dueDate: "2025-04-05T15:00:00Z",
-          assignees: [
-            {
-              _id: "user2",
-              name: "Jane Smith",
-              email: "jane@example.com",
-              profileImg: "https://randomuser.me/api/portraits/women/2.jpg",
-            },
-          ],
-        },
-      ],
-    },
-  ];
   const queryClient = useQueryClient();
 
   const { onCardDrop, updatedListsHandler, socket } = useBoardSocket();
@@ -116,16 +70,19 @@ export default function Board({}: Props) {
 
   const [activeList, setActiveList] = useState<IList | null>(null);
   const [activeCard, setActiveCard] = useState<ICard | null>(null);
+  const [dragStartData, setDragStartData] = useState<ICard | null>(null);
+  const [dragEndData, setDragEndData] = useState<ICard | null>(null);
 
   const handleDragEnd = (e: DragEndEvent) => {
     setActiveCard(null);
     setActiveList(null);
     const { active, over } = e;
-    console.log({ active, over });
+    // console.log({ active, over });
+    // console.log("in drag End>>>", { dragStartData, dragEndData });
     if (!active || !over) return;
 
-    const activeId = active.id as string
-    const overId = over.id as string
+    const activeId = active.id as string;
+    const overId = over.id as string;
     // SCENARIO-1 : lists sorting
     if (
       active.data.current?.type === "list" &&
@@ -153,23 +110,42 @@ export default function Board({}: Props) {
       over.data.current?.type === "list"
     ) {
       console.log("implement the drag and drop");
-      const cardId = activeId 
+      const cardId = activeId;
       const fromListId = active.data.current?.card.listId;
       const toListId = overId;
 
-      console.log({ cardId, fromListId, toListId });
       onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
     }
 
     // SCENARIO-3 : same lists card sorting
     if (
-      active.data.current?.type === "card" &&
-      over.data.current?.type === "card"
+      dragStartData?.listId === dragEndData?.listId &&
+      dragStartData?._id !== dragEndData?._id
     ) {
-      console.log("implement sorting");
+      console.log("implement sorting with same list");
+      // console.log("in drag End>>>", { dragStartData, dragEndData });
+      const listId = dragStartData?.listId as string;
+      const fromCardId = dragStartData?._id as string;
+      const toCardId = dragEndData?._id as string;
+      console.log({ listId, fromCardId, toCardId });
+      updateCardPositionWithInListMutate({ fromCardId, listId, toCardId });
     }
 
     // SCENARIO-4 : different lists card sorting
+    if (
+      dragStartData?.listId !== dragEndData?.listId &&
+      dragStartData?._id !== dragEndData?._id
+    ) {
+      console.log("implement sorting with differenct list");
+    }
+
+    // if (
+    //   active.data.current?.type === "card" &&
+    //   over.data.current?.type === "card" &&
+    //   active.data.current?.card.listId !== over.data.current?.card.listId
+    // ) {
+    //   console.log("implement sorting with differenct list");
+    // }
 
     // const cardId = active.id as string;
     // const fromListId = active.data.current?.list as string;
@@ -192,9 +168,11 @@ export default function Board({}: Props) {
 
     if (e.active.data.current?.type === "list") {
       setActiveList(e.active.data.current.list);
+      // setDragStartData(e.active.data.current.list);
       return;
     } else if (e.active.data.current?.type === "card") {
       setActiveCard(e.active.data.current.card);
+      // setDragStartData(e.active.data.current.card);
       return;
     }
   };
@@ -211,9 +189,18 @@ export default function Board({}: Props) {
     const isOverCard = over.data.current?.type === "card";
     const isOverList = over.data.current?.type === "list";
 
+    if (activeId !== overId && isActiveCard && isOverCard) {
+      console.log("inside fda", { active, over });
+      setDragStartData(active.data.current?.card);
+      setDragEndData(over.data.current?.card);
+    }
+
+    // SCENARIO-3 : same lists card sorting
     if (isActiveCard && isOverCard) {
+      // setDragEndData(over.data.current?.card);
       const activeListId = active.data.current?.card.listId;
       const overListId = over.data.current?.card.listId;
+
       if (!activeListId || !overListId) return;
 
       queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
@@ -249,6 +236,7 @@ export default function Board({}: Props) {
     }
 
     if (isActiveCard && isOverList) {
+      // setDragEndData(over.data.current?.list);
       const activeListId = active.data.current?.card.listId;
       const overListId = overId;
       if (!activeListId || !overListId) return;
@@ -310,7 +298,6 @@ export default function Board({}: Props) {
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
         >
-          {/* <BoardContents lists={dummyData} boardId={channelId} /> */}
           <SortableContext items={items!}>
             <BoardContents lists={boardLists?.data} boardId={channelId} />
           </SortableContext>

@@ -38,6 +38,7 @@ const API_ROUTES = {
     CREATE_CARD: "/v1/cards/",
     GET_CARDBY_ID: "/v1/cards/",
     UPDATE_CARD_BYID: "/v1/cards/",
+    UPDATE_CARD_POSITION_IN_SAME_LIST: "/v1/cards/reorder-in-list",
   },
   INVITE: {
     GET_INVITE_INFO: "/v1/invite/",

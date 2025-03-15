@@ -40,3 +40,19 @@ export const updatedCard = async ({
   );
   return response.data;
 };
+
+type UpdateCardPositionWithInList = {
+  listId: string;
+  fromCardId: string;
+  toCardId: string;
+};
+
+export const updateCardPositionWithInList = async (
+  data: UpdateCardPositionWithInList
+) => {
+  const response = await apiClient.post(
+    API_ROUTES.CARD.UPDATE_CARD_POSITION_IN_SAME_LIST,
+    data
+  );
+  return response.data;
+};
