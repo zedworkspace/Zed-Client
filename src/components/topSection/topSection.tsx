@@ -33,13 +33,13 @@ const TopSection = () => {
       </div>
       <Avatar
         className="me-2 cursor-pointer w-11 h-11"
-        onClick={() => {
-          router.push(`/profile/${userId}`);
-        }}
-        // onClick={()=>{
-        //   setProfileId(userId)
-        //   onOpen() 
-        //   }}
+        // onClick={() => {
+        //   router.push(`/profile/${userId}`);
+        // }}
+        onClick={()=>{
+          setProfileId(userId)
+          onOpen() 
+          }}
         
       >
         {data?.profileImg ? (

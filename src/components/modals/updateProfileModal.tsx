@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Camera } from "lucide-react";
+import { Camera, LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
@@ -17,7 +17,6 @@ import { useGetProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { useUpdateProfileStore } from "@/store/profileStore";
 
 export function UpdateProfileModal() {
-    
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
@@ -27,16 +26,14 @@ export function UpdateProfileModal() {
     }
   }, []);
 
-    
-    const {data} = useGetProfile(userId)
+  const { data } = useGetProfile(userId);
 
-    const {mutate:updateProfile, isPending} = useUpdateProfile(userId)
+  const { mutate: updateProfile, isPending } = useUpdateProfile(userId);
 
-
-    const [bio, setBio] = useState(data?.bio)
-    const [image, setImage] = useState<string >(data?.profileImg);
-    const [name,setName] = useState(data?.name)
-    const [selectedFile, setSelectedFile] = useState<File | null>(null); // Store actual file
+  const [bio, setBio] = useState(data?.bio);
+  const [image, setImage] = useState<string>(data?.profileImg);
+  const [name, setName] = useState(data?.name);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // Store actual file
 
   useEffect(() => {
     if (data) {
@@ -62,7 +59,7 @@ export function UpdateProfileModal() {
     if (selectedFile) {
       formData.append("profileImg", selectedFile);
     }
-    updateProfile( formData );
+    updateProfile(formData);
   };
 
   const { onClose, isOpen } = useUpdateProfileStore();
@@ -124,7 +121,7 @@ export function UpdateProfileModal() {
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleUpdateProfile}>
-            {isPending ? "Updating" : "Edit"}
+            {isPending ? <LoaderCircle className="animate-spin" /> : "Update"}
           </Button>
         </DialogFooter>
       </DialogContent>

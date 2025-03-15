@@ -1,4 +1,4 @@
-export type   Profile = {
+export type Profile = {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;

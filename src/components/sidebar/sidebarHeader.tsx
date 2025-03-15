@@ -16,18 +16,22 @@ import {
   UserRoundPlus,
 } from "lucide-react";
 
-import { useRouter } from "next/navigation";
 import { useInviteStore } from "@/store/inviteStore";
 import { InviteMembers } from "../modals/inviteMembersModal";
+import { useCreateChannelStore } from "@/store/channelStore";
+import { useCreateBoardStore } from "@/store/boardStore";
+import { useRouter } from "next/navigation";
 
 type Props = {
   projectData: any;
 };
 
 export default function SideBarHead({ projectData }: Props) {
-  const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const router = useRouter()
   const { openGenerateModal } = useInviteStore();
+  const { onOpen } = useCreateChannelStore()
+  const { onCreateBoardOpen } = useCreateBoardStore()
   const dropdownItems = [
     {
       icon: FolderKanban,
@@ -39,12 +43,8 @@ export default function SideBarHead({ projectData }: Props) {
       label: "Invite People",
       onClick: openGenerateModal,
     },
-    {
-      icon: Kanban,
-      label: "Create board",
-      onClick: () => {},
-    },
-    { icon: Plus, label: "Create channel", onClick: () => {} },
+    { icon: Kanban, label: "Create board", onClick: () => {onCreateBoardOpen()} },
+    { icon: Plus, label: "Create channel", onClick: () => {onOpen()} },
   ];
 
   return (

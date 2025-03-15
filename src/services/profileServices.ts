@@ -9,6 +9,5 @@ export const getProfile = async()=>{
 
 export const updateProfile = async (formData:FormData) =>{
         const res = await apiClient.put(API_ROUTES.PROFILE.UPDATE, formData)
-        console.log(res.data,'.................');
         return res.data
 }
