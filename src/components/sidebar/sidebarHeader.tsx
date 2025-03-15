@@ -32,7 +32,7 @@ export default function SideBarHead({ projectData }: Props) {
     {
       icon: FolderKanban,
       label: "Project Profile",
-      onClick: () => router.push("#"),
+      onClick: () => router.push("profile"),
     },
     {
       icon: UserRoundPlus,
