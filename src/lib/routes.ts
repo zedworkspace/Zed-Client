@@ -48,6 +48,13 @@ const API_ROUTES = {
   },
   MEMBERS:{
     GET_MEMBERS :"/v1/project/members/",
+  },
+  ROLE:{
+    CREATE_ROLE: '/v1/role/create',
+    GET_ROLES: '/v1/role/project',
+    ASSING_ROLES: '/v1/role/assign',
+    REMOVE_ROLES: '/v1/role/remove',
+    UPDATE_ROLE: '/v1/role/ update/'
   }
 };
 
