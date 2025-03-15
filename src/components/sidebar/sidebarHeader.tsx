@@ -20,6 +20,7 @@ import { useInviteStore } from "@/store/inviteStore";
 import { InviteMembers } from "../modals/inviteMembersModal";
 import { useCreateChannelStore } from "@/store/channelStore";
 import { useCreateBoardStore } from "@/store/boardStore";
+import { useRouter } from "next/navigation";
 
 type Props = {
   projectData: any;
@@ -27,6 +28,7 @@ type Props = {
 
 export default function SideBarHead({ projectData }: Props) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const router = useRouter()
   const { openGenerateModal } = useInviteStore();
   const { onOpen } = useCreateChannelStore()
   const { onCreateBoardOpen } = useCreateBoardStore()
@@ -34,9 +36,13 @@ export default function SideBarHead({ projectData }: Props) {
     {
       icon: FolderKanban,
       label: "Project Profile",
-      onClick: () => {},
+      onClick: () => router.push("profile"),
     },
-    { icon: UserRoundPlus, label: "Invite People", onClick: () => {}},
+    {
+      icon: UserRoundPlus,
+      label: "Invite People",
+      onClick: openGenerateModal,
+    },
     { icon: Kanban, label: "Create board", onClick: () => {onCreateBoardOpen()} },
     { icon: Plus, label: "Create channel", onClick: () => {onOpen()} },
   ];

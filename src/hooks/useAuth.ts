@@ -1,5 +1,11 @@
 import { IUser } from "@/interface/userInterface";
-import { registerApi, resetOtpApi, resetPasswordApi, sendOtpApi, signinApi } from "@/services/authServices";
+import {
+  registerApi,
+  resetOtpApi,
+  resetPasswordApi,
+  sendOtpApi,
+  signinApi,
+} from "@/services/authServices";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -31,30 +37,38 @@ useRegister = () => {
     }}) 
 }
 export const useSignin = () => {
-    const navigate = useRouter();
-    return useMutation({mutationFn:async(signinData : IUser)=>{
-        const res = await signinApi(signinData);
-        return res;
-    },onSuccess:(data)=>{
-        localStorage.setItem('accessToken',data.accessToken);
-        localStorage.setItem("userId", data._id)
-        navigate.replace('/')
-    }})
-}
+  const navigate = useRouter();
+  return useMutation({
+    mutationFn: async (signinData: IUser) => {
+      const res = await signinApi(signinData);
+      return res;
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userId", data._id);
+      navigate.replace("/");
+    },
+  });
+};
 export const useResetOtp = () => {
-    return useMutation({mutationFn:async(restData : IUser)=>{
-        const res = await resetOtpApi(restData);
-        return res;
-    },onSuccess:()=>{
-    }})
-}
+  return useMutation({
+    mutationFn: async (restData: IUser) => {
+      const res = await resetOtpApi(restData);
+      return res;
+    },
+    onSuccess: () => {},
+  });
+};
 export const useResetPassword = () => {
-    const navigate = useRouter();
-    return useMutation({mutationFn:async(restData : IUser)=>{
-        const res = await resetPasswordApi(restData);
-        return res;
-    },onSuccess:(data)=>{
-        alert(data.message)
-        navigate.replace('/signin')
-    }})
-}
+  const navigate = useRouter();
+  return useMutation({
+    mutationFn: async (restData: IUser) => {
+      const res = await resetPasswordApi(restData);
+      return res;
+    },
+    onSuccess: (data) => {
+      alert(data.message);
+      navigate.replace("/signin");
+    },
+  });
+};
