@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import BoardCard from "./boardCard";
 import AddCard from "./addCard";
 import { IList } from "@/interface/listInterface";
@@ -26,7 +26,6 @@ export default function BoardList({ list, index }: Props) {
     "border-l-purple-400",
   ];
 
-  // const { setNodeRef } = useDroppable({ id: list._id });
   const {
     setNodeRef,
     attributes,
@@ -37,8 +36,8 @@ export default function BoardList({ list, index }: Props) {
   } = useSortable({ id: list._id, data: { type: "list", list } });
 
   const style = { transition, transform: CSS.Transform.toString(transform) };
-  const items = list.cards.map((card) => ({ ...card, id: card._id }));
 
+  const items = useMemo(() => list.cards.map((card) => card._id), [list]);
   if (isDragging)
     return (
       <div
@@ -82,11 +81,12 @@ export default function BoardList({ list, index }: Props) {
           {list.cards.length}
         </span>
       </div>
-      {/* <SortableContext items={items} strategy={verticalListSortingStrategy}> */}
-      {list.cards.map((card: ICard) => (
-        <BoardCard key={card._id} card={card} />
-      ))}
-      {/* </SortableContext> */}
+      <SortableContext items={items}>
+        {list.cards.map((card: ICard) => (
+          <BoardCard key={card._id} card={card} />
+        ))}
+      </SortableContext>
+
       <AddCard listId={list._id} boardId={list.boardId} />
     </div>
   );

@@ -11,6 +11,7 @@ import {
   KeyboardSensor,
   DragStartEvent,
   DragOverlay,
+  DragOverEvent,
 } from "@dnd-kit/core";
 import { useBoardSocket } from "@/context/boardSocketProvider";
 import { useGetBoardById } from "@/hooks/useBoard";
@@ -24,6 +25,8 @@ import {
 import { IGetLists, IList } from "@/interface/listInterface";
 import BoardList from "./boardList";
 import { createPortal } from "react-dom";
+import { ICard } from "@/interface/cardInterface";
+import BoardCard from "./boardCard";
 type Props = {
   boardId: string;
   projectId: string;
@@ -112,6 +115,7 @@ export default function Board({}: Props) {
   }, []);
 
   const [activeList, setActiveList] = useState<IList | null>(null);
+  const [activeCard, setActiveCard] = useState<ICard | null>(null);
 
   const handleDragEnd = (e: DragEndEvent) => {
     const { active, over } = e;
@@ -152,12 +156,65 @@ export default function Board({}: Props) {
     // }
   };
 
-  console.log("activeList", activeList);
   const handleDragStart = (e: DragStartEvent) => {
     console.log("ON DRAG START:", e);
+    if (!e.active) return;
+
     if (e.active.data.current?.type === "list") {
       setActiveList(e.active.data.current.list);
       return;
+    } else if (e.active.data.current?.type === "card") {
+      setActiveCard(e.active.data.current.card);
+      return;
+    }
+  };
+
+  const handleDragOver = (e: DragOverEvent) => {
+    const { active, over } = e;
+    console.log("ON DRAG OVER:", { active, over });
+    if (!active || !over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    const isActiveCard = active.data.current?.type === "card";
+    const isOverCard = over.data.current?.type === "card";
+    const isOverList = over.data.current?.type === "list";
+
+    if (isActiveCard && isOverCard) {
+      const activeListId = active.data.current?.card.listId;
+      const overListId = over.data.current?.card.listId;
+
+      queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
+        const newData: IGetLists = {
+          ...oldData,
+          data: JSON.parse(JSON.stringify(oldData.data)),
+        };
+
+        const activeList = newData.data.find(
+          (list) => list._id === activeListId
+        );
+        const overList = newData.data.find((list) => list._id === overListId);
+
+        if (!activeList || !overList) return oldData;
+
+        const activeCardIndex = activeList?.cards.findIndex(
+          (card) => card._id === activeId
+        );
+        const overCardIndex = overList?.cards.findIndex(
+          (card) => card._id === overId
+        );
+
+        if (activeCardIndex < 0 && overCardIndex < 0) return oldData;
+
+        const [movedCard] = activeList.cards.splice(activeCardIndex, 1);
+
+        movedCard.listId = overListId;
+
+        overList.cards.splice(overCardIndex, 0, movedCard);
+
+        return newData;
+      });
     }
   };
 
@@ -191,6 +248,7 @@ export default function Board({}: Props) {
           sensors={sensors}
           onDragEnd={handleDragEnd}
           onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
         >
           {/* <BoardContents lists={dummyData} boardId={channelId} /> */}
           <SortableContext items={items!}>
@@ -199,6 +257,7 @@ export default function Board({}: Props) {
           {createPortal(
             <DragOverlay>
               {activeList && <BoardList list={activeList} index={0} />}
+              {activeCard && <BoardCard card={activeCard} />}
             </DragOverlay>,
             document.body
           )}
