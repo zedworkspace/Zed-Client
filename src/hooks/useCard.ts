@@ -1,4 +1,11 @@
-import { createCard, getCard, updatedCard } from "@/services/taskServices";
+import { useBoardSocket } from "@/context/boardSocketProvider";
+import {
+  createCard,
+  getCard,
+  updateCardPositionBetweenList,
+  updateCardPositionWithInList,
+  updatedCard,
+} from "@/services/taskServices";
 import { useCardStore } from "@/store/cardStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -19,7 +26,6 @@ export const useGetCard = ({
   cardId: string;
   isOpen: boolean;
 }) => {
-  console.log("cardid", cardId);
   return useQuery({
     queryKey: ["card", cardId],
     queryFn: async () => {
@@ -37,6 +43,26 @@ export const useUpdateCard = (boardId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lists", boardId] });
       onClose();
+    },
+  });
+};
+
+export const useUpdateCardPositionWithInList = () => {
+  const { socket } = useBoardSocket();
+  return useMutation({
+    mutationFn: updateCardPositionWithInList,
+    onSuccess: (data) => {
+      socket?.emit("onChangeCardPositionWithInList", data.data.boardId);
+    },
+  });
+};
+
+export const useUpdateCardPositionBetweenList = () => {
+  const { socket } = useBoardSocket();
+  return useMutation({
+    mutationFn: updateCardPositionBetweenList,
+    onSuccess: (data) => {
+      socket?.emit("onChangeCardPositionWithInList", data.data.boardId);
     },
   });
 };

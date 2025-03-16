@@ -1,3 +1,6 @@
+import { ICard } from "./cardInterface";
+import { IList } from "./listInterface";
+
 interface IFetch {
   status: string;
   message: string;
@@ -18,3 +21,15 @@ export interface IGetBoards extends IFetch {
 export interface IGetBoard extends IFetch {
   data: IBoard;
 }
+
+interface IDragCard {
+  data: ICard;
+  type: "card";
+}
+
+interface IDragList {
+  data: IList;
+  type: "list";
+}
+
+export type IDragData = IDragCard | IDragList;
