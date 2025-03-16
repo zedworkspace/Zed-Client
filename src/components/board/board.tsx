@@ -33,6 +33,17 @@ type Props = {
   projectId: string;
 };
 
+interface DragCard {
+  data: ICard;
+  type: "card";
+}
+
+interface DragList {
+  data: IList;
+  type: "list";
+}
+
+type DragData = DragCard | DragList;
 export default function Board({}: Props) {
   const { channelId, projectId } = useParams() as {
     channelId: string;
@@ -70,14 +81,15 @@ export default function Board({}: Props) {
 
   const [activeList, setActiveList] = useState<IList | null>(null);
   const [activeCard, setActiveCard] = useState<ICard | null>(null);
-  const [dragStartData, setDragStartData] = useState<ICard | null>(null);
-  const [dragEndData, setDragEndData] = useState<ICard | null>(null);
+
+  const [dragStartData, setDragStartData] = useState<DragData | null>(null);
+  const [dragEndData, setDragEndData] = useState<DragData | null>(null);
 
   const handleDragEnd = (e: DragEndEvent) => {
     setActiveCard(null);
     setActiveList(null);
     const { active, over } = e;
-    // console.log({ active, over });
+    console.log({ active, over });
     // console.log("in drag End>>>", { dragStartData, dragEndData });
     if (!active || !over) return;
 
@@ -89,6 +101,7 @@ export default function Board({}: Props) {
       over.data.current?.type === "list" &&
       activeId !== overId
     ) {
+      console.log("list sorting:OK");
       const activeListId = active.id as string;
       const overListId = over.id as string;
       queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
@@ -109,32 +122,49 @@ export default function Board({}: Props) {
       active.data.current?.type === "card" &&
       over.data.current?.type === "list"
     ) {
-      console.log("implement the drag and drop");
+      console.log("implement the drag and drop:OK");
       const cardId = activeId;
       const fromListId = active.data.current?.card.listId;
       const toListId = overId;
 
       onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
     }
+    // SCENARIO-2 : different lists card dnd
+    if (
+  
+      dragStartData?.type === "card" &&
+      dragEndData?.type === "list"
+    ) {
+      console.log("implement the drag and drop exception case:OK");
+      const cardId = dragStartData.data._id;
+      const fromListId = dragStartData.data.listId;
+      const toListId = dragEndData.data._id;
+
+      onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
+    }
 
     // SCENARIO-3 : same lists card sorting
     if (
-      dragStartData?.listId === dragEndData?.listId &&
-      dragStartData?._id !== dragEndData?._id
+      dragStartData?.type === "card" &&
+      dragEndData?.type === "card" &&
+      dragStartData.data.listId === dragEndData.data.listId &&
+      dragStartData.data._id !== dragEndData.data._id
     ) {
-      console.log("implement sorting with same list");
+      console.log("implement sorting with same list:OK");
       // console.log("in drag End>>>", { dragStartData, dragEndData });
-      const listId = dragStartData?.listId as string;
-      const fromCardId = dragStartData?._id as string;
-      const toCardId = dragEndData?._id as string;
+      const listId = dragStartData.data.listId as string;
+      const fromCardId = dragStartData.data._id as string;
+      const toCardId = dragEndData.data._id as string;
       console.log({ listId, fromCardId, toCardId });
       updateCardPositionWithInListMutate({ fromCardId, listId, toCardId });
     }
 
     // SCENARIO-4 : different lists card sorting
     if (
-      dragStartData?.listId !== dragEndData?.listId &&
-      dragStartData?._id !== dragEndData?._id
+      dragStartData?.type === "card" &&
+      dragEndData?.type == "card" &&
+      dragStartData?.data.listId !== dragEndData?.data.listId &&
+      dragStartData?.data._id !== dragEndData?.data._id
     ) {
       console.log("implement sorting with differenct list");
     }
@@ -179,7 +209,7 @@ export default function Board({}: Props) {
 
   const handleDragOver = (e: DragOverEvent) => {
     const { active, over } = e;
-    // console.log("ON DRAG OVER:", { active, over });
+    console.log("ON DRAG OVER:", { active, over });
     if (!active || !over) return;
 
     const activeId = active.id;
@@ -191,8 +221,12 @@ export default function Board({}: Props) {
 
     if (activeId !== overId && isActiveCard && isOverCard) {
       console.log("inside fda", { active, over });
-      setDragStartData(active.data.current?.card);
-      setDragEndData(over.data.current?.card);
+      setDragStartData({ data: active.data.current?.card, type: "card" });
+      setDragEndData({ data: over.data.current?.card, type: "card" });
+    } else if (isActiveCard && isOverList) {
+      console.log("inside card and list dnd");
+      setDragStartData({ data: active.data.current?.card, type: "card" });
+      setDragEndData({ data: over.data.current?.list, type: "list" });
     }
 
     // SCENARIO-3 : same lists card sorting
