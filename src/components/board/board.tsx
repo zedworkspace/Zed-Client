@@ -173,7 +173,7 @@ export default function Board({}: Props) {
       dragStartData?.data.listId !== dragEndData?.data.listId &&
       dragStartData?.data._id !== dragEndData?.data._id
     ) {
-      console.log("implement sorting with differenct list");
+      
       const fromCardId = dragStartData.data._id;
       const toCardId = dragEndData.data._id;
       const fromListId = dragStartData.data.listId;
