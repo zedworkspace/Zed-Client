@@ -1,12 +1,17 @@
+
+"use client"
 import React, { useEffect, useState } from "react";
-import { Kanban, MessagesSquare, Volume2 } from "lucide-react";
+import { Github, Kanban, MessagesSquare, Volume2 } from "lucide-react";
 import { IGetChannels } from "@/interface/channelInterface";
 import SidebarAccordion from "./sidebarAccordion";
 import { IGetBoards } from "@/interface/boardInterface";
+import {  usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Separator } from "../ui/separator";
 import { useGetNotification } from "@/hooks/useMessage";
 import { useParams } from "next/navigation";
 import { connectSocket, getSocket } from "@/utils/socket";
-import { useRouter } from "next/navigation";
+
+
 
 type Props = {
   channelData?: IGetChannels;
@@ -15,7 +20,9 @@ type Props = {
 
 export default function SidebarContents({ channelData, boardData }: Props) {
   const router = useRouter();
-
+  const pathName = usePathname()
+  const path = pathName.split('/')[3]
+ 
   const userId = localStorage.getItem("userId");
 
   const { channelId }: { channelId: string } = useParams();
@@ -83,6 +90,19 @@ export default function SidebarContents({ channelData, boardData }: Props) {
 
   return (
     <div className="h-3/4 bg-primary pt-4 space-y-2">
+      {/* github */}
+      <div className="px-2" onClick={() => router.replace("git-hub")}>
+        <div
+          className={`w-full gap-2 cursor-pointer flex items-center p-2 text-muted-foreground hover:bg-secondary/50 hover:text-white transition-colors duration-200 rounded-md h-10 font-bold ${
+            path === "git-hub" ? "bg-secondary/80" : ""
+          } }`}
+        >
+          <Github className="size-5" />
+          <span className="text-sm font-bold">Git Hub</span>
+        </div>
+      </div>
+      <Separator className="w-[95%] m-auto bg-white/30 h-0.5"/>
+
       {/* board */}
       <SidebarAccordion
         Icon={Kanban}
@@ -112,6 +132,6 @@ export default function SidebarContents({ channelData, boardData }: Props) {
         type="voice"
         handleClick={voiceHandleClick}
       />
-    </div>
-  );
+      </div>
+  )
 }

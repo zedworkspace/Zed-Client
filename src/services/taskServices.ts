@@ -29,13 +29,16 @@ export const getCard = async ({
 
 export const updatedCard = async ({
   cardId,
+  projectId,
   formData,
 }: {
   cardId: string;
+  projectId:string;
   formData: ICard;
 }) => {
+  console.log(projectId,'ppp')
   const response = await apiClient.put(
-    API_ROUTES.CARD.UPDATE_CARD_BYID + cardId + "/edit",
+    API_ROUTES.CARD.UPDATE_CARD_BYID + cardId + "/edit/" + projectId,
     formData
   );
   return response.data;

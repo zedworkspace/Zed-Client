@@ -1,6 +1,9 @@
 "use client";
 import Board from "@/components/board/board";
 import TextChannel from "@/components/chat/TextChannel";
+import { useGetBoardById } from "@/hooks/useBoard";
+import { useGetLists } from "@/hooks/useList";
+import VoiceChannel from "@/components/voiceChannel/VoiceChannel";
 import { BoardSocketProvider } from "@/context/boardSocketProvider";
 import { useGetProfile } from "@/hooks/useProfile";
 import { useParams } from "next/navigation";
@@ -24,7 +27,13 @@ export default function ChatPage() {
     setChannelType(type);
   }, []);
 
-  if (channelType === "voice") return <div>This is voice channel</div>; // here we render video based component
+
+  const { data: boardData } = useGetBoardById({
+    boardId: channelId,
+    projectId,
+  });
+
+  if (channelType === "voice") return <VoiceChannel/>; // here we render video based component
 
   if (channelType === "board")
     return (

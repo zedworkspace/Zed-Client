@@ -7,11 +7,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useSignin } from "@/hooks/useAuth";
-import { loginSchema } from '@/validations/authValidation';
+import { loginSchema } from "@/validations/authValidation";
 import ButtonLoading from "@/components/ui/ButtonLoading";
 import { IUser } from "@/interface/userInterface";
 import axios from "axios";
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from "@react-oauth/google";
 
 const SigninPage = () => {
   const [emailPage, setEmailPage] = useState(false);
@@ -34,10 +34,15 @@ const SigninPage = () => {
 
   const handleGoogleAuth = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
+      console.log(credentialResponse);
       try {
-        const res = await axios.post("http://localhost:5000/api/v1/auth/google", {
-          credentialResponse
-        });
+        const res = await axios.post(
+          "http://localhost:5000/api/v1/auth/google",
+          {
+            credentialResponse,
+            withCredentials: true,
+          }
+        );
         const { accessToken } = res.data;
         localStorage.setItem("accessToken", accessToken);
         if (accessToken) {
@@ -52,13 +57,13 @@ const SigninPage = () => {
       }
     },
     onError: () => console.log("Login Failed"),
-  })
+  });
 
   const handleGitHubAuth = () => {
     const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const redirectUri = "http://localhost:3000/github/callback";
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
-  }
+  };
 
   return (
     <div className="w-[100%] flex justify-center h-screen">
@@ -68,41 +73,96 @@ const SigninPage = () => {
             <>
               <div className="top flex flex-col gap-5">
                 <div className="flex items-center gap-3">
-                  <Image src='/Zed-White.png' alt="logo" width={30} height={30} />
+                  <Image
+                    src="/Zed-White.png"
+                    alt="logo"
+                    width={30}
+                    height={30}
+                  />
                   <span>Zed</span>
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="font-bold text-2xl text-white">Login with Email</h3>
+                  <h3 className="font-bold text-2xl text-white">
+                    Login with Email
+                  </h3>
                 </div>
               </div>
 
-             {isError && <p className="text-red-500 text-xs text-center">{error.message}</p> }
+              {isError && (
+                <p className="text-red-500 text-xs text-center">
+                  {error.message}
+                </p>
+              )}
 
               <Formik
                 initialValues={{ email: "", password: "" }}
                 validationSchema={loginSchema}
                 onSubmit={(values) => {
-                  handleOnSubmit(values)
+                  handleOnSubmit(values);
                 }}
               >
                 {() => (
                   <Form className="mid gap-5 flex flex-col">
                     <div className="flex flex-col gap-2">
-                      <label className="text-xs text-[#A3A39E] font-semibold" htmlFor="email">Email</label>
-                      <Field type="text" name="email" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="Enter email"/>
-                      <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
+                      <label
+                        className="text-xs text-[#A3A39E] font-semibold"
+                        htmlFor="email"
+                      >
+                        Email
+                      </label>
+                      <Field
+                        type="text"
+                        name="email"
+                        className="bg-[#171717] h-10 rounded-lg text-sm px-3"
+                        placeholder="Enter email"
+                      />
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="text-red-500 text-xs"
+                      />
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="text-xs text-[#A3A39E] font-semibold" htmlFor="password">
+                      <label
+                        className="text-xs text-[#A3A39E] font-semibold"
+                        htmlFor="password"
+                      >
                         Password
                       </label>
-                      <Field type="password" name="password" className="bg-[#171717] h-10 rounded-lg text-sm px-3" placeholder="Enter password" />
-                      <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
-                      <p onClick={()=>navigate.replace('/forgot-password')} className="text-xs cursor-pointer hover:text-gray-300 w-[30%]">Forgot Password ?</p>
+                      <Field
+                        type="password"
+                        name="password"
+                        className="bg-[#171717] h-10 rounded-lg text-sm px-3"
+                        placeholder="Enter password"
+                      />
+                      <ErrorMessage
+                        name="password"
+                        component="div"
+                        className="text-red-500 text-xs"
+                      />
+                      <p
+                        onClick={() => navigate.replace("/forgot-password")}
+                        className="text-xs cursor-pointer hover:text-gray-300 w-[30%]"
+                      >
+                        Forgot Password ?
+                      </p>
                     </div>
 
-                    <AuthButtons width="100%" height="40px" color="black" value={isPending?<ButtonLoading color={"black"} />:"Sign In"} backgroundColor="white" type="submit" />
+                    <AuthButtons
+                      width="100%"
+                      height="40px"
+                      color="black"
+                      value={
+                        isPending ? (
+                          <ButtonLoading color={"black"} />
+                        ) : (
+                          "Sign In"
+                        )
+                      }
+                      backgroundColor="white"
+                      type="submit"
+                    />
                   </Form>
                 )}
               </Formik>
@@ -110,7 +170,10 @@ const SigninPage = () => {
               <div className="bottom flex flex-col">
                 <p className="text-sm text-gray-500">
                   Create an account ?{" "}
-                  <span onClick={() => navigate.replace("/signup")} className="text-white cursor-pointer hover:text-gray-300">
+                  <span
+                    onClick={() => navigate.replace("/signup")}
+                    className="text-white cursor-pointer hover:text-gray-300"
+                  >
                     Sign up
                   </span>
                 </p>
@@ -120,19 +183,50 @@ const SigninPage = () => {
             <>
               <div className="top flex flex-col gap-5">
                 <div className="flex items-center gap-3">
-                  <Image src='/Zed-White.png' alt="logo" width={30} height={30} />
+                  <Image
+                    src="/Zed-White.png"
+                    alt="logo"
+                    width={30}
+                    height={30}
+                  />
                   <span>Zed</span>
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="font-bold text-2xl text-white">Sign in to your account</h3>
+                  <h3 className="font-bold text-2xl text-white">
+                    Sign in to your account
+                  </h3>
                 </div>
               </div>
               <div className="mid gap-5 flex flex-col">
                 <div onClick={() => setEmailPage(true)}>
-                  <AuthButtons width="100%" height="40px" color="black" value="Continue with Email" backgroundColor="white" />
+                  <AuthButtons
+                    width="100%"
+                    height="40px"
+                    color="black"
+                    value="Continue with Email"
+                    backgroundColor="white"
+                  />
                 </div>
-                <div onClick={()=>handleGitHubAuth()}><AuthButtons width="100%" height="40px" color="black" value="Login with GitHub" icon={<FaGithub />} backgroundColor="white" /></div>
-                <div onClick={()=>handleGoogleAuth()}><AuthButtons width="100%" height="40px" color="black" value="Login with Google" icon={<IoLogoGoogle/>} backgroundColor="white" /></div>
+                <div onClick={() => handleGitHubAuth()}>
+                  <AuthButtons
+                    width="100%"
+                    height="40px"
+                    color="black"
+                    value="Login with GitHub"
+                    icon={<FaGithub />}
+                    backgroundColor="white"
+                  />
+                </div>
+                <div onClick={() => handleGoogleAuth()}>
+                  <AuthButtons
+                    width="100%"
+                    height="40px"
+                    color="black"
+                    value="Login with Google"
+                    icon={<IoLogoGoogle />}
+                    backgroundColor="white"
+                  />
+                </div>
               </div>
               <div className="bottom flex flex-col">
                 <p className="text-sm text-gray-500">

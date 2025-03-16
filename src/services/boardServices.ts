@@ -19,3 +19,8 @@ export const getBoardById = async ({
   );
   return response.data;
 };
+
+export const createBoard = async (data:{name:string,projectId:string}) =>{
+    const response = await apiClient.post(API_ROUTES.BOARD.CREATE_BOARDS,data)
+    return response.data
+}

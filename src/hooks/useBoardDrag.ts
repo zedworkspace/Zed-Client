@@ -184,9 +184,9 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
     ) {
       // console.log("implement the drag and drop exception case:OK");
       console.log({ active, over });
-      const cardId = dragStartData.data._id;
-      const fromListId = dragStartData.data.listId;
-      const toListId = dragEndData.data._id;
+      const cardId = dragStartData.data._id as string;
+      const fromListId = dragStartData.data.listId as string;
+      const toListId = dragEndData.data._id as string;
 
       onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
     }
@@ -213,10 +213,10 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
       dragStartData?.data.listId !== dragEndData?.data.listId &&
       dragStartData?.data._id !== dragEndData?.data._id
     ) {
-      const fromCardId = dragStartData.data._id;
-      const toCardId = dragEndData.data._id;
-      const fromListId = dragStartData.data.listId;
-      const toListId = dragEndData.data.listId;
+      const fromCardId = dragStartData.data._id as string;
+      const toCardId = dragEndData.data._id as string;
+      const fromListId = dragStartData.data.listId as string;
+      const toListId = dragEndData.data.listId as string;
       updateCardPositionBetweenListMutate({
         fromCardId,
         fromListId,

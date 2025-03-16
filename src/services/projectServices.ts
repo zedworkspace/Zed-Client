@@ -18,5 +18,6 @@ export const getProjects = async (): Promise<IGetProjects> => {
 
 export const getProject = async (id: string): Promise<IGetProject> => {
   const response = await apiClient.get(API_ROUTES.PROJECT.GET_PROJECT + id);
+  console.log(response.data)
   return response.data;
 };
