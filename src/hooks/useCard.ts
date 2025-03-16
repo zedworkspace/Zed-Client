@@ -51,6 +51,7 @@ export const useUpdateCardPositionWithInList = () => {
   return useMutation({
     mutationFn: updateCardPositionWithInList,
     onSuccess: (data) => {
+      console.log("data in fsad",data)
       socket?.emit("onChangeCardPositionWithInList", data.data.boardId);
     },
   });

@@ -7,7 +7,6 @@ import { useDraggable } from "@dnd-kit/core";
 import { useCardStore } from "@/store/cardStore";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
 export default function BoardCard({ card }: { card: ICard }) {
   const colors = [
     "bg-red-400 text-red-900 hover:bg-red-500",

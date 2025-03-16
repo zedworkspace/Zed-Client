@@ -89,7 +89,7 @@ export default function Board({}: Props) {
     setActiveCard(null);
     setActiveList(null);
     const { active, over } = e;
-    console.log({ active, over });
+    // console.log({ active, over });
     // console.log("in drag End>>>", { dragStartData, dragEndData });
     if (!active || !over) return;
 
@@ -131,11 +131,13 @@ export default function Board({}: Props) {
     }
     // SCENARIO-2 : different lists card dnd
     if (
-  
+      active.data.current?.type === "card" &&
+      over.data.current?.type === "card" &&
       dragStartData?.type === "card" &&
       dragEndData?.type === "list"
     ) {
       console.log("implement the drag and drop exception case:OK");
+      console.log({ active, over });
       const cardId = dragStartData.data._id;
       const fromListId = dragStartData.data.listId;
       const toListId = dragEndData.data._id;
@@ -151,7 +153,7 @@ export default function Board({}: Props) {
       dragStartData.data._id !== dragEndData.data._id
     ) {
       console.log("implement sorting with same list:OK");
-      // console.log("in drag End>>>", { dragStartData, dragEndData });
+      console.log("in drag End>>>", { dragStartData, dragEndData });
       const listId = dragStartData.data.listId as string;
       const fromCardId = dragStartData.data._id as string;
       const toCardId = dragEndData.data._id as string;
