@@ -56,3 +56,18 @@ export const updateCardPositionWithInList = async (
   );
   return response.data;
 };
+
+type UpdateCardPositionBetweenList = {
+  fromListId: string;
+  toListId: string;
+  fromCardId: string;
+  toCardId: string;
+};
+
+export const updateCardPositionBetweenList = async (data:UpdateCardPositionBetweenList) => {
+  const response = await apiClient.post(
+    API_ROUTES.CARD.UPDATE_CARD_POSITION_IN_DIFF_LIST,
+    data
+  );
+  return response.data;
+};

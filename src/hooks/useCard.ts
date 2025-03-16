@@ -2,6 +2,7 @@ import { useBoardSocket } from "@/context/boardSocketProvider";
 import {
   createCard,
   getCard,
+  updateCardPositionBetweenList,
   updateCardPositionWithInList,
   updatedCard,
 } from "@/services/taskServices";
@@ -51,7 +52,16 @@ export const useUpdateCardPositionWithInList = () => {
   return useMutation({
     mutationFn: updateCardPositionWithInList,
     onSuccess: (data) => {
-      console.log("data in fsad",data)
+      socket?.emit("onChangeCardPositionWithInList", data.data.boardId);
+    },
+  });
+};
+
+export const useUpdateCardPositionBetweenList = () => {
+  const { socket } = useBoardSocket();
+  return useMutation({
+    mutationFn: updateCardPositionBetweenList,
+    onSuccess: (data) => {
       socket?.emit("onChangeCardPositionWithInList", data.data.boardId);
     },
   });

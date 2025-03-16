@@ -39,6 +39,7 @@ const API_ROUTES = {
     GET_CARDBY_ID: "/v1/cards/",
     UPDATE_CARD_BYID: "/v1/cards/",
     UPDATE_CARD_POSITION_IN_SAME_LIST: "/v1/cards/reorder",
+    UPDATE_CARD_POSITION_IN_DIFF_LIST: "/v1/cards/reorder-between-lists",
   },
   INVITE: {
     GET_INVITE_INFO: "/v1/invite/",

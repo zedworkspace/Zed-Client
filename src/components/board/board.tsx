@@ -27,7 +27,10 @@ import BoardList from "./boardList";
 import { createPortal } from "react-dom";
 import { ICard } from "@/interface/cardInterface";
 import BoardCard from "./boardCard";
-import { useUpdateCardPositionWithInList } from "@/hooks/useCard";
+import {
+  useUpdateCardPositionBetweenList,
+  useUpdateCardPositionWithInList,
+} from "@/hooks/useCard";
 type Props = {
   boardId: string;
   projectId: string;
@@ -70,6 +73,8 @@ export default function Board({}: Props) {
   const { mutate: updateListPositions } = useUpdateListPosition();
   const { mutate: updateCardPositionWithInListMutate } =
     useUpdateCardPositionWithInList();
+  const { mutate: updateCardPositionBetweenListMutate } =
+    useUpdateCardPositionBetweenList();
 
   const queryClient = useQueryClient();
 
@@ -169,6 +174,16 @@ export default function Board({}: Props) {
       dragStartData?.data._id !== dragEndData?.data._id
     ) {
       console.log("implement sorting with differenct list");
+      const fromCardId = dragStartData.data._id;
+      const toCardId = dragEndData.data._id;
+      const fromListId = dragStartData.data.listId;
+      const toListId = dragEndData.data.listId;
+      updateCardPositionBetweenListMutate({
+        fromCardId,
+        fromListId,
+        toCardId,
+        toListId,
+      });
     }
 
     // if (
