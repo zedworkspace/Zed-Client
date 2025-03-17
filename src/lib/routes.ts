@@ -22,11 +22,11 @@ const API_ROUTES = {
     CREATE_CHANNEL:"/v1/channel"
   },
   MESSAGE: {
-    SEND_MESSAGE: '/v1/messages/send',
-    GET_MESSAGE: '/v1/messages',
-    SEND_FILE: 'v1/messages/file',
-    GET_NOTIFICATION: 'v1/messages/get/unread',
-    UPDATE_READ : 'v1/messages/read'
+    SEND_MESSAGE: "/v1/messages/send",
+    GET_MESSAGE: "/v1/messages",
+    SEND_FILE: "v1/messages/file",
+    GET_NOTIFICATION: "v1/messages/get/unread",
+    UPDATE_READ: "v1/messages/read",
   },
   BOARD: {
     GET_BOARDS: "/v1/boards/",
@@ -35,13 +35,16 @@ const API_ROUTES = {
   },
   LIST: {
     CREATE_LIST: "/v1/lists/",
+    UPDATE_LIST_POSITION: "/v1/lists/reorder",
   },
   CARD: {
     CREATE_CARD: "/v1/cards/",
-    GET_CARDBY_ID :"/v1/cards/",
-    UPDATE_CARD_BYID:"/v1/cards/"
+    GET_CARDBY_ID: "/v1/cards/",
+    UPDATE_CARD_BYID: "/v1/cards/",
+    UPDATE_CARD_POSITION_IN_SAME_LIST: "/v1/cards/reorder",
+    UPDATE_CARD_POSITION_IN_DIFF_LIST: "/v1/cards/reorder-between-lists",
   },
-  INVITE:{
+  INVITE: {
     GET_INVITE_INFO: "/v1/invite/",
     GENERATE_INVITE: "/v1/invite/generate-invite/",
     SEND_INVITE: "/v1/invite/send-invite",

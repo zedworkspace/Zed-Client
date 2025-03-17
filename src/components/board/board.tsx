@@ -1,20 +1,24 @@
-import React, { useEffect } from "react";
-import BoardHeader from "./boardHeader";
-import BoardContents from "./boardContents";
+import React, { useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import {
   DndContext,
-  DragEndEvent,
   PointerSensor,
   useSensor,
   useSensors,
+  KeyboardSensor,
 } from "@dnd-kit/core";
-import { useBoardSocket } from "@/context/boardSocketProvider";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
+
+import BoardHeader from "./boardHeader";
+import BoardContents from "./boardContents";
+import DragOverlayWrapper from "./dragOverlayWrapper";
+
 import { useGetBoardById } from "@/hooks/useBoard";
 import { useGetLists } from "@/hooks/useList";
-import { useQueryClient } from "@tanstack/react-query";
-import { useCardSocket } from "@/hooks/useCardSocket";
-import { useListSocket } from "@/hooks/useListSocket";
+import { useBoardDrag } from "@/hooks/useBoardDrag";
 
 type Props = {
   boardId: string;
@@ -43,36 +47,36 @@ export default function Board({}: Props) {
   } = useGetLists({
     boardId: channelId,
   });
-  const queryClient = useQueryClient();
 
-  const { onCardDrop, updatedListsHandler, socket } = useBoardSocket();
+  const {
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    activeCard,
+    activeList,
+    initializeSocketHandlers,
+  } = useBoardDrag({
+    channelId,
+  });
 
   useEffect(() => {
-    updatedListsHandler(queryClient, channelId);
+    initializeSocketHandlers();
   }, []);
-
-  const handleDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e;
-    if (!active || !over) return;
-
-    const sourceList = active.id; //card id
-    const targerList = over.id; // list id
-
-    if (!sourceList || !targerList || sourceList === targerList) return;
-
-    const cardId = active.id as string;
-    const fromListId = active.data.current?.list as string;
-    const toListId = over.id as string;
-
-    onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
-  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
       },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
     })
+  );
+
+  const items = useMemo(
+    () => boardLists?.data.map((list) => list._id),
+    [boardLists?.data]
   );
 
   const isLoading = boardLoading || listLoading;
@@ -84,8 +88,16 @@ export default function Board({}: Props) {
     return (
       <div className="h-full flex flex-col">
         <BoardHeader board={BoardData?.data} />
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-          <BoardContents lists={boardLists?.data} boardId={channelId} />
+        <DndContext
+          sensors={sensors}
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+        >
+          <SortableContext items={items!}>
+            <BoardContents lists={boardLists?.data} boardId={channelId} />
+          </SortableContext>
+          <DragOverlayWrapper activeCard={activeCard} activeList={activeList} />
         </DndContext>
       </div>
     );
