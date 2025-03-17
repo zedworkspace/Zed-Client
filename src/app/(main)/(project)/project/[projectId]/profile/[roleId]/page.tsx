@@ -22,33 +22,33 @@ const permissionCategories = [
       { id: "view_server_insights", name: "View Server Insights", description: "Allow members to view server insights" }
     ]
   },
-  {
-    name: "Text Channel Permissions",
-    permissions: [
-      { id: "send_messages", name: "Send Messages", description: "Allow members to send messages in text channels" },
-      { id: "send_messages_in_threads", name: "Send Messages in Threads", description: "Allow members to send messages in threads" },
-      { id: "create_public_threads", name: "Create Public Threads", description: "Allow members to create threads that everyone can see" },
-      { id: "create_private_threads", name: "Create Private Threads", description: "Allow members to create private threads" },
-      { id: "embed_links", name: "Embed Links", description: "Allow links posted by members to show content previews" },
-      { id: "attach_files", name: "Attach Files", description: "Allow members to upload files" },
-      { id: "add_reactions", name: "Add Reactions", description: "Allow members to add new reactions to messages" },
-      { id: "use_external_emojis", name: "Use External Emojis", description: "Allow members to use emojis from other servers" },
-      { id: "mention_everyone", name: "Mention @everyone, @here and All Roles", description: "Allow members to use @everyone and @here mentions" }
-    ]
-  },
-  {
-    name: "Voice Channel Permissions",
-    permissions: [
-      { id: "connect", name: "Connect", description: "Allow members to join voice channels" },
-      { id: "speak", name: "Speak", description: "Allow members to talk in voice channels" },
-      { id: "video", name: "Video", description: "Allow members to share their video" },
-      { id: "use_voice_activity", name: "Use Voice Activity", description: "Allow members to speak without using push-to-talk" },
-      { id: "priority_speaker", name: "Priority Speaker", description: "Allow members to be more easily heard when speaking" },
-      { id: "mute_members", name: "Mute Members", description: "Allow members to mute other members in voice channels" },
-      { id: "deafen_members", name: "Deafen Members", description: "Allow members to deafen other members in voice channels" },
-      { id: "move_members", name: "Move Members", description: "Allow members to move other members between voice channels" }
-    ]
-  }
+//   {
+//     name: "Text Channel Permissions",
+//     permissions: [
+//       { id: "send_messages", name: "Send Messages", description: "Allow members to send messages in text channels" },
+//       { id: "send_messages_in_threads", name: "Send Messages in Threads", description: "Allow members to send messages in threads" },
+//       { id: "create_public_threads", name: "Create Public Threads", description: "Allow members to create threads that everyone can see" },
+//       { id: "create_private_threads", name: "Create Private Threads", description: "Allow members to create private threads" },
+//       { id: "embed_links", name: "Embed Links", description: "Allow links posted by members to show content previews" },
+//       { id: "attach_files", name: "Attach Files", description: "Allow members to upload files" },
+//       { id: "add_reactions", name: "Add Reactions", description: "Allow members to add new reactions to messages" },
+//       { id: "use_external_emojis", name: "Use External Emojis", description: "Allow members to use emojis from other servers" },
+//       { id: "mention_everyone", name: "Mention @everyone, @here and All Roles", description: "Allow members to use @everyone and @here mentions" }
+//     ]
+//   },
+//   {
+//     name: "Voice Channel Permissions",
+//     permissions: [
+//       { id: "connect", name: "Connect", description: "Allow members to join voice channels" },
+//       { id: "speak", name: "Speak", description: "Allow members to talk in voice channels" },
+//       { id: "video", name: "Video", description: "Allow members to share their video" },
+//       { id: "use_voice_activity", name: "Use Voice Activity", description: "Allow members to speak without using push-to-talk" },
+//       { id: "priority_speaker", name: "Priority Speaker", description: "Allow members to be more easily heard when speaking" },
+//       { id: "mute_members", name: "Mute Members", description: "Allow members to mute other members in voice channels" },
+//       { id: "deafen_members", name: "Deafen Members", description: "Allow members to deafen other members in voice channels" },
+//       { id: "move_members", name: "Move Members", description: "Allow members to move other members between voice channels" }
+//     ]
+//   }
 ]
 
 export default function RolePage() {
@@ -164,7 +164,7 @@ export default function RolePage() {
                   </div>
                 </div>
                 
-                <div className="pt-2">
+                {/* <div className="pt-2">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="h-5 w-5 text-zinc-300" />
@@ -173,7 +173,7 @@ export default function RolePage() {
                     <Switch />
                   </div>
                   <p className="text-sm text-zinc-400">Members with this role will display separately from online members.</p>
-                </div>
+                </div> */}
               </CardContent>
             </Card>
 
@@ -184,21 +184,21 @@ export default function RolePage() {
                   <ShieldAlert className="h-5 w-5" />
                   Permissions
                 </CardTitle>
-                <div className="flex items-center gap-2 text-sm">
+                {/* <div className="flex items-center gap-2 text-sm">
                   <CircleDot className="h-4 w-4 text-green-500" />
                   <span className="text-zinc-300">Enabled</span>
                   <span className="mx-2 text-zinc-600">|</span>
                   <CircleDot className="h-4 w-4 text-zinc-600" />
                   <span className="text-zinc-300">Disabled</span>
-                </div>
+                </div> */}
               </CardHeader>
               <CardContent className="space-y-6">
                 {permissionCategories.map((category) => (
                   <div key={category.name} className="space-y-4">
-                    <div className="flex items-center justify-between">
+                    {/* <div className="flex items-center justify-between">
                       <h3 className="text-sm font-semibold text-white">{category.name}</h3>
                       <Separator className="flex-1 mx-4 bg-zinc-700" />
-                    </div>
+                    </div> */}
                     
                     <div className="space-y-2">
                       {category.permissions.map((permission) => (
