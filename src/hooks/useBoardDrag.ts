@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useUpdateListPosition } from "./useList";
 import {
   useUpdateCardPositionBetweenList,
+  useUpdateCardPositionInDnd,
   useUpdateCardPositionWithInList,
 } from "./useCard";
 
@@ -24,6 +25,8 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
     useUpdateCardPositionWithInList();
   const { mutate: updateCardPositionBetweenListMutate } =
     useUpdateCardPositionBetweenList();
+  const { mutate: updateCardPositionInDndMutate } =
+    useUpdateCardPositionInDnd();
 
   const queryClient = useQueryClient();
 
@@ -44,7 +47,7 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
 
   const handleDragOver = (e: DragOverEvent) => {
     const { active, over } = e;
-
+    console.log({ active, over });
     if (!active || !over) return;
 
     const activeId = active.id;
@@ -55,12 +58,23 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
     const isOverList = over.data.current?.type === "list";
 
     if (activeId !== overId && isActiveCard && isOverCard) {
+      console.log("in card active");
       setDragStartData({ data: active.data.current?.card, type: "card" });
       setDragEndData({ data: over.data.current?.card, type: "card" });
     } else if (isActiveCard && isOverList) {
+      console.log("in list active");
       setDragStartData({ data: active.data.current?.card, type: "card" });
       setDragEndData({ data: over.data.current?.list, type: "list" });
     }
+
+    // if (
+    //   activeId !== overId &&
+    //   isActiveCard &&
+    //   isOverCard &&
+    //   activeListId !== overListId
+    // ) {
+    //   console.log("fsadkljfklsajdfkj");
+    // }
 
     // SCENARIO-3 : same lists card sorting
     if (isActiveCard && isOverCard) {
@@ -102,6 +116,7 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
     }
 
     if (isActiveCard && isOverList) {
+      console.log("list invoked");
       const activeListId = active.data.current?.card.listId;
       const overListId = overId;
       if (!activeListId || !overListId) return;
@@ -133,11 +148,16 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
   };
 
   const handleDragEnd = (e: DragEndEvent) => {
-    setActiveCard(null);
-    setActiveList(null);
     const { active, over } = e;
-
-    if (!active || !over) return;
+    console.log("check same", { active, over });
+    console.log({ dragStartData, dragEndData });
+    if (!active || !over) {
+      setActiveCard(null);
+      setActiveList(null);
+      setDragStartData(null);
+      setDragEndData(null);
+      return;
+    }
 
     const activeId = active.id as string;
     const overId = over.id as string;
@@ -165,31 +185,47 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
 
     // SCENARIO-2 : different lists card dnd
     if (
-      active.data.current?.type === "card" &&
-      over.data.current?.type === "list"
-    ) {
-      // console.log("implement the drag and drop:OK");
-      const cardId = activeId;
-      const fromListId = active.data.current?.card.listId;
-      const toListId = overId;
-
-      onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
-    }
-    // SCENARIO-2 : different lists card dnd
-    if (
-      active.data.current?.type === "card" &&
-      over.data.current?.type === "card" &&
+      // active.data.current?.type === "card" &&
+      // over.data.current?.type === "list"
       dragStartData?.type === "card" &&
       dragEndData?.type === "list"
     ) {
-      // console.log("implement the drag and drop exception case:OK");
-      console.log({ active, over });
+      console.log("implement the drag and drop:OK");
+      // const cardId = activeId;
+      // const fromListId = active.data.current?.card.listId;
+      // const toListId = overId;
       const cardId = dragStartData.data._id as string;
       const fromListId = dragStartData.data.listId as string;
       const toListId = dragEndData.data._id as string;
 
-      onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
+      updateCardPositionInDndMutate({
+        boardId: channelId,
+        cardId,
+        fromListId,
+        toListId,
+      });
     }
+    // SCENARIO-2 : different lists card dnd
+    // if (
+    //   active.data.current?.type === "card" &&
+    //   over.data.current?.type === "card" &&
+    //   dragStartData?.type === "card" &&
+    //   dragEndData?.type === "list"
+    // ) {
+    //   console.log("implement the drag and drop exception case:OK");
+    //   console.log({ active, over });
+    //   const cardId = dragStartData.data._id as string;
+    //   const fromListId = dragStartData.data.listId as string;
+    //   const toListId = dragEndData.data._id as string;
+
+    //   // onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
+    //   updateCardPositionInDndExceptionMutate({
+    //     boardId: channelId,
+    //     cardId,
+    //     fromListId,
+    //     toListId,
+    //   });
+    // }
 
     // SCENARIO-3 : same lists card sorting
     if (
@@ -198,7 +234,8 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
       dragStartData.data.listId === dragEndData.data.listId &&
       dragStartData.data._id !== dragEndData.data._id
     ) {
-      // console.log("implement sorting with same list:OK");
+      console.log("implement sorting with same list:OK");
+      console.log({ dragStartData, dragEndData });
       const listId = dragStartData.data.listId as string;
       const fromCardId = dragStartData.data._id as string;
       const toCardId = dragEndData.data._id as string;
@@ -213,6 +250,8 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
       dragStartData?.data.listId !== dragEndData?.data.listId &&
       dragStartData?.data._id !== dragEndData?.data._id
     ) {
+      console.log("different lists card sorting:Ok");
+      console.log({ dragStartData, dragEndData });
       const fromCardId = dragStartData.data._id as string;
       const toCardId = dragEndData.data._id as string;
       const fromListId = dragStartData.data.listId as string;
@@ -224,6 +263,10 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
         toListId,
       });
     }
+    setActiveCard(null);
+    setActiveList(null);
+    setDragStartData(null);
+    setDragEndData(null);
   };
   return {
     handleDragStart,
