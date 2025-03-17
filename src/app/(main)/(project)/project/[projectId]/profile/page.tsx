@@ -45,6 +45,7 @@ import {
     DialogFooter,
     DialogClose,
   } from "@/components/ui/dialog"; 
+import { useRouter } from "next/navigation";
 
 export default function ProjectProfile() {
   // State for editable fields
@@ -59,6 +60,8 @@ export default function ProjectProfile() {
     id: number;
     name: string;
   } | null>(null);
+
+  const router = useRouter();
 
   const handleDeleteClick = (role: { id: number; name: string }) => {
     setSelectedRole(role);
@@ -187,7 +190,7 @@ export default function ProjectProfile() {
   };
 
   return (
-    <div className="flex h-screen bg-secondary text-gray-200">
+    <div className="flex h-screen bg-zinc-900 text-gray-200">
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Top Navigation */}
@@ -335,7 +338,7 @@ export default function ProjectProfile() {
                         <AccordionItem
                           key={role.id}
                           value={role.id.toString()}
-                          className="border-none bg-primary/30 rounded-md"
+                          className="border-none bg-zinc-800 rounded-md"
                         >
                           {/* Role Header */}
                           <AccordionHeader>
@@ -370,7 +373,7 @@ export default function ProjectProfile() {
                         className="text-muted-foreground hover:text-indigo-400"
                         onClick={(e) => {
                           e.stopPropagation();
-                          alert("Edit clicked");
+                          router.push("profile/rolename")
                         }}
                       >
                         <Edit2 className="h-4 w-4" />
@@ -486,7 +489,7 @@ export default function ProjectProfile() {
           </div>
 
           {/* Right Side - Activity Log */}
-          <div className="w-80 border-l border-gray-700 bg-secondary flex flex-col">
+          <div className="w-80 border-l border-gray-700 bg-zinc-900 flex flex-col">
             <div className="p-4 border-b border-gray-700 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Activity size={18} className="text-indigo-400" />
