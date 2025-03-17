@@ -33,6 +33,7 @@ export function PrivatChannel() {
   };
 
   const {  isPending } = useCreateChannel(projectId);
+  // const {data} = useGetProjectMembers(projectId)
 
   const handleCreate = () => {
     // mutate({ name, type, projectId });

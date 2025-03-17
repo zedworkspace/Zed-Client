@@ -11,6 +11,7 @@ const API_ROUTES = {
     CREATE_PROJECT: "/v1/projects",
     GET_PROJECTS: "/v1/projects",
     GET_PROJECT: "/v1/projects/",
+    UPDATE_PROJECT: "/v1/projects/update/"
   },
   PROFILE: {
     GET: "/v1/profile",
@@ -54,7 +55,8 @@ const API_ROUTES = {
     GET_ROLES: '/v1/role/project',
     ASSING_ROLES: '/v1/role/assign',
     REMOVE_ROLES: '/v1/role/remove',
-    UPDATE_ROLE: '/v1/role/ update/'
+    UPDATE_ROLE: '/v1/role/ update/',
+    DELETE_ROLE: '/v1/role/delete'
   }
 };
 
