@@ -9,14 +9,17 @@ import { useState } from "react";
 import { useUpdateListPosition } from "./useList";
 import {
   useUpdateCardPositionBetweenList,
+  useUpdateCardPositionInDnd,
   useUpdateCardPositionWithInList,
 } from "./useCard";
 
 export const useBoardDrag = ({ channelId }: { channelId: string }) => {
   const [activeList, setActiveList] = useState<IList | null>(null);
   const [activeCard, setActiveCard] = useState<ICard | null>(null);
-  const [dragStartData, setDragStartData] = useState<IDragData | null>(null);
-  const [dragEndData, setDragEndData] = useState<IDragData | null>(null);
+  const [dragData, setDragData] = useState<{
+    start: IDragData | null;
+    end: IDragData | null;
+  }>({ start: null, end: null });
 
   const { onCardDrop, updatedListsHandler } = useBoardSocket();
   const { mutate: updateListPositions } = useUpdateListPosition();
@@ -24,120 +27,149 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
     useUpdateCardPositionWithInList();
   const { mutate: updateCardPositionBetweenListMutate } =
     useUpdateCardPositionBetweenList();
+  const { mutate: updateCardPositionInDndMutate } =
+    useUpdateCardPositionInDnd();
 
   const queryClient = useQueryClient();
 
   const initializeSocketHandlers = () => {
     updatedListsHandler(queryClient, channelId);
   };
+
+  const resetDragState = () => {
+    setActiveCard(null);
+    setActiveList(null);
+    setDragData({ start: null, end: null });
+  };
+
   const handleDragStart = (e: DragStartEvent) => {
     if (!e.active) return;
 
-    if (e.active.data.current?.type === "list") {
-      setActiveList(e.active.data.current.list);
-      return;
-    } else if (e.active.data.current?.type === "card") {
-      setActiveCard(e.active.data.current.card);
-      return;
+    const { type, list, card } = e.active.data.current as {
+      type: "list" | "card";
+      list?: IList;
+      card?: ICard;
+    };
+
+    if (type === "list" && list) {
+      setActiveList(list);
+      setDragData({ start: { data: list, type: "list" }, end: null });
+    } else if (type === "card" && card) {
+      setActiveCard(card);
+      setDragData({ start: { data: card, type: "card" }, end: null });
     }
   };
 
   const handleDragOver = (e: DragOverEvent) => {
     const { active, over } = e;
-
-    if (!active || !over) return;
+    // console.log({ active, over });
+    if (!active || !over || !active.data.current || !over.data.current) return;
 
     const activeId = active.id;
     const overId = over.id;
 
-    const isActiveCard = active.data.current?.type === "card";
-    const isOverCard = over.data.current?.type === "card";
-    const isOverList = over.data.current?.type === "list";
+    if (activeId === overId) return;
 
-    if (activeId !== overId && isActiveCard && isOverCard) {
-      setDragStartData({ data: active.data.current?.card, type: "card" });
-      setDragEndData({ data: over.data.current?.card, type: "card" });
-    } else if (isActiveCard && isOverList) {
-      setDragStartData({ data: active.data.current?.card, type: "card" });
-      setDragEndData({ data: over.data.current?.list, type: "list" });
+    const activeType = active.data.current?.type as "card" | "list";
+    const overType = over.data.current?.type as "card" | "list";
+
+    if (activeType === "card" && overType === "card") {
+      setDragData((prev) => ({
+        ...prev,
+        end: { data: over.data.current?.card, type: "card" },
+      }));
+    } else if (activeType === "card" && overType === "list") {
+      setDragData((prev) => ({
+        ...prev,
+        end: { data: over.data.current?.list, type: "list" },
+      }));
     }
 
     // SCENARIO-3 : same lists card sorting
-    if (isActiveCard && isOverCard) {
-      const activeListId = active.data.current?.card.listId;
-      const overListId = over.data.current?.card.listId;
+    if (activeType === "card") {
+      const activeCard = active.data.current.card as ICard;
+      const activeListId = activeCard.listId;
 
-      if (!activeListId || !overListId) return;
+      if (overType === "card") {
+        const overCard = over.data.current.card as ICard;
+        const overListId = overCard.listId;
+        queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
+          const newData: IGetLists = {
+            ...oldData,
+            data: JSON.parse(JSON.stringify(oldData.data)),
+          };
 
-      queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
-        const newData: IGetLists = {
-          ...oldData,
-          data: JSON.parse(JSON.stringify(oldData.data)),
-        };
+          const activeList = newData.data.find(
+            (list) => list._id === activeListId
+          );
+          const overList = newData.data.find((list) => list._id === overListId);
 
-        const activeList = newData.data.find(
-          (list) => list._id === activeListId
-        );
-        const overList = newData.data.find((list) => list._id === overListId);
+          if (!activeList || !overList) return oldData;
 
-        if (!activeList || !overList) return oldData;
+          const activeCardIndex = activeList?.cards.findIndex(
+            (card) => card._id === activeId
+          );
+          const overCardIndex = overList?.cards.findIndex(
+            (card) => card._id === overId
+          );
 
-        const activeCardIndex = activeList?.cards.findIndex(
-          (card) => card._id === activeId
-        );
-        const overCardIndex = overList?.cards.findIndex(
-          (card) => card._id === overId
-        );
+          if (activeCardIndex < 0 && overCardIndex < 0) return oldData;
 
-        if (activeCardIndex < 0 && overCardIndex < 0) return oldData;
+          const [movedCard] = activeList.cards.splice(activeCardIndex, 1);
 
-        const [movedCard] = activeList.cards.splice(activeCardIndex, 1);
+          movedCard.listId = overListId;
 
-        movedCard.listId = overListId;
+          overList.cards.splice(overCardIndex, 0, movedCard);
 
-        overList.cards.splice(overCardIndex, 0, movedCard);
+          return newData;
+        });
+      } else if (overType === "list") {
+        const overListId = overId;
+        if (activeListId === overListId) return;
 
-        return newData;
-      });
-    }
+        queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
+          const newData: IGetLists = {
+            ...oldData,
+            data: JSON.parse(JSON.stringify(oldData.data)),
+          };
+          const activeList = newData.data.find(
+            (list) => list._id === activeListId
+          );
+          const overList = newData.data.find((list) => list._id === overListId);
 
-    if (isActiveCard && isOverList) {
-      const activeListId = active.data.current?.card.listId;
-      const overListId = overId;
-      if (!activeListId || !overListId) return;
-      queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
-        const newData: IGetLists = {
-          ...oldData,
-          data: JSON.parse(JSON.stringify(oldData.data)),
-        };
-        const activeList = newData.data.find(
-          (list) => list._id === activeListId
-        );
-        const overList = newData.data.find((list) => list._id === overListId);
+          if (!activeList || !overList) return oldData;
 
-        if (!activeList || !overList) return oldData;
+          const activeCardIndex = activeList?.cards.findIndex(
+            (card) => card._id === activeId
+          );
 
-        const activeCardIndex = activeList?.cards.findIndex(
-          (card) => card._id === activeId
-        );
+          if (activeCardIndex < 0) return oldData;
 
-        if (activeCardIndex < 0) return oldData;
+          const [movedCard] = activeList.cards.splice(activeCardIndex, 1);
 
-        const [movedCard] = activeList.cards.splice(activeCardIndex, 1);
-
-        movedCard.listId = overListId as string;
-        overList.cards.push(movedCard);
-        return newData;
-      });
+          movedCard.listId = overListId as string;
+          overList.cards.push(movedCard);
+          return newData;
+        });
+      }
     }
   };
 
   const handleDragEnd = (e: DragEndEvent) => {
-    setActiveCard(null);
-    setActiveList(null);
     const { active, over } = e;
+    // console.log("handleDragEnd", { active, over });
 
-    if (!active || !over) return;
+    if (!active || !over) {
+      resetDragState();
+      return;
+    }
+
+    const { start, end } = dragData;
+    console.log({ dragData });
+    if (!start) {
+      resetDragState();
+      return;
+    }
 
     const activeId = active.id as string;
     const overId = over.id as string;
@@ -147,7 +179,7 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
       over.data.current?.type === "list" &&
       activeId !== overId
     ) {
-      //   console.log("list sorting:OK");
+      // console.log("list sorting:OK");
       const activeListId = active.id as string;
       const overListId = over.id as string;
       queryClient.setQueryData(["lists", channelId], (oldData: IGetLists) => {
@@ -164,59 +196,48 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
     }
 
     // SCENARIO-2 : different lists card dnd
-    if (
-      active.data.current?.type === "card" &&
-      over.data.current?.type === "list"
-    ) {
+    if (start?.type === "card" && end?.type === "list") {
       // console.log("implement the drag and drop:OK");
-      const cardId = activeId;
-      const fromListId = active.data.current?.card.listId;
-      const toListId = overId;
+      const cardId = start.data._id as string;
+      const fromListId = start.data.listId as string;
+      const toListId = end.data._id as string;
 
-      onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
-    }
-    // SCENARIO-2 : different lists card dnd
-    if (
-      active.data.current?.type === "card" &&
-      over.data.current?.type === "card" &&
-      dragStartData?.type === "card" &&
-      dragEndData?.type === "list"
-    ) {
-      // console.log("implement the drag and drop exception case:OK");
-      console.log({ active, over });
-      const cardId = dragStartData.data._id as string;
-      const fromListId = dragStartData.data.listId as string;
-      const toListId = dragEndData.data._id as string;
-
-      onCardDrop({ cardId, fromListId, toListId, boardId: channelId });
+      updateCardPositionInDndMutate({
+        boardId: channelId,
+        cardId,
+        fromListId,
+        toListId,
+      });
     }
 
     // SCENARIO-3 : same lists card sorting
     if (
-      dragStartData?.type === "card" &&
-      dragEndData?.type === "card" &&
-      dragStartData.data.listId === dragEndData.data.listId &&
-      dragStartData.data._id !== dragEndData.data._id
+      start?.type === "card" &&
+      end?.type === "card" &&
+      start.data.listId === end.data.listId &&
+      start.data._id !== end.data._id
     ) {
       // console.log("implement sorting with same list:OK");
-      const listId = dragStartData.data.listId as string;
-      const fromCardId = dragStartData.data._id as string;
-      const toCardId = dragEndData.data._id as string;
+      const listId = start.data.listId as string;
+      const fromCardId = start.data._id as string;
+      const toCardId = end.data._id as string;
 
       updateCardPositionWithInListMutate({ fromCardId, listId, toCardId });
     }
 
     // SCENARIO-4 : different lists card sorting
     if (
-      dragStartData?.type === "card" &&
-      dragEndData?.type == "card" &&
-      dragStartData?.data.listId !== dragEndData?.data.listId &&
-      dragStartData?.data._id !== dragEndData?.data._id
+      start?.type === "card" &&
+      end?.type == "card" &&
+      start?.data.listId !== end?.data.listId &&
+      start?.data._id !== end?.data._id
     ) {
-      const fromCardId = dragStartData.data._id as string;
-      const toCardId = dragEndData.data._id as string;
-      const fromListId = dragStartData.data.listId as string;
-      const toListId = dragEndData.data.listId as string;
+      // console.log("different lists card sorting:Ok");
+
+      const fromCardId = start.data._id as string;
+      const toCardId = end.data._id as string;
+      const fromListId = start.data.listId as string;
+      const toListId = end.data.listId as string;
       updateCardPositionBetweenListMutate({
         fromCardId,
         fromListId,
@@ -224,6 +245,7 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
         toListId,
       });
     }
+    resetDragState();
   };
   return {
     handleDragStart,

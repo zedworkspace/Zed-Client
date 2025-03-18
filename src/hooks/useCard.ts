@@ -3,6 +3,7 @@ import {
   createCard,
   getCard,
   updateCardPositionBetweenList,
+  updateCardPositionInDnd,
   updateCardPositionWithInList,
   updatedCard,
 } from "@/services/taskServices";
@@ -64,5 +65,15 @@ export const useUpdateCardPositionBetweenList = () => {
     onSuccess: (data) => {
       socket?.emit("onChangeCardPositionWithInList", data.data.boardId);
     },
+  });
+};
+
+export const useUpdateCardPositionInDnd = () => {
+  const { socket } = useBoardSocket();
+  return useMutation({
+    mutationFn: updateCardPositionInDnd,
+    onSuccess:(data)=>{
+      socket?.emit("onChangeCardPositionWithInList", data.data.boardId);
+    }
   });
 };

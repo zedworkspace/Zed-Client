@@ -19,7 +19,7 @@ const API_ROUTES = {
   },
   CHANNEL: {
     GET_CHANNELS_PROJECT_ID: "/v1/channel/",
-    CREATE_CHANNEL:"/v1/channel"
+    CREATE_CHANNEL: "/v1/channel",
   },
   MESSAGE: {
     SEND_MESSAGE: "/v1/messages/send",
@@ -31,7 +31,7 @@ const API_ROUTES = {
   BOARD: {
     GET_BOARDS: "/v1/boards/",
     GET_BOARD: "/v1/boards/",
-    CREATE_BOARDS: "v1/boards/create"
+    CREATE_BOARDS: "v1/boards/create",
   },
   LIST: {
     CREATE_LIST: "/v1/lists/",
@@ -41,8 +41,9 @@ const API_ROUTES = {
     CREATE_CARD: "/v1/cards/",
     GET_CARDBY_ID: "/v1/cards/",
     UPDATE_CARD_BYID: "/v1/cards/",
-    UPDATE_CARD_POSITION_IN_SAME_LIST: "/v1/cards/reorder",
-    UPDATE_CARD_POSITION_IN_DIFF_LIST: "/v1/cards/reorder-between-lists",
+    UPDATE_CARD_POSITION_IN_DND: "/v1/cards/reorder/dnd",
+    UPDATE_CARD_POSITION_IN_SAME_LIST: "/v1/cards/reorder/same-list",
+    UPDATE_CARD_POSITION_IN_DIFF_LIST: "/v1/cards/reorder/diffrent-list",
   },
   INVITE: {
     GET_INVITE_INFO: "/v1/invite/",
@@ -50,9 +51,9 @@ const API_ROUTES = {
     SEND_INVITE: "/v1/invite/send-invite",
     ACCEPT_INVITE: "/v1/invite/accept-invite",
   },
-  MEMBERS:{
-    GET_MEMBERS :"/v1/project/members/",
-  }
+  MEMBERS: {
+    GET_MEMBERS: "/v1/project/members/",
+  },
 };
 
 export default API_ROUTES;

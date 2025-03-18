@@ -38,7 +38,8 @@ export default function BoardList({ list, index }: Props) {
 
   const style = { transition, transform: CSS.Transform.toString(transform) };
 
-  const items = useMemo(() => list.cards.map((card) => card._id), [list]);
+  const items = useMemo(() => list.cards.map((card) => card._id!), [list]);
+  
   if (isDragging)
     return (
       <div
