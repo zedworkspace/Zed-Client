@@ -11,3 +11,8 @@ export const updateProfile = async (formData:FormData) =>{
         const res = await apiClient.put(API_ROUTES.PROFILE.UPDATE, formData)
         return res.data
 }
+
+export const logoutUser = async () =>{
+        const res = await apiClient.post(API_ROUTES.PROFILE.LOGOUT)
+        return res.data
+}
