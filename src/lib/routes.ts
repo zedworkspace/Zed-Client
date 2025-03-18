@@ -15,6 +15,7 @@ const API_ROUTES = {
   PROFILE: {
     GET: "/v1/profile",
     UPDATE: "/v1/profile/update",
+    LOGOUT: "/v1/logout"
   },
   CHANNEL: {
     GET_CHANNELS_PROJECT_ID: "/v1/channel/",
