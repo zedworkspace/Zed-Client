@@ -20,3 +20,8 @@ export const getProject = async (id: string): Promise<IGetProject> => {
   const response = await apiClient.get(API_ROUTES.PROJECT.GET_PROJECT + id);
   return response.data;
 };
+
+export const leaveProject = async (id: string) => {
+  const response = await apiClient.post(API_ROUTES.PROJECT.LEAVE_PROJECT + id);
+  return response.data;
+};

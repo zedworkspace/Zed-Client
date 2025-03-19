@@ -3,6 +3,7 @@ import {
   createProject,
   getProject,
   getProjects,
+  leaveProject,
 } from "@/services/projectServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
@@ -36,5 +37,20 @@ export const useGetProject = (id: string) => {
   return useQuery({
     queryKey: ["project", id],
     queryFn: () => getProject(id),
+  });
+};
+
+export const useLeaveProject = (projectId:string) => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: leaveProject,
+    onSuccess: (res) => {
+      toast({ description: res.message });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    },
+    onError: (err) => {
+      toast({ description: err.message });
+    },
   });
 };
