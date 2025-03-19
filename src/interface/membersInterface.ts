@@ -3,7 +3,6 @@ import { IUser } from "./userInterface";
 interface IProjectmember{
     _id:string,
     userId:IUser
-    
 }
 
 interface IFetch{
@@ -11,6 +10,7 @@ interface IFetch{
     message:string
 }
 
- export interface IGetProjectMembersbyId extends IFetch{
+export interface IGetProjectMembersbyId extends IFetch{
     data:IProjectmember[]
 }
+
