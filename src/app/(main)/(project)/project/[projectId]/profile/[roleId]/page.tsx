@@ -1,92 +1,93 @@
-"use client"
-import React from "react"
-import { useParams } from "next/navigation"
-import { Switch } from "@/components/ui/switch"
-import { Separator } from "@/components/ui/separator"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check, ChevronLeft, CircleDot, Settings, ShieldAlert, ShieldCheck, Users } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { ScrollArea } from "@/components/ui/scroll-area"
+"use client";
+import React from "react";
+import { useParams } from "next/navigation";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Check,
+  ChevronLeft,
+  CircleDot,
+  Settings,
+  ShieldAlert,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const permissionCategories = [
   {
     name: "General Permissions",
     permissions: [
-      { id: "view_channels", name: "View Channels", description: "Allow members to view text channels and voice channels" },
-      { id: "manage_channels", name: "Manage Channels", description: "Allow members to create, edit or delete channels" },
-      { id: "manage_roles", name: "Manage Roles", description: "Allow members to create and edit roles lower than their highest role" },
-      { id: "manage_emojis", name: "Manage Emojis and Stickers", description: "Allow members to add or remove custom emojis and stickers" },
-      { id: "view_audit_log", name: "View Audit Log", description: "Allow members to view the server's audit log" },
-      { id: "view_server_insights", name: "View Server Insights", description: "Allow members to view server insights" }
-    ]
+      {
+        id: "manage_channels",
+        name: "Manage Channels",
+        description: "Allows members to create, modify, and delete channels.",
+      },
+      {
+        id: "manage_board",
+        name: "Manage Board",
+        description: "Grants members the ability to manage and configure board settings.",
+      },
+      {
+        id: "manage_roles",
+        name: "Manage Roles",
+        description: "Enables members to create, edit, and assign roles below their highest role.",
+      },
+      {
+        id: "invite_members",
+        name: "Invite Members",
+        description: "Allows members to send invitations to new users to join the platform.",
+      },
+      {
+        id: "administaration",
+        name: "Administration",
+        description: "Provides full administrative control, including managing users and settings.",
+      },
+    ],
   },
-//   {
-//     name: "Text Channel Permissions",
-//     permissions: [
-//       { id: "send_messages", name: "Send Messages", description: "Allow members to send messages in text channels" },
-//       { id: "send_messages_in_threads", name: "Send Messages in Threads", description: "Allow members to send messages in threads" },
-//       { id: "create_public_threads", name: "Create Public Threads", description: "Allow members to create threads that everyone can see" },
-//       { id: "create_private_threads", name: "Create Private Threads", description: "Allow members to create private threads" },
-//       { id: "embed_links", name: "Embed Links", description: "Allow links posted by members to show content previews" },
-//       { id: "attach_files", name: "Attach Files", description: "Allow members to upload files" },
-//       { id: "add_reactions", name: "Add Reactions", description: "Allow members to add new reactions to messages" },
-//       { id: "use_external_emojis", name: "Use External Emojis", description: "Allow members to use emojis from other servers" },
-//       { id: "mention_everyone", name: "Mention @everyone, @here and All Roles", description: "Allow members to use @everyone and @here mentions" }
-//     ]
-//   },
-//   {
-//     name: "Voice Channel Permissions",
-//     permissions: [
-//       { id: "connect", name: "Connect", description: "Allow members to join voice channels" },
-//       { id: "speak", name: "Speak", description: "Allow members to talk in voice channels" },
-//       { id: "video", name: "Video", description: "Allow members to share their video" },
-//       { id: "use_voice_activity", name: "Use Voice Activity", description: "Allow members to speak without using push-to-talk" },
-//       { id: "priority_speaker", name: "Priority Speaker", description: "Allow members to be more easily heard when speaking" },
-//       { id: "mute_members", name: "Mute Members", description: "Allow members to mute other members in voice channels" },
-//       { id: "deafen_members", name: "Deafen Members", description: "Allow members to deafen other members in voice channels" },
-//       { id: "move_members", name: "Move Members", description: "Allow members to move other members between voice channels" }
-//     ]
-//   }
-]
+];
+
 
 export default function RolePage() {
-  const { roleId } = useParams() as { roleId: string }
+  const { roleId } = useParams() as { roleId: string };
   const [role, setRole] = React.useState({
-    name: roleId.replace(/-/g, ' '),
+    name: roleId.replace(/-/g, " "),
     color: "#5865f2",
-    permissions: {} as Record<string, boolean>
-  })
+    permissions: {} as Record<string, boolean>,
+  });
 
   // Initialize default permissions
   React.useEffect(() => {
-    const initialPermissions = {} as Record<string, boolean>
-    permissionCategories.forEach(category => {
-      category.permissions.forEach(permission => {
-        initialPermissions[permission.id] = false
-      })
-    })
-    setRole(prev => ({ ...prev, permissions: initialPermissions }))
-  }, [roleId])
+    const initialPermissions = {} as Record<string, boolean>;
+    permissionCategories.forEach((category) => {
+      category.permissions.forEach((permission) => {
+        initialPermissions[permission.id] = false;
+      });
+    });
+    setRole((prev) => ({ ...prev, permissions: initialPermissions }));
+  }, [roleId]);
 
   const togglePermission = (permissionId: string) => {
-    setRole(prev => ({
+    setRole((prev) => ({
       ...prev,
       permissions: {
         ...prev.permissions,
-        [permissionId]: !prev.permissions[permissionId]
-      }
-    }))
-  }
+        [permissionId]: !prev.permissions[permissionId],
+      },
+    }));
+  };
 
   const handleRoleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRole(prev => ({ ...prev, name: e.target.value }))
-  }
+    setRole((prev) => ({ ...prev, name: e.target.value }));
+  };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRole(prev => ({ ...prev, color: e.target.value }))
-  }
+    setRole((prev) => ({ ...prev, color: e.target.value }));
+  };
 
   return (
     <div className="flex min-h-screen bg-zinc-900 text-zinc-100">
@@ -96,10 +97,13 @@ export default function RolePage() {
           <Users className="h-5 w-5 text-zinc-400" />
           <h3 className="font-semibold">Roles</h3>
         </div>
-        
+
         <div className="space-y-1">
           <button className="w-full text-left p-2 rounded flex items-center gap-2 bg-zinc-800 text-white">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: role.color }}></div>
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: role.color }}
+            ></div>
             <span>{role.name}</span>
           </button>
           <button className="w-full text-left p-2 rounded flex items-center gap-2 hover:bg-zinc-800 text-zinc-400">
@@ -138,24 +142,28 @@ export default function RolePage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-300">ROLE NAME</label>
-                  <Input 
-                    value={role.name} 
+                  <label className="text-sm font-medium text-zinc-300">
+                    ROLE NAME
+                  </label>
+                  <Input
+                    value={role.name}
                     onChange={handleRoleNameChange}
                     className="bg-zinc-900 border-zinc-700 focus:border-blue-500 text-zinc-100"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-300">ROLE COLOR</label>
+                  <label className="text-sm font-medium text-zinc-300">
+                    ROLE COLOR
+                  </label>
                   <div className="flex items-center gap-3">
-                    <Input 
-                      type="color" 
-                      value={role.color} 
+                    <Input
+                      type="color"
+                      value={role.color}
                       onChange={handleColorChange}
                       className="w-12 h-8 p-1 bg-transparent border-0"
                     />
-                    <Badge 
+                    <Badge
                       style={{ backgroundColor: role.color }}
                       className="text-white px-3 py-1 font-normal"
                     >
@@ -163,7 +171,7 @@ export default function RolePage() {
                     </Badge>
                   </div>
                 </div>
-                
+
                 {/* <div className="pt-2">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
@@ -199,27 +207,38 @@ export default function RolePage() {
                       <h3 className="text-sm font-semibold text-white">{category.name}</h3>
                       <Separator className="flex-1 mx-4 bg-zinc-700" />
                     </div> */}
-                    
+
                     <div className="space-y-2">
                       {category.permissions.map((permission) => (
-                        <div key={permission.id} className="flex items-center justify-between p-2 hover:bg-zinc-700/40 rounded-md transition-colors">
+                        <div
+                          key={permission.id}
+                          className="flex items-center justify-between p-2 hover:bg-zinc-700/40 rounded-md transition-colors"
+                        >
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
                               {role.permissions[permission.id] && (
                                 <Check className="h-4 w-4 text-green-500" />
                               )}
-                              <span className={cn(
-                                "font-medium",
-                                role.permissions[permission.id] ? "text-white" : "text-zinc-300"
-                              )}>
+                              <span
+                                className={cn(
+                                  "font-medium",
+                                  role.permissions[permission.id]
+                                    ? "text-white"
+                                    : "text-zinc-300"
+                                )}
+                              >
                                 {permission.name}
                               </span>
                             </div>
-                            <p className="text-xs text-zinc-400">{permission.description}</p>
+                            <p className="text-xs text-zinc-400">
+                              {permission.description}
+                            </p>
                           </div>
-                          <Switch 
-                            checked={role.permissions[permission.id]} 
-                            onCheckedChange={() => togglePermission(permission.id)}
+                          <Switch
+                            checked={role.permissions[permission.id]}
+                            onCheckedChange={() =>
+                              togglePermission(permission.id)
+                            }
                           />
                         </div>
                       ))}
@@ -232,5 +251,5 @@ export default function RolePage() {
         </ScrollArea>
       </div>
     </div>
-  )
+  );
 }
