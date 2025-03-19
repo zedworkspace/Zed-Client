@@ -16,16 +16,10 @@ const ProjectHeader = ({
   return (
     <div className="relative rounded-t-lg shadow-md">
       <div
-        className="relative h-56 flex items-end rounded-t-lg overflow-hidden"
+        className="relative h-44 flex items-end overflow-hidden"
         style={{ backgroundColor: bannerColor }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30" />
-
-        <div className="absolute bottom-4 left-36 right-4">
-          <h1 className="text-2xl font-bold text-white truncate">
-            {projectData?.name || "Project Name"}
-          </h1>
-        </div>
 
         <button
           className="absolute top-4 right-4 bg-secondary hover:bg-secondary/80 p-2 rounded-full transition-colors"

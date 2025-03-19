@@ -13,8 +13,8 @@ export interface CreateRole extends IFetch {
 }
  
 
-interface Member {
-  _id:string
+export interface Member {
+  userId:string
   name:string,
   profileImg:string,
 }

@@ -10,6 +10,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import DeleteRoleModal from "../modals/deleteRoleModal";
+import { useRouter } from "next/navigation";
 
 // Define the type for a single role
 type Role = {
@@ -29,6 +30,8 @@ type Member = {
 const RolesList = ({ roles, projectId }: { roles: Role[], projectId: string }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+
+  const router = useRouter()
 
   const handleDeleteClick = (role: Role) => {
     setSelectedRole(role)
@@ -69,10 +72,10 @@ const RolesList = ({ roles, projectId }: { roles: Role[], projectId: string }) =
                   className="text-muted-foreground hover:text-indigo-400"
                   onClick={(e) => {
                     e.stopPropagation();
-                    alert("Edit clicked");
+                    router.push(`profile/${role.roleId}`);
                   }}
                 >
-                  <Edit2 className="h-4 w-4" />
+                  <Edit2 className="h-4 w-4"/>
                 </Button>
 
                 <Button

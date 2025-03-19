@@ -7,6 +7,8 @@ import { PrivatChannel } from "@/components/modals/privateChannelModal";
 import { UpdateProfileModal } from "@/components/modals/editProfileModal";
 import React from "react";
 import { EditProjectModal } from "@/components/modals/editProjectModal";
+import { AssigneRole } from "@/components/modals/assignRoleModal";
+import { RemoveRole } from "@/components/modals/removeRoleModal";
 
 export default function ModalProvider() {
   return (
@@ -19,6 +21,8 @@ export default function ModalProvider() {
       <CreateBoard/>
       <CreateRole/>
       <EditProjectModal/>
+      <AssigneRole/>
+      <RemoveRole/>
     </>
   );
 }

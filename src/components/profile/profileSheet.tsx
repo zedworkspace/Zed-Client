@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState } from "react";
 import {
@@ -11,7 +12,6 @@ import { useGetProfile } from "@/hooks/useProfile";
 import { ProfileActivity } from "./Activity";
 import { ProfileMyWork } from "./MyWork";
 import { ProfileAssigned } from "./Assigned";
-import Image from "next/image";
 import { User2Icon, UserPen, Activity, Briefcase, Users } from "lucide-react";
 
 export const ProfileSheet = () => {
@@ -43,9 +43,7 @@ export const ProfileSheet = () => {
               {data?.profileImg ? (
                <div className="relative">
                {/* <div className="absolute inset-0 rounded-full bg-gray-500/40 blur-md opacity-75 group-hover:opacity-90 transition-opacity"></div> */}
-               <Image
-                 width={100}
-                 height={100}
+               <img
                  src={data.profileImg}
                  alt="Profile"
                  className="rounded-full w-24 h-24 object-cover shadow-lg shadow-white/10 relative z-10"

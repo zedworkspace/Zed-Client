@@ -23,8 +23,6 @@ export function EditProjectModal() {
   };
   const { data } = useGetProject(projectId);
 
-  console.log(data, "datea");
-
   const { mutate: updateProject, isPending } = useUpdateProject(projectId);
 
   const [description, setDescription] = useState(data?.data.description);

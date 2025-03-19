@@ -18,8 +18,12 @@ export default function ProjectProfile() {
   const { onOpen } = useCreateNewRole();
   
   const { projectId } = useParams() as { projectId: string };
-  const { data: projectData } = useGetProject(projectId);
+  const { data: projectData, isLoading  } = useGetProject(projectId);
   const { data: rolesData } = useGetRoles(projectId);
+
+  if(isLoading){
+    return <div>loading....</div>
+  }
 
   return (
     <div className="flex bg-zinc-900 text-gray-200">
@@ -36,7 +40,7 @@ export default function ProjectProfile() {
             />
 
             {/* Profile Info */}
-            <div className="mt-16 px-8">
+            <div className="mt-14 px-8">
               <div className="flex justify-between items-center">
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold">
