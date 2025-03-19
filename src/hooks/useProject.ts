@@ -3,10 +3,11 @@ import {
   createProject,
   getProject,
   getProjects,
+  updateProject,
 } from "@/services/projectServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
-import { useNewProjectStore } from "@/store/projectStore";
+import { useEditProjectStore, useNewProjectStore } from "@/store/projectStore";
 
 export const useCreateProject = () => {
   const { onClose } = useNewProjectStore();
@@ -20,6 +21,7 @@ export const useCreateProject = () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
     onError: (err) => {
+      console.log(err,'object');
       toast({ description: err.message });
     },
   });
@@ -38,3 +40,18 @@ export const useGetProject = (id: string) => {
     queryFn: () => getProject(id),
   });
 };
+
+export const useUpdateProject = (projectId:string) => {
+  const queryClient = useQueryClient()
+  const {onClose} = useEditProjectStore()
+  const {toast} = useToast()
+  return useMutation({
+    mutationFn:updateProject,
+    onSuccess: (data)=>{
+      toast({description:data.message})
+      queryClient.invalidateQueries({queryKey:['project',projectId]})
+      queryClient.invalidateQueries({queryKey:['projects']})
+      onClose()
+    }
+  })
+}

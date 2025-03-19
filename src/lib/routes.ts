@@ -11,6 +11,7 @@ const API_ROUTES = {
     CREATE_PROJECT: "/v1/projects",
     GET_PROJECTS: "/v1/projects",
     GET_PROJECT: "/v1/projects/",
+    UPDATE_PROJECT: "/v1/projects/update/"
   },
   PROFILE: {
     GET: "/v1/profile",
@@ -51,9 +52,18 @@ const API_ROUTES = {
     SEND_INVITE: "/v1/invite/send-invite",
     ACCEPT_INVITE: "/v1/invite/accept-invite",
   },
-  MEMBERS: {
-    GET_MEMBERS: "/v1/project/members/",
+  MEMBERS:{
+    GET_MEMBERS :"/v1/project/members/",
   },
+  ROLE:{
+    CREATE_ROLE: '/v1/role/create',
+    GET_ROLES: '/v1/role/project',
+    ASSING_ROLES: '/v1/role/assign',
+    REMOVE_ROLES: '/v1/role/remove',
+    UPDATE_ROLE: '/v1/role/ update/',
+    DELETE_ROLE: '/v1/role/delete',
+    GET_SINGLE_ROLE: '/v1/role/'
+  }
 };
 
 export default API_ROUTES;

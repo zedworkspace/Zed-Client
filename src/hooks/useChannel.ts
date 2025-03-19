@@ -5,7 +5,7 @@ import { useCreateChannelStore } from "@/store/channelStore";
 
 export const useGetChannels = ({
   projectId,
-  isEnabled,
+  // isEnabled,
 }: {
   projectId: string;
   isEnabled?: boolean;

@@ -152,7 +152,7 @@ export function CardModal({ initialData }: CardModalProps) {
 
   // Map IProjectmember to Assignee
   const mappedAssignees =
-    membersData?.data.map((member) => ({
+    membersData?.data?.map((member) => ({
       id: member._id, // Use the member's _id as the id
       name: member.userId.name, // Use the userId's name
       profileImg: member.userId.profileImg, // Use the userId's profileImg
