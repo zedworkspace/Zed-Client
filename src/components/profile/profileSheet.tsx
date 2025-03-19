@@ -8,17 +8,21 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useProfileStore, useUpdateProfileStore } from "@/store/profileStore";
-import { useGetProfile } from "@/hooks/useProfile";
+import { useGetProfile, useLogout } from "@/hooks/useProfile";
 import { ProfileActivity } from "./Activity";
 import { ProfileMyWork } from "./MyWork";
 import { ProfileAssigned } from "./Assigned";
-import { User2Icon, UserPen, Activity, Briefcase, Users } from "lucide-react";
+import Image from "next/image";
+import { User2Icon, UserPen, Activity, Briefcase, Users, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 export const ProfileSheet = () => {
   const [activeTab, setActiveTab] = useState<
     "activity" | "mywork" | "assigned"
   >("activity");
-
+  const router = useRouter();
   const { isOpen, onClose, profileId } = useProfileStore();
   const { data } = useGetProfile(profileId);
   const { onOpen } = useUpdateProfileStore();
@@ -29,6 +33,15 @@ export const ProfileSheet = () => {
     { id: "assigned", label: "Assigned", icon: <Users size={16} /> },
   ];
   
+  const [open, setOpen] = useState(false);
+  const { mutate: logout, isPending } = useLogout();
+  const handleLogout = () => {
+    logout();
+    setOpen(false);
+    onClose();
+    console.log("User logged out");
+    router.push('/signin');
+  };
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="fixed flex flex-col gap-0 p-0 border-l border-gray-800 bg-gradient-to-b from-primary to-primary/95">
@@ -39,6 +52,34 @@ export const ProfileSheet = () => {
 
           {/* Profile Info Section */}
           <div className="flex flex-col items-center mt-2 mb-6">
+            {/* Logout Section */}
+            <div className="flex justify-end w-full px-3">
+              <button
+                onClick={() => setOpen(true)}
+                className="group flex items-center gap-2 py-2 px-3 hover:px-4 rounded-full bg-gray-600 focus:outline-none border-0 text-white hover:bg-red-500"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="hidden text-sm  rounded-full font-medium group-hover:flex">
+                  Logout
+                </span>
+              </button>
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="max-w-sm  border-none text-muted-foreground">
+                  <DialogHeader>
+                    <DialogTitle>Confirm Logout</DialogTitle>
+                  </DialogHeader>
+                  <p className="text-sm">Are you sure you want to log out?</p>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button variant="destructive" onClick={handleLogout}>
+                      Logout
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
             <div className="relative mb-2 group">
               {data?.profileImg ? (
                <div className="relative">

@@ -1,6 +1,6 @@
-import { getProfile, updateProfile } from "@/services/profileServices"
+import { getProfile, logoutUser, updateProfile } from "@/services/profileServices"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useToast } from "./use-toast"
+import { toast, useToast } from "./use-toast"
 import { useUpdateProfileStore } from "@/store/profileStore"
 
 export const useGetProfile = (userId:string) => {
@@ -30,3 +30,20 @@ export const useUpdateProfile = (userId:string) => {
         }
     })
 }
+
+export const useLogout = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      localStorage.clear();
+    //   localStorage.removeItem("accessToken");
+      queryClient.invalidateQueries();
+    },
+    onError: (error) => {
+      console.error("Logout failed:", error);
+      toast({description:error.message})
+    },
+  });
+};

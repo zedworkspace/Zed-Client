@@ -253,7 +253,7 @@ export function CardModal({ initialData }: CardModalProps) {
   };
 
   const { data, isSuccess, isLoading } = useGetCard({ cardId, isOpen });
-  console.log(data?.data, "data");
+  // console.log(data?.data, "data");
   const { mutate, isPending } = useUpdateCard(channelId);
 
   // Update form when data is loaded
