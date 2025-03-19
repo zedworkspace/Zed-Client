@@ -12,6 +12,7 @@ const API_ROUTES = {
     GET_PROJECTS: "/v1/projects",
     GET_PROJECT: "/v1/projects/",
     UPDATE_PROJECT: "/v1/projects/update/"
+    LEAVE_PROJECT: "/v1/projects/",
   },
   PROFILE: {
     GET: "/v1/profile",

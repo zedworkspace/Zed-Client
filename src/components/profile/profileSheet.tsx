@@ -64,7 +64,7 @@ export const ProfileSheet = () => {
                 </span>
               </button>
               <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="max-w-sm  border-none text-muted-foreground">
+                <DialogContent className="max-w-sm border-none text-muted-foreground">
                   <DialogHeader>
                     <DialogTitle>Confirm Logout</DialogTitle>
                   </DialogHeader>
