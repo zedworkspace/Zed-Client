@@ -2,6 +2,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -35,6 +36,9 @@ export function CreateBoard() {
       <DialogContent className="sm:max-w-md border-none text-muted-foreground">
         <DialogHeader className="">
           <DialogTitle className="text-white">Create Board</DialogTitle>
+          <DialogDescription>
+            Provide a unique name for your board to organize your tasks efficiently.
+          </DialogDescription>
         </DialogHeader>
         <div>
             <Input placeholder="Give a name for your board" value={name} onChange={(e)=>setName(e.target.value)}/>

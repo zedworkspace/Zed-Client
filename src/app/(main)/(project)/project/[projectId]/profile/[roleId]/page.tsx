@@ -1,94 +1,26 @@
 "use client";
-import React from "react";
-import { useParams } from "next/navigation";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
+import React, { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Check,
-  ChevronLeft,
-  CircleDot,
-  Settings,
-  ShieldAlert,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ChevronLeft, Settings, Users } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-const permissionCategories = [
-  {
-    name: "General Permissions",
-    permissions: [
-      {
-        id: "manage_channels",
-        name: "Manage Channels",
-        description: "Allows members to create, modify, and delete channels.",
-      },
-      {
-        id: "manage_board",
-        name: "Manage Board",
-        description: "Grants members the ability to manage and configure board settings.",
-      },
-      {
-        id: "manage_roles",
-        name: "Manage Roles",
-        description: "Enables members to create, edit, and assign roles below their highest role.",
-      },
-      {
-        id: "invite_members",
-        name: "Invite Members",
-        description: "Allows members to send invitations to new users to join the platform.",
-      },
-      {
-        id: "administaration",
-        name: "Administration",
-        description: "Provides full administrative control, including managing users and settings.",
-      },
-    ],
-  },
-];
-
+import { useGetSingleRole } from "@/hooks/useRole";
+import Permissions from "@/components/role/permissions";
+import Members from "@/components/role/members";
 
 export default function RolePage() {
   const { roleId } = useParams() as { roleId: string };
-  const [role, setRole] = React.useState({
-    name: roleId.replace(/-/g, " "),
-    color: "#5865f2",
-    permissions: {} as Record<string, boolean>,
-  });
 
-  // Initialize default permissions
-  React.useEffect(() => {
-    const initialPermissions = {} as Record<string, boolean>;
-    permissionCategories.forEach((category) => {
-      category.permissions.forEach((permission) => {
-        initialPermissions[permission.id] = false;
-      });
-    });
-    setRole((prev) => ({ ...prev, permissions: initialPermissions }));
-  }, [roleId]);
+  const router = useRouter();
 
-  const togglePermission = (permissionId: string) => {
-    setRole((prev) => ({
-      ...prev,
-      permissions: {
-        ...prev.permissions,
-        [permissionId]: !prev.permissions[permissionId],
-      },
-    }));
-  };
+  const { data, isLoading } = useGetSingleRole(roleId);
 
-  const handleRoleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRole((prev) => ({ ...prev, name: e.target.value }));
-  };
+  const [activeTab, setActiveTab] = useState("permissions");
 
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRole((prev) => ({ ...prev, color: e.target.value }));
-  };
-
+  if (isLoading) {
+    return <div>loading details..</div>;
+  }
   return (
     <div className="flex min-h-screen bg-zinc-900 text-zinc-100">
       {/* Sidebar  */}
@@ -100,11 +32,7 @@ export default function RolePage() {
 
         <div className="space-y-1">
           <button className="w-full text-left p-2 rounded flex items-center gap-2 bg-zinc-800 text-white">
-            <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: role.color }}
-            ></div>
-            <span>{role.name}</span>
+            <span>{data?.data?.roleName}</span>
           </button>
           <button className="w-full text-left p-2 rounded flex items-center gap-2 hover:bg-zinc-800 text-zinc-400">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
@@ -123,7 +51,10 @@ export default function RolePage() {
         <header className="border-b border-zinc-800 p-4">
           <div className="flex items-center gap-2">
             <button className="p-1 rounded-full hover:bg-zinc-800">
-              <ChevronLeft className="h-5 w-5 text-zinc-400" />
+              <ChevronLeft
+                className="h-5 w-5 text-zinc-400"
+                onClick={router.back}
+              />
             </button>
             <h1 className="font-bold text-xl">Role Settings</h1>
           </div>
@@ -146,107 +77,42 @@ export default function RolePage() {
                     ROLE NAME
                   </label>
                   <Input
-                    value={role.name}
-                    onChange={handleRoleNameChange}
-                    className="bg-zinc-900 border-zinc-700 focus:border-blue-500 text-zinc-100"
+                    value={data?.data.roleName}
+                    readOnly
+                    // onChange={handleRoleNameChange}
+                    className="text-white"
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-300">
-                    ROLE COLOR
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <Input
-                      type="color"
-                      value={role.color}
-                      onChange={handleColorChange}
-                      className="w-12 h-8 p-1 bg-transparent border-0"
-                    />
-                    <Badge
-                      style={{ backgroundColor: role.color }}
-                      className="text-white px-3 py-1 font-normal"
-                    >
-                      {role.name}
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* <div className="pt-2">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="h-5 w-5 text-zinc-300" />
-                      <h3 className="font-medium text-muted-foreground">Display role members separately</h3>
-                    </div>
-                    <Switch />
-                  </div>
-                  <p className="text-sm text-zinc-400">Members with this role will display separately from online members.</p>
-                </div> */}
               </CardContent>
             </Card>
 
-            {/* Permissions Card */}
-            <Card className="bg-zinc-800 border-zinc-700">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-zinc-100 flex items-center gap-2">
-                  <ShieldAlert className="h-5 w-5" />
-                  Permissions
-                </CardTitle>
-                {/* <div className="flex items-center gap-2 text-sm">
-                  <CircleDot className="h-4 w-4 text-green-500" />
-                  <span className="text-zinc-300">Enabled</span>
-                  <span className="mx-2 text-zinc-600">|</span>
-                  <CircleDot className="h-4 w-4 text-zinc-600" />
-                  <span className="text-zinc-300">Disabled</span>
-                </div> */}
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {permissionCategories.map((category) => (
-                  <div key={category.name} className="space-y-4">
-                    {/* <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-white">{category.name}</h3>
-                      <Separator className="flex-1 mx-4 bg-zinc-700" />
-                    </div> */}
+            <div className="flex space-x-5 border-b border-zinc-700 pb-2">
+              <button
+                className={`pb-2 px-1 font-medium ${
+                  activeTab === "permissions"
+                    ? "text-white border-b-2 border-white"
+                    : "text-zinc-400 hover:text-zinc-200"
+                }`}
+                onClick={() => setActiveTab("permissions")}
+              >
+                Permissions
+              </button>
+              <button
+                className={`pb-2 px-1 font-medium ${
+                  activeTab === "members"
+                    ? "text-white border-b-2 border-white"
+                    : "text-zinc-400 hover:text-zinc-200"
+                }`}
+                onClick={() => setActiveTab("members")}
+              >
+                Members
+              </button>
+            </div>
 
-                    <div className="space-y-2">
-                      {category.permissions.map((permission) => (
-                        <div
-                          key={permission.id}
-                          className="flex items-center justify-between p-2 hover:bg-zinc-700/40 rounded-md transition-colors"
-                        >
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              {role.permissions[permission.id] && (
-                                <Check className="h-4 w-4 text-green-500" />
-                              )}
-                              <span
-                                className={cn(
-                                  "font-medium",
-                                  role.permissions[permission.id]
-                                    ? "text-white"
-                                    : "text-zinc-300"
-                                )}
-                              >
-                                {permission.name}
-                              </span>
-                            </div>
-                            <p className="text-xs text-zinc-400">
-                              {permission.description}
-                            </p>
-                          </div>
-                          <Switch
-                            checked={role.permissions[permission.id]}
-                            onCheckedChange={() =>
-                              togglePermission(permission.id)
-                            }
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+            {activeTab === "permissions" && <Permissions />}
+            {activeTab === "members" && (
+              <Members roleName={data?.data.roleName} roleId={roleId} roleMembers={data?.data.members} />
+            )}
           </div>
         </ScrollArea>
       </div>

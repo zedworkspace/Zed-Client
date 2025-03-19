@@ -20,3 +20,9 @@ export const useProjectStore = create<Project>((set) => ({
   projectId: "",
   setProjectId: (id: string) => set({ projectId: id }),
 }));
+
+export const useEditProjectStore = create<NewProject>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
