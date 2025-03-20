@@ -4,10 +4,11 @@ import {
   deleteRole,
   getRoles,
   getSingleRole,
+  removeRole,
 } from "@/services/roleServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
-import { useAssignRoleStore } from "@/store/roleStore";
+import { useAssignRoleStore, useRemoveRoleStore } from "@/store/roleStore";
 
 export const useCreateRole = (projectId: string) => {
   const queryClient = useQueryClient();
@@ -63,6 +64,20 @@ export const useAssignRole = (roleId:string) =>{
       toast({description:data.message})
       onClose()
       queryClient.invalidateQueries({queryKey:["role",roleId]})
+    }
+  })
+}
+
+export const useRemoveFromRole = (roleId:string) => {
+  const {toast } = useToast()
+  const queryClient = useQueryClient()
+  const {onDeleteClose} = useRemoveRoleStore()
+  return useMutation({
+    mutationFn: removeRole,
+    onSuccess:(data)=>{ 
+      onDeleteClose()
+      toast({description:data.message})
+      queryClient.invalidateQueries({queryKey:['role',roleId]})
     }
   })
 }

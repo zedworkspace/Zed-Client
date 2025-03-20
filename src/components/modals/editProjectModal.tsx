@@ -25,9 +25,9 @@ export function EditProjectModal() {
 
   const { mutate: updateProject, isPending } = useUpdateProject(projectId);
 
-  const [description, setDescription] = useState(data?.data.description);
-  const [image, setImage] = useState<string>(data?.data.logo ?? "");
-  const [name, setName] = useState(data?.data.name);
+  const [description, setDescription] = useState(data?.data?.description);
+  const [image, setImage] = useState<string>(data?.data?.logo ?? "");
+  const [name, setName] = useState(data?.data?.name);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { onClose, isOpen } = useEditProjectStore();
 

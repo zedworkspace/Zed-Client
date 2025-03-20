@@ -17,16 +17,17 @@ function Members({
 }) {
 
     const {setMembers,onOpen} = useAssignRoleStore()
-    const {onDeleteOpen, setMemberName, setRoleName} = useRemoveRoleStore()
+    const {onDeleteOpen, setMemberName, setRoleName, setMemeberId} = useRemoveRoleStore()
 
     const handleAdd = () => {
         setMembers(roleMembers)
         onOpen()
     }
 
-    const handleRemove = (name:string) => {
+    const handleRemove = (name:string,userId:string) => {
       setMemberName(name)
       setRoleName(roleName)
+      setMemeberId(userId)
       onDeleteOpen()
     }
           
@@ -48,7 +49,7 @@ function Members({
             />
             <p>{member.name}</p>
           </div>
-          <X size={16} onClick={()=>handleRemove(member.name)}/>
+          <X size={16} onClick={()=>handleRemove(member.name,member.userId)}/>
         </div>
       ))}
     </div>
