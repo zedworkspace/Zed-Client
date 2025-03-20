@@ -26,11 +26,11 @@ export const useCreateRole = (projectId: string) => {
   });
 };
 
-export const useGetRoles = (projectId: string,enabled: boolean = true) => {
+export const useGetRoles = (projectId: string, enabled: boolean = true) => {
   return useQuery({
     queryKey: ["role", projectId],
     queryFn: () => getRoles(projectId),
-    enabled
+    enabled,
   });
 };
 
@@ -42,6 +42,8 @@ export const useDeleteRole = (projectId: string) => {
     onSuccess: (data) => {
       toast({ description: data.message });
       queryClient.invalidateQueries({ queryKey: ["role", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["channels", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["board", projectId] });
     },
     onError: (err) => {
       toast({ description: err.message });
@@ -56,16 +58,18 @@ export const useGetSingleRole = (roleId: string) => {
   });
 };
 
-export const useAssignRole = (roleId:string) =>{
-  const queryClient = useQueryClient()
-  const {toast} = useToast()
-  const {onClose} = useAssignRoleStore()
+export const useAssignRole = (roleId: string, projectId: string) => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { onClose } = useAssignRoleStore();
   return useMutation({
-    mutationFn:assignRole,
-    onSuccess:(data)=>{
-      toast({description:data.message})
-      onClose()
-      queryClient.invalidateQueries({queryKey:["role",roleId]})
-    }
-  })
-}
+    mutationFn: assignRole,
+    onSuccess: (data) => {
+      toast({ description: data.message });
+      onClose();
+      queryClient.invalidateQueries({ queryKey: ["role", roleId] });
+      queryClient.invalidateQueries({ queryKey: ["channels", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["board", projectId] });
+    },
+  });
+};
