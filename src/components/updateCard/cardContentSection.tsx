@@ -150,7 +150,7 @@ export function CardModalContent({
   const handleAddAssignee = (
     newValue: MultiValue<{
       value: string;
-      label: React.JSX.Element;
+      label: React.ReactNode;
       data: IBoardMember;
     }>
   ) => {

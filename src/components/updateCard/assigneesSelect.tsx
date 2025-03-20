@@ -6,13 +6,11 @@ import { IBoardMember } from "@/interface/boardInterface";
 type Props = {
   members?: IBoardMember[];
   handleChange: (
-    selected:
-      | MultiValue<{
-          value: string;
-          label: React.ReactNode;
-          data: IBoardMember;
-        }>
-      | unknown
+    selected: MultiValue<{
+      value: string;
+      label: React.ReactNode;
+      data: IBoardMember;
+    }>
   ) => void;
   value?:
     | MultiValue<{
@@ -148,7 +146,15 @@ export default function AssigneesSelect({
     <Select
       isMulti
       options={options}
-      onChange={handleChange}
+      onChange={(newValue, actionMeta) =>
+        handleChange(
+          newValue as MultiValue<{
+            value: string;
+            label: React.ReactNode;
+            data: IBoardMember;
+          }>
+        )
+      }
       value={value}
       styles={customStyles}
       components={{ MultiValueRemove }}
