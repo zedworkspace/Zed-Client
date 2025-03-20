@@ -27,7 +27,7 @@ export function AssigneRole() {
 
   const { isOpen, onClose, members } = useAssignRoleStore();
   const { data } = useGetProjectMembers({ projectId, enabled: isOpen });
-  const { mutate } = useAssignRole(roleId);
+  const { mutate } = useAssignRole(roleId,projectId);
 
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
 

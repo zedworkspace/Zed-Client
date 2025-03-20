@@ -21,7 +21,8 @@ export function EditProjectModal() {
   const { projectId } = useParams() as {
     projectId: string;
   };
-  const { data } = useGetProject(projectId);
+  const { onClose, isOpen } = useEditProjectStore();
+  const { data } = useGetProject(projectId, isOpen);
 
   const { mutate: updateProject, isPending } = useUpdateProject(projectId);
 
@@ -29,7 +30,6 @@ export function EditProjectModal() {
   const [image, setImage] = useState<string>(data?.data.logo ?? "");
   const [name, setName] = useState(data?.data.name);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const { onClose, isOpen } = useEditProjectStore();
 
   useEffect(() => {
     if (data) {

@@ -11,20 +11,20 @@ interface IRole {
 export interface CreateRole extends IFetch {
   data: IRole;
 }
- 
 
 export interface Member {
-  userId:string
-  name:string,
-  profileImg:string,
+  userId: string;
+  name: string;
+  profileImg: string;
 }
 
+export interface IRole2 {
+  _id: string;
+  members: Member[];
+  permissions: string[];
+  roleId: string;
+  roleName: string;
+}
 export interface GetRole extends IFetch {
-  data:{
-    _id:string,
-    members:Member[],
-    permissions:string[],
-    roleId:string,
-    roleName:string
-  }[]
+  data: IRole2[];
 }

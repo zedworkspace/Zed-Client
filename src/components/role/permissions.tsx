@@ -8,16 +8,35 @@ const permissionCategories = [
   {
     name: "General Permissions",
     permissions: [
-      { id: "view_channels", name: "View Channels", description: "Allow members to view text channels and voice channels" },
-      { id: "manage_channels", name: "Manage Channels", description: "Allow members to create, edit or delete channels" },
-      { id: "manage_roles", name: "Manage Roles", description: "Allow members to create and edit roles lower than their highest role" },
-      { id: "manage_emojis", name: "Manage Emojis and Stickers", description: "Allow members to add or remove custom emojis and stickers" },
-      { id: "view_audit_log", name: "View Audit Log", description: "Allow members to view the server's audit log" },
-      { id: "view_server_insights", name: "View Server Insights", description: "Allow members to view server insights" }
-    ]
+      {
+        id: "manage_channels",
+        name: "Manage Channels",
+        description: "Allows members to create, modify, and delete channels.",
+      },
+      {
+        id: "manage_board",
+        name: "Manage Board",
+        description: "Grants members the ability to manage and configure board settings.",
+      },
+      {
+        id: "manage_roles",
+        name: "Manage Roles",
+        description: "Enables members to create, edit, and assign roles below their highest role.",
+      },
+      {
+        id: "invite_members",
+        name: "Invite Members",
+        description: "Allows members to send invitations to new users to join the platform.",
+      },
+      {
+        id: "administaration",
+        name: "Administration",
+        description: "Provides full administrative control, including managing users and settings.",
+      },
+    ],
   },
+];
 
-]
 
 function Permissions() {
 

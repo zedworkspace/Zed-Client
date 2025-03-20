@@ -1,3 +1,4 @@
+"use client";
 import { CardModal } from "@/components/board/cardModal";
 import { CreateBoard } from "@/components/modals/createBoardModal";
 import { CreateChannel } from "@/components/modals/createChannelModal";

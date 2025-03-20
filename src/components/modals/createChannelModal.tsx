@@ -7,9 +7,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { useCreateChannelStore, usePrivateChannelStore } from "@/store/channelStore";
+import {
+  useCreateChannelStore,
+  usePrivateChannelStore,
+} from "@/store/channelStore";
 import { Button } from "../ui/button";
 import {
+  Kanban,
   LoaderCircle,
   LockKeyhole,
   MessagesSquare,
@@ -19,12 +23,23 @@ import { Input } from "../ui/input";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 // import { useState } from "react";
 import { useCreateChannel } from "@/hooks/useChannel";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Switch } from "../ui/switch";
+import { useEffect } from "react";
+import { useCreateBoard } from "@/hooks/useBoard";
 
 export function CreateChannel() {
-  const { onClose, isOpen, setName, name, type, setType,isPrivate,setIsPrivate } = useCreateChannelStore();
-  const { onOpenPrivate } = usePrivateChannelStore()
+  const {
+    onClose,
+    isOpen,
+    setName,
+    name,
+    type,
+    setType,
+    isPrivate,
+    setIsPrivate,
+  } = useCreateChannelStore();
+  const { onOpenPrivate } = usePrivateChannelStore();
   // const [type, setType] = useState("text");
   // const [name, setName] = useState("");
   // const [isPrivate, setIsPrivate] = useState(false);
@@ -32,23 +47,47 @@ export function CreateChannel() {
     projectId: string;
   };
 
-  const { mutate, isPending } = useCreateChannel(projectId);
+  const { mutate, isPending, isSuccess, data } = useCreateChannel(projectId);
+  const {
+    mutate: boardMutate,
+    isSuccess: boardSuccess,
+    data: boardData,
+  } = useCreateBoard(projectId);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isSuccess) {
+      sessionStorage.setItem("channelType", type);
+      const id = data.data._id;
+      router.push(`/project/${projectId}/${id}`);
+      onClose();
+    } else if (boardSuccess) {
+      sessionStorage.setItem("channelType", type);
+      const id = boardData.data._id;
+      router.push(`/project/${projectId}/${id}`);
+      onClose();
+    }
+  }, [isSuccess, boardSuccess]);
 
   const handleCreate = () => {
-    mutate({ name, type, projectId });
+    if (type === "board") {
+      boardMutate({ name, projectId });
+    } else {
+      mutate({ name, type, projectId });
+    }
   };
 
   const handleNext = () => {
-    onClose()
-    onOpenPrivate()
-  }
+    onClose();
+    onOpenPrivate();
+  };
 
   const handleCloseModal = () => {
-    setIsPrivate(false)
-    setType('text')
-    setName('')
-    onClose()
-  }
+    setIsPrivate(false);
+    setType("text");
+    setName("");
+    onClose();
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleCloseModal}>
@@ -98,6 +137,23 @@ export function CreateChannel() {
                   </div>
                   <RadioGroupItem value="voice" />
                 </label>
+
+                <label
+                  className={`flex items-center justify-between  h-16 rounded-md px-4 cursor-pointer hover:bg-gray-700 transition ${
+                    type === "board" ? " bg-indigo-500" : "bg-secondary"
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <Kanban className="text-gray-300" size={20} />
+                    <div>
+                      <h1 className="text-white text-sm font-medium">Board</h1>
+                      <p className="text-xs text-gray-400">
+                        create board to organize your tasks efficiently.
+                      </p>
+                    </div>
+                  </div>
+                  <RadioGroupItem value="board" />
+                </label>
               </RadioGroup>
             </div>
 
@@ -140,28 +196,26 @@ export function CreateChannel() {
           </div>
         </DialogHeader>
         <DialogFooter>
-          {
-            isPrivate ? 
+          {isPrivate ? (
             <Button
-            onClick={handleNext}
-            className="font-semibold w-28"
-            size="lg"
-            disabled={isPending || name == ""}
-          >
-            Next
-          </Button>
-            :
+              onClick={handleNext}
+              className="font-semibold w-28"
+              size="lg"
+              disabled={isPending || name == ""}
+            >
+              Next
+            </Button>
+          ) : (
             <Button
-            onClick={handleCreate}
-            type="submit"
-            className="font-semibold w-28"
-            size="lg"
-            disabled={isPending || name == ""}
-          >
-            {isPending ? <LoaderCircle className="animate-spin" /> : "Create"}
-          </Button>
-
-          }
+              onClick={handleCreate}
+              type="submit"
+              className="font-semibold w-28"
+              size="lg"
+              disabled={isPending || name == ""}
+            >
+              {isPending ? <LoaderCircle className="animate-spin" /> : "Create"}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

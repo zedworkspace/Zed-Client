@@ -5,17 +5,20 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronLeft, Settings, Users } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useGetSingleRole } from "@/hooks/useRole";
+import { useGetRoles, useGetSingleRole } from "@/hooks/useRole";
 import Permissions from "@/components/role/permissions";
 import Members from "@/components/role/members";
 
 export default function RolePage() {
-  const { roleId } = useParams() as { roleId: string };
+  const { roleId, projectId } = useParams() as {
+    roleId: string;
+    projectId: string;
+  };
 
   const router = useRouter();
 
   const { data, isLoading } = useGetSingleRole(roleId);
-
+  const { data: roles } = useGetRoles(projectId);
   const [activeTab, setActiveTab] = useState("permissions");
 
   if (isLoading) {
@@ -31,17 +34,21 @@ export default function RolePage() {
         </div>
 
         <div className="space-y-1">
-          <button className="w-full text-left p-2 rounded flex items-center gap-2 bg-zinc-800 text-white">
-            <span>{data?.data?.roleName}</span>
-          </button>
-          <button className="w-full text-left p-2 rounded flex items-center gap-2 hover:bg-zinc-800 text-zinc-400">
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span>Moderator</span>
-          </button>
-          <button className="w-full text-left p-2 rounded flex items-center gap-2 hover:bg-zinc-800 text-zinc-400">
-            <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-            <span>Member</span>
-          </button>
+          {roles?.data.map((role) => {
+            const isActive = roleId === role._id;
+            return (
+              <button
+                key={role.roleId}
+                className={`w-full text-left p-2 rounded flex items-center gap-2 hover:bg-zinc-800 text-zinc-400 ${
+                  isActive ? `bg-zinc-800 text-white` : ""
+                }`}
+                onClick={() => router.push(role.roleId)}
+              >
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <span>{role.roleName}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -111,7 +118,11 @@ export default function RolePage() {
 
             {activeTab === "permissions" && <Permissions />}
             {activeTab === "members" && (
-              <Members roleName={data?.data.roleName} roleId={roleId} roleMembers={data?.data.members} />
+              <Members
+                roleName={data?.data.roleName}
+                roleId={roleId}
+                roleMembers={data?.data.members}
+              />
             )}
           </div>
         </ScrollArea>

@@ -1,4 +1,4 @@
-import { ActivityLog } from "@/components/board/cardModal";
+// import { ActivityLog } from "@/components/board/cardModal";
 import { IUser } from "./userInterface";
 
 interface IFetch {
@@ -7,17 +7,30 @@ interface IFetch {
 }
 
 export interface ICard {
-  _id?: string;
-  listId?: string;
-  title?: string;
-  description?: string;
-  labels?: string[];
-  dueDate?:Date;
-  assignees?: IUser[];
-  projectId?:string;
-  activityLogs?:ActivityLog[]
+  _id: string;
+  listId: string;
+  title: string;
+  description: string;
+  labels: string[];
+  dueDate:string;
+  assignees: IUser[];
+  projectId:string;
+  status:string
+  // activityLogs:ActivityLog[]
 }
 
 export interface GetCard extends IFetch{
   data:ICard
 }
+
+// export interface IUpdateCard {
+//   _id?: string;
+//   listId?: string;
+//   title?: string;
+//   description?: string;
+//   labels?: string[];
+//   dueDate?:string;
+//   assignees?: IUser[];
+//   projectId?:string;
+//   activityLogs?:ActivityLog[]
+// }

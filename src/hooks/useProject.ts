@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   createProject,
   getProject,
@@ -22,7 +22,7 @@ export const useCreateProject = () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
     onError: (err) => {
-      console.log(err,'object');
+      console.log(err, "object");
       toast({ description: err.message });
     },
   });
@@ -35,17 +35,18 @@ export const useGetProjects = () => {
   });
 };
 
-export const useGetProject = (id: string) => {
+export const useGetProject = (id: string, enabled: boolean = true) => {
   return useQuery({
     queryKey: ["project", id],
     queryFn: () => getProject(id),
+    enabled,
   });
 };
 
-export const useUpdateProject = (projectId:string) => {
-  const queryClient = useQueryClient()
-  const {onClose} = useEditProjectStore()
-  const {toast} = useToast()
+export const useUpdateProject = (projectId: string) => {
+  const queryClient = useQueryClient();
+  const { onClose } = useEditProjectStore();
+  const { toast } = useToast();
   return useMutation({
     mutationFn:updateProject,
     onSuccess: (data)=>{
