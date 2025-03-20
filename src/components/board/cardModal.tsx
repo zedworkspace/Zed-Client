@@ -59,6 +59,8 @@ import AssigneesSelect from "./assigneesSelect";
 import { MultiValue } from "react-select";
 import { IProjectmember } from "@/interface/membersInterface";
 import { ICard } from "@/interface/cardInterface";
+import { useGetBoardMembers } from "@/hooks/useBoard";
+import { IBoardMember } from "@/interface/boardInterface";
 
 type FormValues = z.infer<typeof UpdateCardSchema>;
 
@@ -166,24 +168,21 @@ export function CardModal() {
     data: membersData,
     isLoading: isMembersLoading,
     isSuccess: isMembersSuccess,
-  } = useGetProjectMembers({
-    projectId,
-    enabled: isOpen,
-  });
+  } = useGetBoardMembers(channelId, isOpen);
 
   const handleAddAssignee = (
     newValue: MultiValue<{
       value: string;
       label: React.JSX.Element;
-      data: IProjectmember;
+      data: IBoardMember;
     }>
   ) => {
     setAssignees(newValue);
 
     const newAssignees = newValue.map((member) => ({
       _id: member.data._id,
-      name: member.data.userId.name,
-      profileImg: member.data.userId.profileImg,
+      name: member.data.name,
+      profileImg: member.data.profileImg,
     }));
 
     form.setValue("assignees", newAssignees);

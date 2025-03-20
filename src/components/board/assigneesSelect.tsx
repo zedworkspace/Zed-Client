@@ -2,9 +2,10 @@ import { IProjectmember } from "@/interface/membersInterface";
 import React from "react";
 import Select, { MultiValue, StylesConfig, components } from "react-select";
 import { X } from "lucide-react";
+import { IBoardMember } from "@/interface/boardInterface";
 
 type Props = {
-  members?: IProjectmember[];
+  members?: IBoardMember[];
   handleChange: (
     selected:
       | MultiValue<{
@@ -37,23 +38,22 @@ export default function AssigneesSelect({
   value,
 }: Props) {
   const options = members?.map((member) => ({
-    value: member.userId.name,
+    value: member.name,
     label: (
       <div className="flex items-center gap-2">
         <img
-          src={member.userId.profileImg}
-          alt={member.userId.name}
+          src={member.profileImg}
+          alt={member.name}
           width={20}
           height={20}
           className="rounded-full"
         />
-        {member.userId.name}
+        {member.name}
       </div>
     ),
     data: member,
   }));
 
-  
   const customStyles: StylesConfig = {
     control: (provided) => ({
       ...provided,

@@ -1,4 +1,8 @@
-import { IGetBoard, IGetBoards } from "@/interface/boardInterface";
+import {
+  IGetBoard,
+  IGetBoardMemebers,
+  IGetBoards,
+} from "@/interface/boardInterface";
 import apiClient from "@/lib/axios.config";
 import API_ROUTES from "@/lib/routes";
 
@@ -26,5 +30,14 @@ export const createBoard = async (data: {
   allowedRoles?: string[];
 }): Promise<IGetBoard> => {
   const response = await apiClient.post(API_ROUTES.BOARD.CREATE_BOARDS, data);
+  return response.data;
+};
+
+export const getBoardMembers = async (
+  boardId: string
+): Promise<IGetBoardMemebers> => {
+  const response = await apiClient.get(
+    API_ROUTES.BOARD.GET_BOARD_MEMBERS + boardId
+  );
   return response.data;
 };

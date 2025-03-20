@@ -17,7 +17,7 @@ const API_ROUTES = {
   PROFILE: {
     GET: "/v1/profile",
     UPDATE: "/v1/profile/update",
-    LOGOUT: "/v1/logout"
+    LOGOUT: "/v1/logout",
   },
   CHANNEL: {
     GET_CHANNELS_PROJECT_ID: "/v1/channel/",
@@ -35,6 +35,7 @@ const API_ROUTES = {
     GET_BOARDS: "/v1/boards/",
     GET_BOARD: "/v1/boards/",
     CREATE_BOARDS: "v1/boards/create",
+    GET_BOARD_MEMBERS: "v1/boards/members/",
   },
   LIST: {
     CREATE_LIST: "/v1/lists/",
@@ -54,18 +55,18 @@ const API_ROUTES = {
     SEND_INVITE: "/v1/invite/send-invite",
     ACCEPT_INVITE: "/v1/invite/accept-invite",
   },
-  MEMBERS:{
-    GET_MEMBERS :"/v1/project/members/",
+  MEMBERS: {
+    GET_MEMBERS: "/v1/project/members/",
   },
-  ROLE:{
-    CREATE_ROLE: '/v1/role/create',
-    GET_ROLES: '/v1/role/project',
-    ASSING_ROLES: '/v1/role/assign',
-    REMOVE_ROLES: '/v1/role/remove',
-    UPDATE_ROLE: '/v1/role/ update/',
-    DELETE_ROLE: '/v1/role/delete',
-    GET_SINGLE_ROLE: '/v1/role/'
-  }
+  ROLE: {
+    CREATE_ROLE: "/v1/role/create",
+    GET_ROLES: "/v1/role/project",
+    ASSING_ROLES: "/v1/role/assign",
+    REMOVE_ROLES: "/v1/role/remove",
+    UPDATE_ROLE: "/v1/role/ update/",
+    DELETE_ROLE: "/v1/role/delete",
+    GET_SINGLE_ROLE: "/v1/role/",
+  },
 };
 
 export default API_ROUTES;
