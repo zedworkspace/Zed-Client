@@ -1,4 +1,3 @@
-import { IProjectmember } from "@/interface/membersInterface";
 import React from "react";
 import Select, { MultiValue, StylesConfig, components } from "react-select";
 import { X } from "lucide-react";
@@ -11,7 +10,7 @@ type Props = {
       | MultiValue<{
           value: string;
           label: React.ReactNode;
-          data: IProjectmember;
+          data: IBoardMember;
         }>
       | unknown
   ) => void;
@@ -19,7 +18,7 @@ type Props = {
     | MultiValue<{
         value: string;
         label: React.ReactNode;
-        data: IProjectmember;
+        data: IBoardMember;
       }>
     | unknown;
 };

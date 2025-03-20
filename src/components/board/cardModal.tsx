@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -51,14 +50,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useParams } from "next/navigation";
-import { useGetProjectMembers } from "@/hooks/useMembers";
 import { UpdateCardSchema } from "@/validations/cardValidation";
 import { useQueryClient } from "@tanstack/react-query";
 import { IGetLists } from "@/interface/listInterface";
 import AssigneesSelect from "./assigneesSelect";
 import { MultiValue } from "react-select";
 import { IProjectmember } from "@/interface/membersInterface";
-import { ICard } from "@/interface/cardInterface";
 import { useGetBoardMembers } from "@/hooks/useBoard";
 import { IBoardMember } from "@/interface/boardInterface";
 
@@ -193,21 +190,9 @@ export function CardModal() {
       ...formData,
       labels: formData.labels?.filter((label) => label !== labelToRemove),
     });
-
-    // setActivityLogs([
-    //   ...activityLogs,
-    //   {
-    //     id: Date.now().toString(),
-    //     type: "label",
-    //     action: "removed",
-    //     label: labelToRemove,
-    //     timestamp: new Date(),
-    //   },
-    // ]);
   };
 
   const onSubmit = (submitData: FormValues) => {
-    console.log("Form submitted:", submitData);
     mutate({ cardId, projectId, formData: submitData });
   };
 
@@ -338,7 +323,13 @@ export function CardModal() {
                               Status
                             </FormLabel>
                             <Select
-                              onValueChange={field.onChange}
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                                const selectedList = currentLists?.data.find(
+                                  (list) => list.name === value
+                                );
+                                form.setValue("listId", selectedList?._id);
+                              }}
                               value={field.value}
                             >
                               <FormControl>

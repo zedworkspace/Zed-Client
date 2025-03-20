@@ -1,7 +1,7 @@
 import { GetCard, ICard } from "@/interface/cardInterface";
 import apiClient from "@/lib/axios.config";
 import API_ROUTES from "@/lib/routes";
-import { createCardSchema } from "@/validations/cardValidation";
+import { createCardSchema, UpdateCardSchema } from "@/validations/cardValidation";
 import { z } from "zod";
 
 type CreateCard = {
@@ -34,7 +34,7 @@ export const updatedCard = async ({
 }: {
   cardId: string;
   projectId: string;
-  formData: ICard;
+  formData: z.infer<typeof UpdateCardSchema>;
 }) => {
   console.log(projectId, "ppp");
   const response = await apiClient.put(
