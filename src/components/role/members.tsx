@@ -2,7 +2,6 @@ import { X } from "lucide-react";
 import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import Image from "next/image";
 import { Member } from "@/interface/roleInterFace";
 import { useAssignRoleStore, useRemoveRoleStore } from "@/store/roleStore";
 
@@ -40,7 +39,7 @@ function Members({
       {roleMembers?.map((member, ind) => (
         <div key={ind} className="flex items-center justify-between w-1/2">
           <div className="flex items-center space-x-3">
-            <Image
+            <img
               width={100}
               height={100}
               src={member.profileImg}
