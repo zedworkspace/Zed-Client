@@ -94,7 +94,11 @@ export function CardModal() {
     isLoading: isCardLoading,
   } = useGetCard({ cardId, isOpen });
 
-  const { mutate, isPending } = useUpdateCard(channelId);
+  const {
+    mutate,
+    isPending,
+    isSuccess: isCardUpdatedSuccess,
+  } = useUpdateCard(channelId);
   const currentLists = queryClient.getQueryData<IGetLists>([
     "lists",
     channelId,
@@ -145,6 +149,11 @@ export function CardModal() {
     }
   }, [data?.data?.assignees]);
 
+  useEffect(() => {
+    if (isCardUpdatedSuccess) {
+      onClose();
+    }
+  }, [isCardUpdatedSuccess]);
   const formData = form.watch();
 
   const handleAddLabel = () => {
@@ -284,14 +293,14 @@ export function CardModal() {
                         <FormField
                           control={form.control}
                           name="labels"
-                          render={({ field }) => (
+                          render={() => (
                             <FormItem className="w-full">
                               <FormControl>
                                 <Input
                                   value={newLabel}
                                   onChange={(e) => setNewLabel(e.target.value)}
                                   placeholder="Add a label"
-                                  className="flex-grow bg-secondary border-none text-gray-200 placeholder:text-[#72767d] focus-visible:ring-[#5865f2] focus-visible:border-[#5865f2]"
+                                  className="flex-grow bg-secondary shadow  border-none text-gray-200 placeholder:text-[#72767d] focus-visible:ring-0 focus-visible:border-0 outline-0 focus-visible:ring-offset-0"
                                 />
                               </FormControl>
                             </FormItem>
@@ -304,7 +313,7 @@ export function CardModal() {
                           size="icon"
                           onClick={handleAddLabel}
                           disabled={!newLabel.trim()}
-                          className="bg-secondary border-none hover:bg-secondary/50 hover:text-white text-white"
+                          className="bg-secondary shadow border-none hover:bg-secondary/50 hover:text-white text-white"
                         >
                           <PlusCircle className="h-4 w-4" />
                         </Button>
@@ -333,16 +342,16 @@ export function CardModal() {
                               value={field.value}
                             >
                               <FormControl>
-                                <SelectTrigger className="w-full bg-secondary border-none text-gray-200 focus:ring-0">
+                                <SelectTrigger className="w-full bg-secondary shadow border-none text-gray-200 focus:ring-0 focus:ring-offset-0">
                                   <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent className="bg-[#2f3136] border-[#202225] text-gray-200">
+                              <SelectContent className="bg-[#2f3136] border-[#202225] text-gray-200 focus:ring-0 focus:ring-offset-0">
                                 {currentLists?.data.map((list) => (
                                   <SelectItem
                                     key={list._id}
                                     value={list.name}
-                                    className="hover:bg-[#393c43] focus:bg-[#393c43] cursor-pointer"
+                                    className="hover:bg-secondary focus:bg-white/30 cursor-pointer"
                                   >
                                     {list.name}
                                   </SelectItem>
