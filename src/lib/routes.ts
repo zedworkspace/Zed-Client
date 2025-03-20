@@ -21,6 +21,7 @@ const API_ROUTES = {
   },
   CHANNEL: {
     GET_CHANNELS_PROJECT_ID: "/v1/channel/",
+    GET_CHANNEL: "/v1/channel/",
     CREATE_CHANNEL: "/v1/channel",
   },
   MESSAGE: {

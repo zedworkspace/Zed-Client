@@ -1,10 +1,9 @@
 "use client";
 import Board from "@/components/board/board";
 import TextChannel from "@/components/chat/TextChannel";
-import { useGetBoardById } from "@/hooks/useBoard";
-import { useGetLists } from "@/hooks/useList";
 import VoiceChannel from "@/components/voiceChannel/VoiceChannel";
 import { BoardSocketProvider } from "@/context/boardSocketProvider";
+import { useGetChannelById } from "@/hooks/useChannel";
 import { useGetProfile } from "@/hooks/useProfile";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -19,6 +18,17 @@ export default function ChatPage() {
   };
 
   const { data } = useGetProfile(userId);
+  const enabled = channelType === "voice" || channelType === "text";
+
+  const {
+    data: channelData,
+    isSuccess: channelSuccess,
+    isLoading: channelLoading,
+  } = useGetChannelById({
+    channelId,
+    projectId,
+    enabled,
+  });
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId") || "";
@@ -27,13 +37,9 @@ export default function ChatPage() {
     setChannelType(type);
   }, []);
 
-
-  const { data: boardData } = useGetBoardById({
-    boardId: channelId,
-    projectId,
-  });
-
-  if (channelType === "voice") return <VoiceChannel/>; // here we render video based component
+  const isSuccess = channelSuccess;
+  const isLoading = channelLoading;
+  if (channelType === "voice") return <VoiceChannel />; // here we render video based component
 
   if (channelType === "board")
     return (
@@ -42,12 +48,19 @@ export default function ChatPage() {
       </BoardSocketProvider>
     );
 
-  return (
-    <TextChannel
-      channelId={channelId}
-      userId={userId}
-      userName={data?.name || "Anonymous"}
-      userProfileImg={data?.profileImg || ""}
-    />
-  );
+  if (channelType === "text") {
+    if (isLoading) {
+      <div>channel loading....</div>;
+    } else if (isSuccess)
+      return (
+        <TextChannel
+          channelId={channelId}
+          projectId={projectId}
+          userId={userId}
+          userName={data?.name || "Anonymous"}
+          userProfileImg={data?.profileImg || ""}
+          data={channelData?.data}
+        />
+      );
+  }
 }

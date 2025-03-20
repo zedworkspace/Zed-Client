@@ -17,6 +17,8 @@ export const useCreateRole = (projectId: string) => {
     onSuccess: (data) => {
       toast({ description: data.message });
       queryClient.invalidateQueries({ queryKey: ["role", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["channels", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["board", projectId] });
     },
     onError: (err) => {
       toast({ description: err.message });
@@ -24,10 +26,11 @@ export const useCreateRole = (projectId: string) => {
   });
 };
 
-export const useGetRoles = (projectId: string) => {
+export const useGetRoles = (projectId: string,enabled: boolean = true) => {
   return useQuery({
     queryKey: ["role", projectId],
     queryFn: () => getRoles(projectId),
+    enabled
   });
 };
 
