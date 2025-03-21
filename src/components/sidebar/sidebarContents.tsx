@@ -11,6 +11,9 @@ import { useParams } from "next/navigation";
 import { connectSocket, getSocket } from "@/utils/socket";
 
 import Image from "next/image";
+import { useProfileStore } from "@/store/profileStore";
+import { useGetProfile } from "@/hooks/useProfile";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 type Props = {
   channelData?: IGetChannels;
@@ -21,8 +24,6 @@ export default function SidebarContents({ channelData, boardData }: Props) {
   const router = useRouter();
   const pathName = usePathname();
   const path = pathName.split("/")[3];
-
-  const userId = localStorage.getItem("userId");
 
   const { channelId, projectId }: { channelId: string; projectId: string } =
     useParams();
@@ -87,6 +88,16 @@ export default function SidebarContents({ channelData, boardData }: Props) {
     sessionStorage.setItem("channelType", type);
     router.replace(`/project/${projectId}/${channelId}`);
   };
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId") || "";
+      setUserId(storedUserId);
+    }
+  }, []);
+  const { onOpen, setProfileId } = useProfileStore();
+  const { data: profileData } = useGetProfile(userId);
 
   return (
     <div className="h-3/4 bg-pri pt-4 flex flex-col justify-between bg-black">
@@ -134,18 +145,31 @@ export default function SidebarContents({ channelData, boardData }: Props) {
           handleClick={voiceHandleClick}
         />
       </div>
-      <div className="">
-        <button className="w-full flex items-center gap-3 p-2 text-muted-foreground hover:text-white transition-colors duration-200 h-14 font-bold cursor-pointer">
-          <Image
-            src=''
-            alt=""
-            width={10}
-            height={10}
-            className="bg-slate-500 w-10 h-10 rounded-full"
-          />
+      <div className="px-2 mb-2">
+        <button
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-secondary/30 transition-colors duration-200 h-14 font-medium cursor-pointer"
+          onClick={() => {
+            setProfileId(userId);
+            onOpen();
+          }}
+        >
+          <Avatar className="h-10 w-10 border border-secondary/20">
+            {profileData?.profileImg ? (
+              <AvatarImage src={profileData.profileImg} alt="Profile" />
+            ) : (
+              <AvatarFallback className="bg-secondary text-white">
+                {profileData?.name?.[0] || "P"}
+              </AvatarFallback>
+            )}
+          </Avatar>
           <div className="flex flex-col items-start">
-            <span className="text-sm">Abhay pc</span>
-            <span className="text-xs text-muted-foreground/50 ">Online</span>
+            <span className="text-sm font-medium">
+              {profileData?.name || "Abhay pc"}
+            </span>
+            <span className="text-xs text-muted-foreground/70 flex items-center gap-1">
+              <span className="h-2 w-2 rounded-full bg-green-500"></span>
+              Online
+            </span>
           </div>
         </button>
       </div>
