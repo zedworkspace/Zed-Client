@@ -5,6 +5,7 @@ export interface IProjectmember {
     name: string;
     profileImg: string;
   };
+  isOwner: boolean;
 }
 
 interface IFetch {

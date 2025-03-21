@@ -74,7 +74,7 @@ export const useLeaveProject = (projectId:string) => {
   });
 };
 
-export const useChangeOwner = () => {
+export const useChangeOwner = (projectId:string) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -84,6 +84,7 @@ export const useChangeOwner = () => {
     onSuccess: (res) => {
       toast({ description: res.message });
       queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["permissions", projectId] });
     },
     onError: (err) => {
       toast({ description: err.message });
