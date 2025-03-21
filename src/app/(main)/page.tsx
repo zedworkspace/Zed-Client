@@ -8,6 +8,8 @@ import { useNewProjectStore } from "@/store/projectStore";
 export default function Page() {
   const { onOpen, isOpen } = useNewProjectStore();
 
+ 
+
   const data = [
     {
       title: "E-Commerce Platform",
