@@ -97,7 +97,7 @@ const Permissions = ({
 
   return (
     <div>
-      <Card className="bg-zinc-800 border-zinc-700">
+      <Card className="bg-transparent border-none">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-zinc-100 flex items-center gap-2">
             <ShieldAlert className="h-5 w-5" />
@@ -135,6 +135,7 @@ const Permissions = ({
                     </div>
                     <Switch
                       checked={role.permissions[permission.id]}
+                      className={`data-[state=checked]:bg-white data-[state=unchecked]:bg-white/50`}
                       onCheckedChange={() => togglePermission(permission.id)}
                     />
                   </div>

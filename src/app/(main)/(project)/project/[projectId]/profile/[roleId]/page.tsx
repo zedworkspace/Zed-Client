@@ -96,9 +96,9 @@ export default function RolePage() {
           </div>
         </header>
 
-        <ScrollArea className="flex-1 px-4 py-6">
-          <div className="max-w-3xl mx-auto space-y-8 pb-16">
-            <Card className="bg-zinc-800 border-zinc-700">
+        <ScrollArea className="flex-1 px-4 ">
+          <div className="max-w-3xl mx-auto ">
+            <Card className="bg-transparent border-none">
               <CardHeader>
                 <CardTitle className="text-zinc-100 flex items-center gap-2">
                   <Settings className="h-5 w-5" />
@@ -107,13 +107,14 @@ export default function RolePage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-300">
+                  <label className="text-sm font-semibold text-zinc-300">
                     ROLE NAME
                   </label>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="text-white"
+                    className="flex-grow bg-secondary shadow border-none text-gray-200 placeholder:text-[#72767d] focus-visible:ring-0 focus-visible:border-0 outline-0 focus-visible:ring-offset-0"
+
                   />
                 </div>
               </CardContent>
