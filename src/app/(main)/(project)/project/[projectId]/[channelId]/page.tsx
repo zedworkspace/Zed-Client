@@ -3,6 +3,7 @@ import Board from "@/components/board/board";
 import ChatLoading from "@/components/chat/ChatLoading";
 import TextChannel from "@/components/chat/TextChannel";
 import VoiceChannel from "@/components/voiceChannel/VoiceChannel";
+import VoiceHeader from "@/components/voiceChannel/VoiceHeader";
 import { BoardSocketProvider } from "@/context/boardSocketProvider";
 import { useGetChannelById } from "@/hooks/useChannel";
 import { useGetProfile } from "@/hooks/useProfile";
@@ -42,7 +43,7 @@ export default function ChatPage() {
 
   const isSuccess = channelSuccess;
   const isLoading = channelLoading;
-  if (channelType === "voice") return <VoiceChannel />; // here we render video based component
+  if (channelType === "voice") return <> <VoiceHeader data={channelData?.data}/><VoiceChannel/></> ; // here we render video based component
 
   if (channelType === "board")
     return (

@@ -67,12 +67,12 @@ export default function BoardList({ list, index }: Props) {
     );
   return (
     <div
-      className="w-72 p-3 h-full space-y-2 group"
+      className="w-72 p-3 h-full space-y-2 group "
       ref={setNodeRef}
       style={style}
     >
       <div
-        className={`p-3 bg-primary/50 flex gap-2 items-center rounded-md border-l-4 ${
+        className={`p-3 bg-black/30 shadow-md shadow-black/50 flex gap-2 items-center rounded-md border-l-4 ${
           colors[index % colors.length]
         } `}
         {...attributes}
