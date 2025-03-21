@@ -6,8 +6,7 @@ export const getProjectMembersbyId = async ({
   projectId,
 }: {
   projectId: string;
-}):Promise<IGetProjectMembersbyId> => {
-    console.log("vugh",projectId)
+}): Promise<IGetProjectMembersbyId> => {
   const response = await apiClient.get(
     API_ROUTES.MEMBERS.GET_MEMBERS + projectId
   );

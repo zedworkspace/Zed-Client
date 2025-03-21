@@ -1,17 +1,14 @@
-
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { Github, Kanban, MessagesSquare, Volume2 } from "lucide-react";
 import { IGetChannels } from "@/interface/channelInterface";
 import SidebarAccordion from "./sidebarAccordion";
 import { IGetBoards } from "@/interface/boardInterface";
-import {  usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Separator } from "../ui/separator";
 import { useGetNotification } from "@/hooks/useMessage";
 import { useParams } from "next/navigation";
 import { connectSocket, getSocket } from "@/utils/socket";
-
-
 
 type Props = {
   channelData?: IGetChannels;
@@ -20,12 +17,13 @@ type Props = {
 
 export default function SidebarContents({ channelData, boardData }: Props) {
   const router = useRouter();
-  const pathName = usePathname()
-  const path = pathName.split('/')[3]
- 
+  const pathName = usePathname();
+  const path = pathName.split("/")[3];
+
   const userId = localStorage.getItem("userId");
 
-  const { channelId }: { channelId: string } = useParams();
+  const { channelId, projectId }: { channelId: string; projectId: string } =
+    useParams();
 
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
   const [socketChannelId, setSocketChannelId] = useState("");
@@ -75,7 +73,7 @@ export default function SidebarContents({ channelData, boardData }: Props) {
     // socket.emit("readMessage", { channelId, userId }); // Send read event
 
     sessionStorage.setItem("channelType", type);
-    router.replace(`${channelId}`);
+    router.replace(`/project/${projectId}/${channelId}`);
 
     setUnreadCounts((prevCounts) => ({
       ...prevCounts,
@@ -85,7 +83,7 @@ export default function SidebarContents({ channelData, boardData }: Props) {
 
   const voiceHandleClick = (channelId: string, type: string) => {
     sessionStorage.setItem("channelType", type);
-    router.replace(`${channelId}`);
+    router.replace(`/project/${projectId}/${channelId}`);
   };
 
   return (
@@ -101,7 +99,7 @@ export default function SidebarContents({ channelData, boardData }: Props) {
           <span className="text-sm font-bold">Git Hub</span>
         </div>
       </div>
-      <Separator className="w-[95%] m-auto bg-white/30 h-0.5"/>
+      <Separator className="w-[95%] m-auto bg-white/30 h-0.5" />
 
       {/* board */}
       <SidebarAccordion
@@ -132,6 +130,6 @@ export default function SidebarContents({ channelData, boardData }: Props) {
         type="voice"
         handleClick={voiceHandleClick}
       />
-      </div>
-  )
+    </div>
+  );
 }

@@ -12,6 +12,7 @@ import {
   ChevronUp,
   FolderKanban,
   Kanban,
+  LogOut,
   Plus,
   UserRoundPlus,
 } from "lucide-react";
@@ -21,6 +22,7 @@ import { InviteMembers } from "../modals/inviteMembersModal";
 import { useCreateChannelStore } from "@/store/channelStore";
 import { useCreateBoardStore } from "@/store/boardStore";
 import { useRouter } from "next/navigation";
+import { LeaveProjectModal } from "../modals/LeaveProjectModal"; // Import modal
 
 type Props = {
   projectData: any;
@@ -28,10 +30,12 @@ type Props = {
 
 export default function SideBarHead({ projectData }: Props) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const router = useRouter()
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
+  const router = useRouter();
   const { openGenerateModal } = useInviteStore();
-  const { onOpen } = useCreateChannelStore()
-  const { onCreateBoardOpen } = useCreateBoardStore()
+  const { onOpen } = useCreateChannelStore();
+  const { onCreateBoardOpen } = useCreateBoardStore();
+
   const dropdownItems = [
     {
       icon: FolderKanban,
@@ -43,8 +47,9 @@ export default function SideBarHead({ projectData }: Props) {
       label: "Invite People",
       onClick: openGenerateModal,
     },
-    { icon: Kanban, label: "Create board", onClick: () => {onCreateBoardOpen()} },
-    { icon: Plus, label: "Create channel", onClick: () => {onOpen()} },
+    { icon: Kanban, label: "Create board", onClick: onCreateBoardOpen },
+    { icon: Plus, label: "Create channel", onClick: onOpen },
+    { icon: LogOut, label: "Leave project", onClick: () => setIsLeaveModalOpen(true) },
   ];
 
   return (
@@ -53,6 +58,11 @@ export default function SideBarHead({ projectData }: Props) {
       style={{ backgroundImage: `url(${projectData?.data.logo})` }}
     >
       <InviteMembers />
+      <LeaveProjectModal
+        isOpen={isLeaveModalOpen}
+        onClose={() => setIsLeaveModalOpen(false)}
+        projectId={projectData?.data._id}
+      />
       <div className="flex justify-between items-center bg-black bg-opacity-20 p-3 w-full text-white text-base font-semibold">
         <h1>{projectData?.data.name}</h1>
         <DropdownMenu onOpenChange={setIsDropdownOpen}>

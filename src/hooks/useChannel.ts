@@ -1,12 +1,16 @@
-import { createChannels, getChannels } from "@/services/channelServices";
+import {
+  createChannels,
+  getChannelById,
+  getChannels,
+} from "@/services/channelServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
 import { useCreateChannelStore } from "@/store/channelStore";
 
 export const useGetChannels = ({
   projectId,
-  isEnabled,
-}: {
+}: // isEnabled,
+{
   projectId: string;
   isEnabled?: boolean;
 }) => {
@@ -18,20 +22,35 @@ export const useGetChannels = ({
   });
 };
 
-
-export const useCreateChannel = (projectId:string)=>{
-  const queryClient = useQueryClient()
-  const {toast} = useToast()
-  const {onClose} = useCreateChannelStore()
+export const useCreateChannel = (projectId: string) => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { onClose } = useCreateChannelStore();
   return useMutation({
-    mutationFn:createChannels,
-    onSuccess:(res)=>{
-      toast({description:res.message})
-      onClose()
-      queryClient.invalidateQueries({queryKey:['channels',projectId]}) 
+    mutationFn: createChannels,
+    onSuccess: (res) => {
+      toast({ description: res.message });
+      onClose();
+      queryClient.invalidateQueries({ queryKey: ["channels", projectId] });
     },
     onError: (err) => {
-      toast ({description:err.message})
-    }
-  })
-}
+      toast({ description: err.message });
+    },
+  });
+};
+
+export const useGetChannelById = ({
+  channelId,
+  projectId,
+  enabled = false,
+}: {
+  channelId: string;
+  projectId: string;
+  enabled: boolean;
+}) => {
+  return useQuery({
+    queryKey: ["channel"],
+    queryFn: async () => await getChannelById({ channelId, projectId }),
+    enabled,
+  });
+};

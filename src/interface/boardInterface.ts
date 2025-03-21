@@ -33,3 +33,12 @@ interface IDragList {
 }
 
 export type IDragData = IDragCard | IDragList;
+
+export interface IBoardMember {
+  name: string;
+  profileImg: string;
+  _id: string;
+}
+export interface IGetBoardMemebers extends IFetch {
+  data: IBoardMember[];
+}

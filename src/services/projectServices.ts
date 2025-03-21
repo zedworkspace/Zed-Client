@@ -18,6 +18,15 @@ export const getProjects = async (): Promise<IGetProjects> => {
 
 export const getProject = async (id: string): Promise<IGetProject> => {
   const response = await apiClient.get(API_ROUTES.PROJECT.GET_PROJECT + id);
-  console.log(response.data)
+  return response.data;
+};
+
+export const updateProject = async ({projectId,data}:{projectId:string,data:FormData}) => {
+  const response = await apiClient.put(API_ROUTES.PROJECT.UPDATE_PROJECT+projectId, data)
+  return response.data
+}
+
+export const leaveProject = async (id: string) => {
+  const response = await apiClient.post(API_ROUTES.PROJECT.LEAVE_PROJECT + id);
   return response.data;
 };

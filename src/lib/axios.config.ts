@@ -46,7 +46,7 @@ apiClient.interceptors.response.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (err) => {
-    console.error("Response Error:", err.response.data);
+    // console.error("Response Error:", err.response.data);
     return Promise.reject(err.response.data);
   }
 );

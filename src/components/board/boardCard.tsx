@@ -15,16 +15,9 @@ export default function BoardCard({ card }: { card: ICard }) {
     "bg-yellow-400 text-yellow-900 hover:bg-yellow-500",
     "bg-purple-400 text-purple-900 hover:bg-purple-500",
   ];
-  
 
   const { setCardid, onOpen } = useCardStore();
-  const [isLabelHide, setIsLabelHide] = useState(true);
 
-  // const { setNodeRef, transform, listeners, attributes, isDragging } =
-  //   useDraggable({
-  //     id: card._id,
-  //     data: { list: card.listId },
-  //   });
   const {
     setNodeRef,
     attributes,
@@ -66,29 +59,20 @@ export default function BoardCard({ card }: { card: ICard }) {
         className={`p-3 border rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing bg-primary/20 border-primary/50 rotate-1 scale-105 transition-all duration-300`}
       >
         {card.labels.length > 0 && (
-          <div
-            className="flex gap-2 overflow-scroll scrollbar-hide rounded-full"
-            onClick={() => setIsLabelHide((p) => !p)}
-          >
+          <div className="flex gap-2 overflow-scroll scrollbar-hide rounded-full">
             {card.labels.map((label: string, index: number) => (
               <Badge
                 className={`${
                   colors[index % colors.length]
-                } transition-all duration-500 whitespace-nowrap ${
-                  isLabelHide ? "px-5 py-1" : ""
-                }`}
+                } transition-all duration-500 whitespace-nowrap px-5 py-1`}
                 key={index}
               >
-                <span className={`${isLabelHide ? "hidden" : "inline"}`}>
-                  {label}
-                </span>
+                <span>{label}</span>
               </Badge>
             ))}
           </div>
         )}
-        <div
-       
-        >
+        <div>
           <h1 className="font-semibold text-white/50">{card.title}</h1>
         </div>
 
@@ -117,6 +101,10 @@ export default function BoardCard({ card }: { card: ICard }) {
       {...listeners}
       ref={setNodeRef}
       style={style}
+      onClick={() => {
+        setCardid(card._id);
+        onOpen();
+      }}
       className={`p-3 border rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing
         ${
           isDragging
@@ -125,37 +113,23 @@ export default function BoardCard({ card }: { card: ICard }) {
         }
         transition-all duration-300`}
     >
-      
       {card.labels.length > 0 && (
-        <div
-          className="flex gap-2 overflow-scroll scrollbar-hide rounded-full"
-          onClick={() => setIsLabelHide((p) => !p)}
-        >
+        <div className="flex gap-2 overflow-scroll scrollbar-hide rounded-full">
           {card.labels.map((label: string, index: number) => (
             <Badge
               className={`${
                 colors[index % colors.length]
-              } transition-all duration-500 whitespace-nowrap ${
-                isLabelHide ? "px-5 py-1" : ""
-              }`}
+              } transition-all duration-500 whitespace-nowrap`}
               key={index}
             >
-              <span className={`${isLabelHide ? "hidden" : "inline"}`}>
-                {label}
-              </span>
+              <span>{label}</span>
             </Badge>
           ))}
         </div>
       )}
-      <div
-        onClick={() => {
-          setCardid(card._id);
-          onOpen();
-        }}
-      >
+      <div>
         <h1 className="font-semibold text-white/85">{card.title}</h1>
       </div>
-     
 
       {(card.dueDate || card.assignees.length > 0) && (
         <div className="flex justify-evenly items-center ">

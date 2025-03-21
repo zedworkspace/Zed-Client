@@ -33,10 +33,10 @@ export const updatedCard = async ({
   formData,
 }: {
   cardId: string;
-  projectId:string;
+  projectId: string;
   formData: ICard;
 }) => {
-  console.log(projectId,'ppp')
+  console.log(projectId, "ppp");
   const response = await apiClient.put(
     API_ROUTES.CARD.UPDATE_CARD_BYID + cardId + "/edit/" + projectId,
     formData
@@ -67,9 +67,27 @@ type UpdateCardPositionBetweenList = {
   toCardId: string;
 };
 
-export const updateCardPositionBetweenList = async (data:UpdateCardPositionBetweenList) => {
+export const updateCardPositionBetweenList = async (
+  data: UpdateCardPositionBetweenList
+) => {
   const response = await apiClient.post(
     API_ROUTES.CARD.UPDATE_CARD_POSITION_IN_DIFF_LIST,
+    data
+  );
+  return response.data;
+};
+
+export interface IUpdateCardPositionInDnd {
+  fromListId: string;
+  cardId: string;
+  toListId: string;
+  boardId: string;
+}
+export const updateCardPositionInDnd = async (
+  data: IUpdateCardPositionInDnd
+) => {
+  const response = await apiClient.post(
+    API_ROUTES.CARD.UPDATE_CARD_POSITION_IN_DND,
     data
   );
   return response.data;
