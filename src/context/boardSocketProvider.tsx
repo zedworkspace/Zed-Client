@@ -47,6 +47,7 @@ export const BoardSocketProvider = ({ children }: { children: ReactNode }) => {
 
   const updatedListsHandler = (queryClient: QueryClient, boardId: string) => {
     socket?.on("onUpdateList", (updatedData) => {
+      console.log("updatedLists", updatedData);
       queryClient.setQueryData(["lists", boardId], (oldData: IGetLists) => {
         return { ...oldData, data: updatedData };
       });

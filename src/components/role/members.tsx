@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { X } from "lucide-react";
 import React from "react";
 import { Input } from "../ui/input";
@@ -7,30 +8,29 @@ import { useAssignRoleStore, useRemoveRoleStore } from "@/store/roleStore";
 
 function Members({
   roleName,
-  roleId,
   roleMembers,
 }: {
   roleName:string
-  roleId: string;
   roleMembers: Member[];
 }) {
 
     const {setMembers,onOpen} = useAssignRoleStore()
-    const {onDeleteOpen, setMemberName, setRoleName} = useRemoveRoleStore()
+    const {onDeleteOpen, setMemberName, setRoleName, setMemeberId} = useRemoveRoleStore()
 
     const handleAdd = () => {
         setMembers(roleMembers)
         onOpen()
     }
 
-    const handleRemove = (name:string) => {
+    const handleRemove = (name:string,userId:string) => {
       setMemberName(name)
       setRoleName(roleName)
+      setMemeberId(userId)
       onDeleteOpen()
     }
           
   return (
-    <div className="space-y-7">
+    <div className="space-y-7 mt-7">
       <div className="flex space-x-5 ">
         <Input placeholder="Search Members" className="w-1/2" />
         <Button className="bg-secondary" onClick={handleAdd}>Add Members</Button>
@@ -39,15 +39,13 @@ function Members({
         <div key={ind} className="flex items-center justify-between w-1/2">
           <div className="flex items-center space-x-3">
             <img
-              width={100}
-              height={100}
               src={member.profileImg}
               alt={member.name}
               className="w-8 h-8 rounded-full"
             />
             <p>{member.name}</p>
           </div>
-          <X size={16} onClick={()=>handleRemove(member.name)}/>
+          <X size={16} onClick={()=>handleRemove(member.name,member.userId)}/>
         </div>
       ))}
     </div>

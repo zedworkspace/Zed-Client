@@ -1,4 +1,8 @@
-import { CreateRole, GetRole } from "@/interface/roleInterFace";
+import {
+  CreateRole,
+  GetRole,
+  IGetMemberPermissions,
+} from "@/interface/roleInterFace";
 import apiClient from "@/lib/axios.config";
 import API_ROUTES from "@/lib/routes";
 
@@ -37,9 +41,10 @@ export const getRoles = async (projectId: string): Promise<GetRole> => {
 
 export const updateRole = async (data: {
   roleId: string;
-  permissions: string[];
-  name: string;
+  permissions?: string[];
+  name?: string;
 }) => {
+  console.log(data.permissions, "laskdjflkajsdlfkj");
   const response = await apiClient.put(API_ROUTES.ROLE.UPDATE_ROLE, data);
   return response.data;
 };
@@ -57,6 +62,15 @@ export const deleteRole = async (data: {
 export const getSingleRole = async (roleId: string) => {
   const response = await apiClient.get(
     API_ROUTES.ROLE.GET_SINGLE_ROLE + roleId
+  );
+  return response.data;
+};
+
+export const getMemberPermissions = async (
+  projectId: string
+): Promise<IGetMemberPermissions> => {
+  const response = await apiClient.get(
+    API_ROUTES.ROLE.GET_MEMBER_PERMISSIONS + projectId
   );
   return response.data;
 };

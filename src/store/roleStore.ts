@@ -20,7 +20,9 @@ type RemoveRole = {
   onDeleteOpen: () => void;
   onDeleteClose: () => void;
   memberName: string;
+  memberId: string;
   roleName: string;
+  setMemeberId: (memberId: string) => void;
   setMemberName: (memberName: string) => void;
   setRoleName: (roleName: string) => void;
 };
@@ -45,6 +47,8 @@ export const useRemoveRoleStore = create<RemoveRole>((set) => ({
   onDeleteClose: () => set({ isDeleteOpen: false }),
   memberName: "",
   roleName: "",
+  memberId: "",
   setMemberName: (memberName) => set({ memberName: memberName }),
   setRoleName: (roleName) => set({ roleName: roleName }),
+  setMemeberId: (id) => set({ memberId: id }),
 }));

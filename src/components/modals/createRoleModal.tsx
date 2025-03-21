@@ -21,22 +21,21 @@ export function CreateRole() {
     projectId: string;
   };
 
-  const router = useRouter()
+  const router = useRouter();
 
   const { isOpen, onClose } = useCreateNewRole();
   const [name, setName] = useState("");
-  const { mutate, isPending,data, isSuccess } = useCreateRole(projectId);
+  const { mutate, isPending, data, isSuccess } = useCreateRole(projectId);
 
-
-  const roleId = data?.data._id
-  useEffect(()=>{
-    if(isSuccess){
-        router.push(`profile/${roleId}`)
+  const roleId = data?.data._id;
+  useEffect(() => {
+    if (isSuccess) {
+      router.push(`/project/${projectId}/profile/${roleId}`);
     }
-  },[isSuccess,roleId,router])
+  }, [isSuccess, roleId, router]);
   const handleCreate = () => {
-    mutate({name,projectId});
-    setName('')
+    mutate({ name, projectId });
+    setName("");
     onClose();
   };
 
@@ -58,7 +57,12 @@ export function CreateRole() {
           />
         </div>
         <DialogFooter>
-          <Button className="bg-none" type="submit" onClick={handleCreate} disabled = {name==""}>
+          <Button
+            className="bg-none"
+            type="submit"
+            onClick={handleCreate}
+            disabled={name == ""}
+          >
             {isPending ? <LoaderCircle /> : "Create"}
           </Button>
         </DialogFooter>
