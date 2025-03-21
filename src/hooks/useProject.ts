@@ -5,6 +5,7 @@ import {
   getProjects,
   updateProject,
   leaveProject,
+  changeOwner,
 } from "@/services/projectServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
@@ -63,6 +64,23 @@ export const useLeaveProject = (projectId:string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: leaveProject,
+    onSuccess: (res) => {
+      toast({ description: res.message });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    },
+    onError: (err) => {
+      toast({ description: err.message });
+    },
+  });
+};
+
+export const useChangeOwner = () => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ projectId, userId }: { projectId: string; userId: string }) =>
+      changeOwner(projectId, userId),
     onSuccess: (res) => {
       toast({ description: res.message });
       queryClient.invalidateQueries({ queryKey: ["projects"] });
