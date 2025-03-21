@@ -31,7 +31,7 @@ export default function TextChannel({
 
         <div className="flex flex-col justify-between">
           <ChatWindow channelId={channelId} userId={userId} />
-          <div className="fixed bottom-0  w-[50vw] md:w-[65vw] lg:w-[78vw] px-4 bg-secondary h-14">
+          <div className="fixed bottom-0  w-[50vw] md:w-[65vw] lg:w-[78vw] px-4 h-14">
             <ChatInput
               channelId={channelId}
               userId={userId}

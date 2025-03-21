@@ -5,7 +5,7 @@ const VoiceChannel = () => {
   const [mic,setMic] = useState(false);
   const user = [1,2];
   return (
-    <div className='h-full bg-black'>
+    <div className='h-full bg-black/50'>
       <div className='h-full w-[100%] flex flex-col'>
       <div className="top w-full h-[80%] flex justify-center items-center gap-5 content-center flex-wrap">
            {

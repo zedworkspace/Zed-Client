@@ -8,7 +8,7 @@ function layout({ children }: Props) {
   return (
     <div className="flex h-full w-full">
       <Sidebar />
-      <main className="bg-secondary flex-1 overflow-auto h-full scrollbar-hide ">
+      <main className="bg-black/40 flex-1 overflow-auto h-full scrollbar-hide ">
         {children}
       </main>
     </div>

@@ -20,7 +20,7 @@ export default function LeftSection() {
 
   if (isSuccess)
     return (
-      <div className=" w-16 flex flex-col gap-3 items-center fixed h-screen bg-black pt-2 border-r border-white/40">
+      <div className=" w-16 flex flex-col gap-3 items-center fixed h-screen bg-black pt-2 border-r border-gray-500/40">
         <Image
                   src="/logo.svg"
                   width={40}
