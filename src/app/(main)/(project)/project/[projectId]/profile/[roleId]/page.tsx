@@ -1,13 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronLeft, Settings, Users } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useGetRoles, useGetSingleRole } from "@/hooks/useRole";
+import { useGetRoles, useGetSingleRole, useUpdateRole } from "@/hooks/useRole";
 import Permissions from "@/components/role/permissions";
 import Members from "@/components/role/members";
+import SaveChanges from "@/components/role/saveChanges";
 
 export default function RolePage() {
   const { roleId, projectId } = useParams() as {
@@ -17,16 +18,24 @@ export default function RolePage() {
 
   const router = useRouter();
 
-  const { data, isLoading } = useGetSingleRole(roleId);
+  const { data, isLoading, isSuccess } = useGetSingleRole(roleId);
   const { data: roles } = useGetRoles(projectId);
+  const { mutate } = useUpdateRole(roleId);
   const [activeTab, setActiveTab] = useState("permissions");
+  const [name, setName] = useState<string >("");
+
+
+  useEffect(() => {
+    if (isSuccess) {
+      setName(data?.data.roleName);
+    }
+  }, [data?.data.roleName, isSuccess]);
 
   if (isLoading) {
     return <div>loading details..</div>;
   }
   return (
     <div className="flex min-h-screen bg-zinc-900 text-zinc-100">
-      {/* Sidebar  */}
       <div className="w-64 border-r border-zinc-800 p-4 hidden md:block">
         <div className="flex items-center gap-2 mb-6">
           <Users className="h-5 w-5 text-zinc-400" />
@@ -52,9 +61,7 @@ export default function RolePage() {
         </div>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col">
-        {/* Header */}
         <header className="border-b border-zinc-800 p-4">
           <div className="flex items-center gap-2">
             <button className="p-1 rounded-full hover:bg-zinc-800">
@@ -67,10 +74,8 @@ export default function RolePage() {
           </div>
         </header>
 
-        {/* Content */}
         <ScrollArea className="flex-1 px-4 py-6">
           <div className="max-w-3xl mx-auto space-y-8 pb-16">
-            {/* Role Overview Card */}
             <Card className="bg-zinc-800 border-zinc-700">
               <CardHeader>
                 <CardTitle className="text-zinc-100 flex items-center gap-2">
@@ -84,14 +89,20 @@ export default function RolePage() {
                     ROLE NAME
                   </label>
                   <Input
-                    value={data?.data.roleName}
-                    readOnly
-                    // onChange={handleRoleNameChange}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="text-white"
                   />
                 </div>
               </CardContent>
             </Card>
+            {name.trim() !== data?.data.roleName && (
+              <SaveChanges
+              onClick={() => mutate({ roleId, name })}
+              onCancel={() => setName(data?.data.roleName)}
+           />
+             
+            )} 
 
             <div className="flex space-x-5 border-b border-zinc-700 pb-2">
               <button
@@ -116,11 +127,15 @@ export default function RolePage() {
               </button>
             </div>
 
-            {activeTab === "permissions" && <Permissions />}
+            {activeTab === "permissions" && (
+              <Permissions
+                roleId ={roleId}
+                existingPermissions = {data?.data.permissions}
+              />
+            )}
             {activeTab === "members" && (
               <Members
                 roleName={data?.data.roleName}
-                roleId={roleId}
                 roleMembers={data?.data.members}
               />
             )}
