@@ -68,6 +68,9 @@ const API_ROUTES = {
     GET_SINGLE_ROLE: "/v1/role/",
     GET_MEMBER_PERMISSIONS: "/v1/role/permissions/",
   },
+  ACTIVITY: {
+    GET_ACTIVITY_BY_ENTITY_ID: "/v1/activity/",
+  },
 };
 
 export default API_ROUTES;
