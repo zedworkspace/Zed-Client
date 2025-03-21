@@ -1,5 +1,6 @@
 "use client";
 import Board from "@/components/board/board";
+import ChatLoading from "@/components/chat/ChatLoading";
 import TextChannel from "@/components/chat/TextChannel";
 import VoiceChannel from "@/components/voiceChannel/VoiceChannel";
 import { BoardSocketProvider } from "@/context/boardSocketProvider";
@@ -19,6 +20,8 @@ export default function ChatPage() {
 
   const { data } = useGetProfile(userId);
   const enabled = channelType === "voice" || channelType === "text";
+
+
 
   const {
     data: channelData,
@@ -47,6 +50,13 @@ export default function ChatPage() {
         <Board boardId={channelId} projectId={projectId} />
       </BoardSocketProvider>
     );
+
+    if(!isSuccess && sessionStorage.getItem("channelType")=== 'text'){
+      return <ChatLoading/>
+    }
+    if(!isSuccess && sessionStorage.getItem('channelType') === 'voice'){
+      return <div>Loading voice channel</div>
+    }
 
   if (channelType === "text") {
     if (isLoading) {

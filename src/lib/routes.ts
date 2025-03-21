@@ -63,7 +63,7 @@ const API_ROUTES = {
     GET_ROLES: "/v1/role/project",
     ASSING_ROLES: "/v1/role/assign",
     REMOVE_ROLES: "/v1/role/remove",
-    UPDATE_ROLE: "/v1/role/ update/",
+    UPDATE_ROLE: "/v1/role/update/",
     DELETE_ROLE: "/v1/role/delete",
     GET_SINGLE_ROLE: "/v1/role/",
   },

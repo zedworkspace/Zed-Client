@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import { useParams } from "next/navigation";
 
 import { useRemoveRoleStore } from "@/store/roleStore";
-import { useAssignRole } from "@/hooks/useRole";
+import { useRemoveFromRole } from "@/hooks/useRole";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
 export function RemoveRole() {
@@ -22,13 +22,14 @@ export function RemoveRole() {
     roleId: string;
   };
 
-  const { isDeleteOpen, onDeleteClose, roleName, memberName} = useRemoveRoleStore();
-  const { mutate } = useAssignRole(roleId);
+  const { isDeleteOpen, onDeleteClose, roleName, memberId, memberName} = useRemoveRoleStore();
+  
+  const { mutate } = useRemoveFromRole(roleId);
 
 
-  const handleAdd = () => {
-    mutate({ projectId, roleId, userId});
-  };
+  const handleConfirmRemove = () => {
+    mutate({projectId,roleId,userId:memberId})
+  }
 
   return (
     <Dialog open={isDeleteOpen} onOpenChange={onDeleteClose}>
@@ -48,7 +49,7 @@ export function RemoveRole() {
           <Button className="bg-none" type="submit" onClick={onDeleteClose}>
             Cancel
           </Button>
-          <Button className="bg-red-600 hover:bg-red-700" type="submit" onClick={handleAdd}>
+          <Button className="bg-red-600 hover:bg-red-700" type="submit" onClick={handleConfirmRemove}>
             Remove
           </Button>
         </DialogFooter>
