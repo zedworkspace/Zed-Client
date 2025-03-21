@@ -10,6 +10,8 @@ import { useGetNotification } from "@/hooks/useMessage";
 import { useParams } from "next/navigation";
 import { connectSocket, getSocket } from "@/utils/socket";
 
+import Image from "next/image";
+
 type Props = {
   channelData?: IGetChannels;
   boardData?: IGetBoards;
@@ -87,49 +89,66 @@ export default function SidebarContents({ channelData, boardData }: Props) {
   };
 
   return (
-    <div className="h-3/4 bg-primary pt-4 space-y-2">
-      {/* github */}
-      <div className="px-2" onClick={() => router.replace("git-hub")}>
-        <div
-          className={`w-full gap-2 cursor-pointer flex items-center p-2 text-muted-foreground hover:bg-secondary/50 hover:text-white transition-colors duration-200 rounded-md h-10 font-bold ${
-            path === "git-hub" ? "bg-secondary/80" : ""
-          } }`}
-        >
-          <Github className="size-5" />
-          <span className="text-sm font-bold">Git Hub</span>
+    <div className="h-3/4 bg-pri pt-4 flex flex-col justify-between bg-black">
+      <div className="space-y-3 overflow-auto h-full">
+        {/* github */}
+        <div className="px-2" onClick={() => router.replace("git-hub")}>
+          <div
+            className={`w-full gap-2 cursor-pointer flex items-center p-2 text-muted-foreground hover:bg-secondary/50 hover:text-white transition-colors duration-200 rounded-md h-10 font-bold ${
+              path === "git-hub" ? "bg-secondary/80" : ""
+            } }`}
+          >
+            <Github className="size-5" />
+            <span className="text-sm font-bold">Git Hub</span>
+          </div>
         </div>
-      </div>
-      <Separator className="w-[95%] m-auto bg-white/30 h-0.5" />
+        <Separator className="w-[95%] m-auto bg-white/30 h-0.5" />
 
-      {/* board */}
-      <SidebarAccordion
-        Icon={Kanban}
-        accordianValue="item-3"
-        title="YOUR BOARDS"
-        channelData={boardData?.data}
-        type="board"
-        handleClick={voiceHandleClick}
-      />
-      {/* Text channels  */}
-      <SidebarAccordion
-        Icon={MessagesSquare}
-        accordianValue="item-1"
-        title="TEXT CHANNELS"
-        channelData={channelData?.data.textChannels}
-        type="text"
-        handleClick={textHandleClick}
-        unreadCounts={unreadCounts}
-        socketChannelId={socketChannelId}
-      />
-      {/* Voice channels */}
-      <SidebarAccordion
-        Icon={Volume2}
-        accordianValue="item-2"
-        title="VOICE CHANNELS"
-        channelData={channelData?.data.voiceChannels}
-        type="voice"
-        handleClick={voiceHandleClick}
-      />
+        {/* board */}
+        <SidebarAccordion
+          Icon={Kanban}
+          accordianValue="item-3"
+          title="YOUR BOARDS"
+          channelData={boardData?.data}
+          type="board"
+          handleClick={voiceHandleClick}
+        />
+        {/* Text channels  */}
+        <SidebarAccordion
+          Icon={MessagesSquare}
+          accordianValue="item-1"
+          title="TEXT CHANNELS"
+          channelData={channelData?.data.textChannels}
+          type="text"
+          handleClick={textHandleClick}
+          unreadCounts={unreadCounts}
+          socketChannelId={socketChannelId}
+        />
+        {/* Voice channels */}
+        <SidebarAccordion
+          Icon={Volume2}
+          accordianValue="item-2"
+          title="VOICE CHANNELS"
+          channelData={channelData?.data.voiceChannels}
+          type="voice"
+          handleClick={voiceHandleClick}
+        />
+      </div>
+      <div className="">
+        <button className="w-full flex items-center gap-3 p-2 text-muted-foreground hover:text-white transition-colors duration-200 h-14 font-bold cursor-pointer">
+          <Image
+            src=''
+            alt=""
+            width={10}
+            height={10}
+            className="bg-slate-500 w-10 h-10 rounded-full"
+          />
+          <div className="flex flex-col items-start">
+            <span className="text-sm">Abhay pc</span>
+            <span className="text-xs text-muted-foreground/50 ">Online</span>
+          </div>
+        </button>
+      </div>
     </div>
   );
 }
