@@ -43,7 +43,7 @@ export default function ChatPage() {
 
   const isSuccess = channelSuccess;
   const isLoading = channelLoading;
-  if (channelType === "voice") return <VoiceChannel />; // here we render video based component
+  if (channelType === "voice") return <> <VoiceHeader data={channelData?.data}/><VoiceChannel/></> ; // here we render video based component
 
   if (channelType === "board")
     return (
@@ -56,7 +56,7 @@ export default function ChatPage() {
       return <ChatLoading/>
     }
     if(!isSuccess && sessionStorage.getItem('channelType') === 'voice'){
-      return <div><VoiceHeader/><VoiceChannel/></div>
+      return <div>Loading voice channel</div>
     }
 
   if (channelType === "text") {

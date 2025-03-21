@@ -105,7 +105,7 @@ export default function BoardCard({ card }: { card: ICard }) {
         setCardid(card._id);
         onOpen();
       }}
-      className={`p-3 border rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing shadow-md shadow-black/50 font-sans bg-neutral-900/40
+      className={`p-3 border rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing shadow-md shadow-black/50 font-sans bg-neutral-900/50
         ${
           isDragging
             ? "bg-primary/40 border-primary/50 rotate-1 scale-105"

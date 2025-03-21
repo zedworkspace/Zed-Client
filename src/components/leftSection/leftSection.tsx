@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Separator } from "../ui/separator";
 
 export default function LeftSection() {
+  
   const { onOpen } = useNewProjectStore();
    const router = useRouter();
 

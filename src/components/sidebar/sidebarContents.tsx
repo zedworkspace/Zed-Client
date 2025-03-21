@@ -9,6 +9,7 @@ import { Separator } from "../ui/separator";
 import { useGetNotification } from "@/hooks/useMessage";
 import { useParams } from "next/navigation";
 import { connectSocket, getSocket } from "@/utils/socket";
+
 import Image from "next/image";
 
 type Props = {
@@ -101,7 +102,7 @@ export default function SidebarContents({ channelData, boardData }: Props) {
             <span className="text-sm font-bold">Git Hub</span>
           </div>
         </div>
-        <Separator className="w-[94%] m-auto bg-white/30 h-0.5" />
+        <Separator className="w-[95%] m-auto bg-white/30 h-0.5" />
 
         {/* board */}
         <SidebarAccordion
