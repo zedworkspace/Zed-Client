@@ -1,38 +1,120 @@
-import { Mic, MicOff, MonitorUp, PhoneOff, VideoOff } from 'lucide-react';
-import React, { useState } from 'react'
+import { useEffect, useState } from "react";
+import {
+  StreamVideo,
+  StreamVideoClient,
+  StreamCall,
+  CallControls,
+  CallParticipantsList,
+  ParticipantView,
+  useCallStateHooks,
+} from "@stream-io/video-react-sdk";
+import "@stream-io/video-react-sdk/dist/css/styles.css"; // Import styles
+
+const userId = localStorage.getItem("userId")!;
+const API_KEY = "th8534tttvjg"; // Replace with your API key
+const USER_ID = userId;
+const USER_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdiYzVlZGQ2OGExZDRkYjkzZjJjYWRiIn0.N0Wm4fHF9Z_OKtYq-4gCs_aL4g2uJBCzOoEKsMBvxHE"; // Replace with actual token
+
+const client = new StreamVideoClient({ apiKey: API_KEY });
 
 const VoiceChannel = () => {
-  const [mic,setMic] = useState(false);
-  const user = [1,2];
+  const [call, setCall] = useState<any>(null);
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    const connectUser = async () => {
+      if (!USER_ID) {
+        console.error("User ID not found in localStorage");
+        return;
+      }
+
+      await client.connectUser({ id: USER_ID, name: "User" }, USER_TOKEN);
+      setConnected(true);
+
+      const newCall = client.call("default", "group-call");
+      await newCall.join({ create: true });
+      setCall(newCall);
+    };
+
+    connectUser();
+  }, []);
+
+  if (!connected) return <p className="text-center text-white">Loading...</p>;
+  if (!call) return <p className="text-center text-white">Joining call...</p>;
+
   return (
-    <div className='h-full bg-black/50'>
-      <div className='h-full w-[100%] flex flex-col'>
-      <div className="top w-full h-[80%] flex justify-center items-center gap-5 content-center flex-wrap">
-           {
-            user.map(()=>{
-              return(
-                <div className='w-[30rem] bg-primary h-[18rem] rounded-md flex flex-col p-3'>
-                <div className='w-full h-[90%] flex justify-center items-center'><img className='h-16 w-16 rounded-full' src="https://res.cloudinary.com/dbr7bctve/image/upload/v1740980674/ts6i7dv7so2cawlsfhkt.png" alt="" /></div>
-                <div className='flex justify-between px-5 w-full h-[10%]' >
-                  <span>Abahy</span>
-                  <span className='w-6 h-6 bg bg-gray-700 rounded-full flex justify-center items-center'><MicOff className='w-4 h-4 bg'/></span>
-                </div>
-              </div>
-              )
-            })
-           } 
-        </div>
-        <div className="bottom w-full h-[20%] flex justify-center">
-          <div className='w-[40%] flex justify-center items-center gap-5'>
-              <button className='w-14 h-14 bg-primary rounded-full flex justify-center items-center'><VideoOff/></button>
-              <button className='w-14 h-14 bg-primary rounded-full flex justify-center items-center'><MonitorUp/></button>
-              <button onClick={()=>setMic(!mic)} className={`w-14 h-14 ${mic?'bg-gray-500':"bg-primary"} rounded-full flex justify-center items-center`}>{mic?<Mic/>:<MicOff/>}</button>
-              <button className='w-14 h-14 bg-red-500 rounded-full flex justify-center items-center'><PhoneOff/></button>
+    <StreamVideo client={client}>
+      <StreamCall call={call}>
+        <CallUI call={call} />
+      </StreamCall>
+    </StreamVideo>
+  );
+};
+
+const CallUI = ({ call }: { call: any }) => {
+  const { useLocalParticipant, useRemoteParticipants, useScreenShareState } = useCallStateHooks();
+  const localParticipant = useLocalParticipant();
+  const remoteParticipants = useRemoteParticipants();
+  const { screenShareActive, screenShareParticipant } = useScreenShareState();
+  
+  const toggleScreenShare = async () => {
+    if (screenShareActive) {
+      await call.screenShare.stop();
+    } else {
+      await call.screenShare.start();
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+      {/* ✅ Video Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-6 w-full max-w-6xl">
+        {/* ✅ Show Shared Screen */}
+        {screenShareActive && screenShareParticipant && (
+          <div className="col-span-2 md:col-span-3 lg:col-span-4 relative w-full h-64 md:h-80 border-2 border-green-500 rounded-lg shadow-lg overflow-hidden">
+            <p className="absolute top-2 left-2 bg-black/60 px-2 py-1 rounded-md text-sm">
+              {screenShareParticipant.name} is sharing
+            </p>
+            <ParticipantView participant={screenShareParticipant} />
           </div>
-        </div>
+        )}
+
+        {/* ✅ Self Video */}
+        {localParticipant && (
+          <div className="relative w-full h-48 md:h-60 border-2 border-blue-500 rounded-lg shadow-lg overflow-hidden">
+            <p className="absolute top-2 left-2 bg-black/60 px-2 py-1 rounded-md text-sm">You</p>
+            <ParticipantView participant={localParticipant} />
+          </div>
+        )}
+
+        {/* ✅ Remote Participants */}
+        {remoteParticipants.map((participant) => (
+          <div key={participant.userId} className="relative w-full h-48 md:h-60 border rounded-lg shadow-lg overflow-hidden">
+            <p className="absolute top-2 left-2 bg-black/60 px-2 py-1 rounded-md text-sm">{participant.name}</p>
+            <ParticipantView participant={participant} />
+          </div>
+        ))}
+      </div>
+
+      {/* ✅ Controls Section */}
+      <div className="fixed bottom-6 flex justify-center items-center gap-4 px-6 py-4 rounded-lg shadow-lg">
+        <CallControls />
+        {/* ✅ Screen Share Button */}
+        <button
+          onClick={toggleScreenShare}
+          className="px-4 py-2 bg-blue-500 rounded-md text-black font-semibold"
+        >
+        </button>
+      </div>
+
+      {/* ✅ Participants List (Popup Style) */}
+      <div className="absolute top-20 right-4 bg-black/80 p-4 rounded-lg shadow-lg">
+        <h3 className="text-lg font-semibold">Participants</h3>
+        <CallParticipantsList onClose={() => {}} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default VoiceChannel
+export default VoiceChannel;

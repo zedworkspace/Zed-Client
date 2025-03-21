@@ -3,6 +3,7 @@ import Board from "@/components/board/board";
 import ChatLoading from "@/components/chat/ChatLoading";
 import TextChannel from "@/components/chat/TextChannel";
 import VoiceChannel from "@/components/voiceChannel/VoiceChannel";
+import VoiceHeader from "@/components/voiceChannel/VoiceHeader";
 import { BoardSocketProvider } from "@/context/boardSocketProvider";
 import { useGetChannelById } from "@/hooks/useChannel";
 import { useGetProfile } from "@/hooks/useProfile";
@@ -55,7 +56,7 @@ export default function ChatPage() {
       return <ChatLoading/>
     }
     if(!isSuccess && sessionStorage.getItem('channelType') === 'voice'){
-      return <div>Loading voice channel</div>
+      return <div><VoiceHeader/><VoiceChannel/></div>
     }
 
   if (channelType === "text") {
