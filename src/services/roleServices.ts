@@ -37,9 +37,10 @@ export const getRoles = async (projectId: string): Promise<GetRole> => {
 
 export const updateRole = async (data: {
   roleId: string;
-  permissions: string[];
-  name: string;
+  permissions?: string[];
+  name?: string;
 }) => {
+  console.log(data.permissions,'laskdjflkajsdlfkj');
   const response = await apiClient.put(API_ROUTES.ROLE.UPDATE_ROLE, data);
   return response.data;
 };
