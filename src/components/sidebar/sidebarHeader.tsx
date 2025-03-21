@@ -11,18 +11,17 @@ import {
   ChevronDown,
   ChevronUp,
   FolderKanban,
-  Kanban,
   LogOut,
   Plus,
   UserRoundPlus,
 } from "lucide-react";
-
 import { useInviteStore } from "@/store/inviteStore";
 import { InviteMembers } from "../modals/inviteMembersModal";
 import { useCreateChannelStore } from "@/store/channelStore";
-import { useCreateBoardStore } from "@/store/boardStore";
-import { useRouter } from "next/navigation";
-import { LeaveProjectModal } from "../modals/LeaveProjectModal"; // Import modal
+import { useParams, useRouter } from "next/navigation";
+import { LeaveProjectModal } from "../modals/LeaveProjectModal";
+import { useGetMemberPermissions } from "@/hooks/useRole";
+import { hasPermission } from "@/utils/checkPermission";
 
 type Props = {
   projectData: any;
@@ -34,22 +33,40 @@ export default function SideBarHead({ projectData }: Props) {
   const router = useRouter();
   const { openGenerateModal } = useInviteStore();
   const { onOpen } = useCreateChannelStore();
-  const { onCreateBoardOpen } = useCreateBoardStore();
+  const { projectId } = useParams() as { projectId: string };
+  const { data } = useGetMemberPermissions(projectId);
 
   const dropdownItems = [
     {
       icon: FolderKanban,
       label: "Project Profile",
-      onClick: () => router.push("profile"),
+      onClick: () => router.push(`/project/${projectId}/profile`),
+      hasPermission: hasPermission(["ADMINISTRATION","MANAGE_ROLES"], data?.data),
     },
     {
       icon: UserRoundPlus,
       label: "Invite People",
       onClick: openGenerateModal,
+      hasPermission: hasPermission(
+        ["ADMINISTRATION", "INVITE_MEMBERS"],
+        data?.data
+      ),
     },
-    // { icon: Kanban, label: "Create board", onClick: onCreateBoardOpen },
-    { icon: Plus, label: "Create channel", onClick: onOpen },
-    { icon: LogOut, label: "Leave project", onClick: () => setIsLeaveModalOpen(true) },
+    {
+      icon: Plus,
+      label: "Create channel",
+      onClick: onOpen,
+      hasPermission: hasPermission(
+        ["ADMINISTRATION", "MANAGE_CHANNELS"],
+        data?.data
+      ),
+    },
+    {
+      icon: LogOut,
+      label: "Leave project",
+      onClick: () => setIsLeaveModalOpen(true),
+      hasPermission: true,
+    },
   ];
 
   return (
@@ -71,16 +88,19 @@ export default function SideBarHead({ projectData }: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 bg-background text-white border-none outline-none p-2">
             <DropdownMenuGroup>
-              {dropdownItems.map((item, index) => (
-                <DropdownMenuItem
-                  key={index}
-                  className="flex items-center cursor-pointer space-x-2 p-2 focus:bg-secondary focus:text-white transition-colors duration-200"
-                  onClick={item.onClick}
-                >
-                  <item.icon className="size-4" />
-                  <span>{item.label}</span>
-                </DropdownMenuItem>
-              ))}
+              {dropdownItems.map(
+                (item, index) =>
+                  item.hasPermission && (
+                    <DropdownMenuItem
+                      key={index}
+                      className="flex items-center cursor-pointer space-x-2 p-2 focus:bg-secondary focus:text-white transition-colors duration-200"
+                      onClick={item.onClick}
+                    >
+                      <item.icon className="size-4" />
+                      <span>{item.label}</span>
+                    </DropdownMenuItem>
+                  )
+              )}
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

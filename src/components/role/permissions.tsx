@@ -6,36 +6,31 @@ import { Check, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UseMutateFunction } from "@tanstack/react-query";
 import { useUpdateRole } from "@/hooks/useRole";
+import { useParams } from "next/navigation";
 
 const permissionCategories = [
   {
     name: "General Permissions",
     permissions: [
       {
-        id: "manage_channels",
+        id: "MANAGE_CHANNELS",
         name: "Manage Channels",
         description: "Allows members to create, modify, and delete channels.",
       },
       {
-        id: "manage_board",
-        name: "Manage Board",
-        description:
-          "Grants members the ability to manage and configure board settings.",
-      },
-      {
-        id: "manage_roles",
+        id: "MANAGE_ROLES",
         name: "Manage Roles",
         description:
           "Enables members to create, edit, and assign roles below their highest role.",
       },
       {
-        id: "invite_members",
+        id: "INVITE_MEMBERS",
         name: "Invite Members",
         description:
           "Allows members to send invitations to new users to join the platform.",
       },
       {
-        id: "administration",
+        id: "ADMINISTRATION",
         name: "Administration",
         description:
           "Provides full administrative control, including managing users and settings.",
@@ -44,10 +39,14 @@ const permissionCategories = [
   },
 ];
 
-
-const Permissions = ({roleId,existingPermissions}:{roleId:string,existingPermissions:string[]}) => {
-
-  console.log(existingPermissions,'aklsjdf');
+const Permissions = ({
+  roleId,
+  existingPermissions,
+}: {
+  roleId: string;
+  existingPermissions: string[];
+}) => {
+  const { projectId } = useParams() as { projectId: string };
   const [role, setRole] = useState({
     color: "#5865f2",
     permissions: {} as Record<string, boolean>,
@@ -56,14 +55,16 @@ const Permissions = ({roleId,existingPermissions}:{roleId:string,existingPermiss
 
   useEffect(() => {
     const initialPermissions = {} as Record<string, boolean>;
-  
+
     permissionCategories.forEach((category) => {
       category.permissions.forEach((permission) => {
         // Set existing permissions as checked
-        initialPermissions[permission.id] = existingPermissions.includes(permission.id);
+        initialPermissions[permission.id] = existingPermissions.includes(
+          permission.id
+        );
       });
     });
-  
+
     setRole((prev) => ({ ...prev, permissions: initialPermissions }));
   }, [existingPermissions]);
 
@@ -77,21 +78,21 @@ const Permissions = ({roleId,existingPermissions}:{roleId:string,existingPermiss
     }));
   };
 
-  const {mutate} = useUpdateRole(roleId)
+  const { mutate } = useUpdateRole(roleId, projectId);
 
   const handleSubmit = () => {
     const selectedPermissions = Object.entries(role.permissions)
       .filter(([_, isEnabled]) => isEnabled)
       .map(([key]) => key);
 
-    if (selectedPermissions.length === 0) {
-      setError("Please select at least one permission.");
-      return;
-    }
+    // if (selectedPermissions.length === 0) {
+    //   setError("Please select at least one permission.");
+    //   return;
+    // }
 
     setError(null);
     mutate({ roleId, permissions: selectedPermissions });
-    console.log(selectedPermissions,'permsinnioslndf');
+    console.log(selectedPermissions, "permsinnioslndf");
   };
 
   return (

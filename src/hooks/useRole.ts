@@ -2,6 +2,7 @@ import {
   assignRole,
   createRole,
   deleteRole,
+  getMemberPermissions,
   getRoles,
   getSingleRole,
   removeRole,
@@ -90,7 +91,7 @@ export const useRemoveFromRole = (roleId: string) => {
   });
 };
 
-export const useUpdateRole = (roleId: string) => {
+export const useUpdateRole = (roleId: string,projectId:string) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   return useMutation({
@@ -98,6 +99,14 @@ export const useUpdateRole = (roleId: string) => {
     onSuccess: (data) => {
       toast({ description: data.message });
       queryClient.invalidateQueries({ queryKey: ["role", roleId] });
+      queryClient.invalidateQueries({ queryKey: ["permissions", projectId] });
     },
+  });
+};
+
+export const useGetMemberPermissions = (projectId: string) => {
+  return useQuery({
+    queryKey: ["permissions", projectId],
+    queryFn: async () => await getMemberPermissions(projectId),
   });
 };
