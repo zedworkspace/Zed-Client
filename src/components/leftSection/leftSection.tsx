@@ -4,9 +4,13 @@ import { useNewProjectStore } from "@/store/projectStore";
 import { useGetProjects } from "@/hooks/useProject";
 import LeftSectionLoading from "./leftSectionLoading";
 import LeftSectionProjectAvatars from "./leftSectionProjectAvatars";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Separator } from "../ui/separator";
 
 export default function LeftSection() {
   const { onOpen } = useNewProjectStore();
+   const router = useRouter();
 
   const { data, isSuccess, isLoading, isError } = useGetProjects();
 
@@ -16,7 +20,16 @@ export default function LeftSection() {
 
   if (isSuccess)
     return (
-      <div className=" w-20 flex flex-col gap-3 items-center fixed h-screen bg-background mt-20">
+      <div className=" w-16 flex flex-col gap-3 items-center fixed h-screen bg-black pt-2 border-r border-white/40">
+        <Image
+                  src="/logo.svg"
+                  width={40}
+                  height={40}
+                  alt="logo"
+                  onClick={() => router.replace("/")}
+                  className="cursor-pointer"
+                />
+                <div className="w-[100%] px-2"><Separator className="bg-white/40"/></div>
         {data?.data.map((project) => (
           <LeftSectionProjectAvatars
             key={project.projectId._id}

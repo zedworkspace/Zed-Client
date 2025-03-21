@@ -87,7 +87,7 @@ export default function SidebarContents({ channelData, boardData }: Props) {
   };
 
   return (
-    <div className="h-3/4 bg-primary pt-4 space-y-2">
+    <div className="h-3/4 bg-black/100 pt-4 space-y-2">
       {/* github */}
       <div className="px-2" onClick={() => router.replace("git-hub")}>
         <div
