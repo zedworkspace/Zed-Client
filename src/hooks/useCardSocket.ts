@@ -9,6 +9,7 @@ type CreateCard = {
   data: z.infer<typeof createCardSchema>;
   listId: string;
   boardId: string;
+  userId: string;
 };
 
 export const useCardSocket = ({
@@ -18,8 +19,8 @@ export const useCardSocket = ({
   socket: Socket | null;
   form?: UseFormReturn<z.infer<typeof createCardSchema>>;
 }) => {
-  const onCreateCard = ({ data, listId, boardId }: CreateCard) => {
-    socket?.emit("onCreateCard", { data, listId, boardId });
+  const onCreateCard = ({ data, listId, boardId, userId }: CreateCard) => {
+    socket?.emit("onCreateCard", { data, listId, boardId, userId });
     if (form) {
       form.reset();
     }
