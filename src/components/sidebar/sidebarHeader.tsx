@@ -47,7 +47,7 @@ export default function SideBarHead({ projectData }: Props) {
       label: "Invite People",
       onClick: openGenerateModal,
     },
-    { icon: Kanban, label: "Create board", onClick: onCreateBoardOpen },
+    // { icon: Kanban, label: "Create board", onClick: onCreateBoardOpen },
     { icon: Plus, label: "Create channel", onClick: onOpen },
     { icon: LogOut, label: "Leave project", onClick: () => setIsLeaveModalOpen(true) },
   ];

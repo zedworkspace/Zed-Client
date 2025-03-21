@@ -13,11 +13,7 @@ const permissionCategories = [
         name: "Manage Channels",
         description: "Allows members to create, modify, and delete channels.",
       },
-      {
-        id: "manage_board",
-        name: "Manage Board",
-        description: "Grants members the ability to manage and configure board settings.",
-      },
+     
       {
         id: "manage_roles",
         name: "Manage Roles",
