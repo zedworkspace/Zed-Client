@@ -37,13 +37,11 @@ export const useGetCard = ({
 };
 
 export const useUpdateCard = (boardId: string) => {
-  const { onClose } = useCardStore();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updatedCard,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lists", boardId] });
-      onClose();
     },
   });
 };
@@ -72,8 +70,8 @@ export const useUpdateCardPositionInDnd = () => {
   const { socket } = useBoardSocket();
   return useMutation({
     mutationFn: updateCardPositionInDnd,
-    onSuccess:(data)=>{
+    onSuccess: (data) => {
       socket?.emit("onChangeCardPositionWithInList", data.data.boardId);
-    }
+    },
   });
 };

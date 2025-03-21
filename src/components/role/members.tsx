@@ -30,7 +30,7 @@ function Members({
     }
           
   return (
-    <div className="space-y-7">
+    <div className="space-y-7 mt-7">
       <div className="flex space-x-5 ">
         <Input placeholder="Search Members" className="w-1/2" />
         <Button className="bg-secondary" onClick={handleAdd}>Add Members</Button>
