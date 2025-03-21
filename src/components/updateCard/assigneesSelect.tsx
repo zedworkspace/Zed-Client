@@ -1,4 +1,3 @@
-import { IProjectmember } from "@/interface/membersInterface";
 import React from "react";
 import Select, { MultiValue, StylesConfig, components } from "react-select";
 import { X } from "lucide-react";
@@ -7,19 +6,17 @@ import { IBoardMember } from "@/interface/boardInterface";
 type Props = {
   members?: IBoardMember[];
   handleChange: (
-    selected:
-      | MultiValue<{
-          value: string;
-          label: React.ReactNode;
-          data: IProjectmember;
-        }>
-      | unknown
+    selected: MultiValue<{
+      value: string;
+      label: React.ReactNode;
+      data: IBoardMember;
+    }>
   ) => void;
   value?:
     | MultiValue<{
         value: string;
         label: React.ReactNode;
-        data: IProjectmember;
+        data: IBoardMember;
       }>
     | unknown;
 };
@@ -149,7 +146,15 @@ export default function AssigneesSelect({
     <Select
       isMulti
       options={options}
-      onChange={handleChange}
+      onChange={(newValue, actionMeta) =>
+        handleChange(
+          newValue as MultiValue<{
+            value: string;
+            label: React.ReactNode;
+            data: IBoardMember;
+          }>
+        )
+      }
       value={value}
       styles={customStyles}
       components={{ MultiValueRemove }}

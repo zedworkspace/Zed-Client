@@ -3,33 +3,44 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronLeft, Settings, Users } from "lucide-react";
+import { ChevronLeft, Plus, Settings, Users } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGetRoles, useGetSingleRole, useUpdateRole } from "@/hooks/useRole";
 import Permissions from "@/components/role/permissions";
 import Members from "@/components/role/members";
 import SaveChanges from "@/components/role/saveChanges";
+import { Button } from "@/components/ui/button";
+import { useCreateNewRole } from "@/store/roleStore";
 
 export default function RolePage() {
   const { roleId, projectId } = useParams() as {
     roleId: string;
     projectId: string;
   };
+  const { onOpen } = useCreateNewRole();
 
   const router = useRouter();
 
   const { data, isLoading, isSuccess } = useGetSingleRole(roleId);
   const { data: roles } = useGetRoles(projectId);
-  const { mutate } = useUpdateRole(roleId);
+  const { mutate } = useUpdateRole(roleId, projectId);
   const [activeTab, setActiveTab] = useState("permissions");
-  const [name, setName] = useState<string >("");
-
+  const [name, setName] = useState<string>("");
 
   useEffect(() => {
     if (isSuccess) {
       setName(data?.data.roleName);
     }
   }, [data?.data.roleName, isSuccess]);
+
+  const colors = [
+    "bg-red-500 text-red-800",
+    "bg-blue-500 text-blue-800",
+    "bg-green-500 text-green-800",
+    "bg-yellow-500 text-yellow-800",
+    "bg-purple-500 text-purple-800",
+    "bg-pink-500 text-pink-800",
+  ];
 
   if (isLoading) {
     return <div>loading details..</div>;
@@ -43,7 +54,7 @@ export default function RolePage() {
         </div>
 
         <div className="space-y-1">
-          {roles?.data.map((role) => {
+          {roles?.data.map((role, index) => {
             const isActive = roleId === role._id;
             return (
               <button
@@ -53,11 +64,22 @@ export default function RolePage() {
                 }`}
                 onClick={() => router.push(role.roleId)}
               >
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    colors[index % colors.length]
+                  }`}
+                ></div>
                 <span>{role.roleName}</span>
               </button>
             );
           })}
+          <Button
+            className="w-full text-left p-2 rounded flex items-center gap-2 hover:bg-zinc-800 text-zinc-400"
+            onClick={() => onOpen()}
+          >
+            <Plus className="h-4 w-4" />
+            <span>Create Role</span>
+          </Button>
         </div>
       </div>
 
@@ -74,9 +96,9 @@ export default function RolePage() {
           </div>
         </header>
 
-        <ScrollArea className="flex-1 px-4 py-6">
-          <div className="max-w-3xl mx-auto space-y-8 pb-16">
-            <Card className="bg-zinc-800 border-zinc-700">
+        <ScrollArea className="flex-1 px-4 ">
+          <div className="max-w-3xl mx-auto ">
+            <Card className="bg-transparent border-none">
               <CardHeader>
                 <CardTitle className="text-zinc-100 flex items-center gap-2">
                   <Settings className="h-5 w-5" />
@@ -85,24 +107,24 @@ export default function RolePage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-300">
+                  <label className="text-sm font-semibold text-zinc-300">
                     ROLE NAME
                   </label>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="text-white"
+                    className="flex-grow bg-secondary shadow border-none text-gray-200 placeholder:text-[#72767d] focus-visible:ring-0 focus-visible:border-0 outline-0 focus-visible:ring-offset-0"
+
                   />
                 </div>
               </CardContent>
             </Card>
             {name.trim() !== data?.data.roleName && (
               <SaveChanges
-              onClick={() => mutate({ roleId, name })}
-              onCancel={() => setName(data?.data.roleName)}
-           />
-             
-            )} 
+                onClick={() => mutate({ roleId, name })}
+                onCancel={() => setName(data?.data.roleName)}
+              />
+            )}
 
             <div className="flex space-x-5 border-b border-zinc-700 pb-2">
               <button
@@ -129,8 +151,8 @@ export default function RolePage() {
 
             {activeTab === "permissions" && (
               <Permissions
-                roleId ={roleId}
-                existingPermissions = {data?.data.permissions}
+                roleId={roleId}
+                existingPermissions={data?.data.permissions}
               />
             )}
             {activeTab === "members" && (

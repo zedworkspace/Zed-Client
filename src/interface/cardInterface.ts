@@ -34,3 +34,9 @@ export interface GetCard extends IFetch{
 //   projectId?:string;
 //   activityLogs?:ActivityLog[]
 // }
+
+
+import { z } from "zod";
+import { UpdateCardSchema } from "@/validations/cardValidation";
+
+export type FormValues = z.infer<typeof UpdateCardSchema>;
