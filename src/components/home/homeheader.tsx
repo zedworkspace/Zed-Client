@@ -4,7 +4,7 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 
 export default function HomeHeader() {
   return (
-    <Card className="bg-primary border-none mt-4">
+    <Card className="bg-neutral-900/100 border-none mt-4">
       <CardHeader className="flex-col justify-center items-center">
         <CardDescription className="text-2xl text-muted-foreground">
           Friday, February 14

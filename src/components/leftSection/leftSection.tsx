@@ -22,6 +22,7 @@ export default function LeftSection() {
             key={project.projectId._id}
             project={project}
           />
+          
         ))}
         <Button
           size="icon"

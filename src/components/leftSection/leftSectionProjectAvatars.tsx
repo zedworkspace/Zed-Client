@@ -10,6 +10,8 @@ type Props = {
 };
 export default function LeftSectionProjectAvatars({ project }: Props) {
   const { setProjectId } = useProjectStore();
+  console.log(setProjectId,"ssss",project.projectId._id)
+
   const router = useRouter();
   return (
     <Avatar
