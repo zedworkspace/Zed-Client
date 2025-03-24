@@ -21,7 +21,7 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
     end: IDragData | null;
   }>({ start: null, end: null });
 
-  const { onCardDrop, updatedListsHandler } = useBoardSocket();
+  const {  updatedListsHandler } = useBoardSocket();
   const { mutate: updateListPositions } = useUpdateListPosition();
   const { mutate: updateCardPositionWithInListMutate } =
     useUpdateCardPositionWithInList();

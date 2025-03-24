@@ -92,7 +92,7 @@ export default function Page({ projectId }: { projectId: string }) {
   };
 
   return (
-    <div className="flex flex-col justify-center bg-neutral-900/100 h-screen">
+    <div className="flex flex-col justify-center bg-neutral-900/100 min-h-screen">
       <HomeHeader />
 
       <div className="p-6">

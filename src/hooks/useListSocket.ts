@@ -24,7 +24,7 @@ export const useListSocket = ({ socket, form }: Args) => {
   };
 
   const updateListHandler = (queryClient: QueryClient, boardId: string) => {
-    socket?.on("onUpdatedLists", ({ data, isSuccess }) => {
+    socket?.on("onUpdatedLists", ({ data }) => {
       queryClient.setQueryData(["lists", boardId], (oldData: IGetLists) => {
         return { ...oldData, data: data };
       });

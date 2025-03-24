@@ -19,7 +19,7 @@ const SigninPage = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
 
-  const {mutate, isSuccess, isError, isPending,  error} = useSignin();
+  const {mutate, isError, isPending,  error} = useSignin();
   const handleOnSubmit = (signinData : IUser) => {
     mutate(signinData, {
       onSuccess: () => {

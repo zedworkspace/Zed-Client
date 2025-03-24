@@ -59,7 +59,7 @@ export const useUpdateProject = (projectId: string) => {
   })
 }
 
-export const useLeaveProject = (projectId:string) => {
+export const useLeaveProject = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   return useMutation({
