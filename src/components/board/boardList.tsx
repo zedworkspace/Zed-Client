@@ -1,18 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import BoardCard from "./boardCard";
 import AddCard from "./addCard";
 import { IList } from "@/interface/listInterface";
 import { ICard } from "@/interface/cardInterface";
-import { useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  arrayMove,
-  horizontalListSortingStrategy,
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { Card } from "../ui/card";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { EllipsisVertical } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
@@ -26,7 +18,7 @@ type Props = {
 
 export default function BoardList({ list, boardId }: Props) {
   const listDeleteMutate = useDeleteListById(boardId!);
-  
+
   const {
     setNodeRef,
     attributes,
@@ -43,6 +35,7 @@ export default function BoardList({ list, boardId }: Props) {
   const handleDeleteList = () => {
     listDeleteMutate.mutate(list._id);
   };
+
   if (isDragging)
     return (
       <div
@@ -66,6 +59,7 @@ export default function BoardList({ list, boardId }: Props) {
         <AddCard listId={list._id} boardId={list.boardId} />
       </div>
     );
+
   return (
     <div
       className="w-72 p-3 h-full space-y-2 group "
