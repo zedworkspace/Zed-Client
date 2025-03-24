@@ -104,8 +104,8 @@ export function CreateChannel() {
               >
                 {/* Text Channel */}
                 <label
-                  className={`flex items-center justify-between  h-16 rounded-md px-4 cursor-pointer hover:bg-gray-700 transition ${
-                    type === "text" ? " bg-indigo-500" : "bg-secondary"
+                  className={`flex items-center justify-between  h-16 rounded-md px-4 cursor-pointer hover:bg-secondary transition ${
+                    type === "text" ? "bg-secondary" : "bg-primary"
                   }`}
                 >
                   <div className="flex items-center gap-4">
@@ -122,8 +122,8 @@ export function CreateChannel() {
 
                 {/* Voice Channel */}
                 <label
-                  className={`flex items-center justify-between  h-16 rounded-md px-4 cursor-pointer hover:bg-gray-700 transition ${
-                    type === "voice" ? " bg-indigo-500" : "bg-secondary"
+                  className={`flex items-center justify-between  h-16 rounded-md px-4 cursor-pointer hover:bg-secondary transition ${
+                    type === "voice" ? "bg-secondary/90" : "bg-primary"
                   }`}
                 >
                   <div className="flex items-center gap-4">
@@ -139,8 +139,8 @@ export function CreateChannel() {
                 </label>
 
                 <label
-                  className={`flex items-center justify-between  h-16 rounded-md px-4 cursor-pointer hover:bg-gray-700 transition ${
-                    type === "board" ? " bg-indigo-500" : "bg-secondary"
+                  className={`flex items-center justify-between  h-16 rounded-md px-4 cursor-pointer hover:bg-secondary transition ${
+                    type === "board" ? "bg-secondary/90" : "bg-primary"
                   }`}
                 >
                   <div className="flex items-center gap-4">
@@ -163,8 +163,10 @@ export function CreateChannel() {
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                   {type === "voice" ? (
                     <Volume2 size={18} />
-                  ) : (
+                  ) : type === "text" ? (
                     <MessagesSquare size={18} />
+                  ) : (
+                    <Kanban size={18} />
                   )}
                 </span>
 
