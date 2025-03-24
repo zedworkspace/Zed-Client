@@ -45,6 +45,7 @@ const API_ROUTES = {
     CREATE_CARD: "/v1/cards/",
     GET_CARDBY_ID: "/v1/cards/",
     UPDATE_CARD_BYID: "/v1/cards/",
+    DELETE_CARD_BY_ID: "/v1/cards/",
     UPDATE_CARD_POSITION_IN_DND: "/v1/cards/reorder/dnd",
     UPDATE_CARD_POSITION_IN_SAME_LIST: "/v1/cards/reorder/same-list",
     UPDATE_CARD_POSITION_IN_DIFF_LIST: "/v1/cards/reorder/diffrent-list",
@@ -67,6 +68,9 @@ const API_ROUTES = {
     DELETE_ROLE: "/v1/role/delete",
     GET_SINGLE_ROLE: "/v1/role/",
     GET_MEMBER_PERMISSIONS: "/v1/role/permissions/",
+  },
+  ACTIVITY: {
+    GET_ACTIVITY_BY_ENTITY_ID: "/v1/activity/",
   },
 };
 

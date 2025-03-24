@@ -1,4 +1,4 @@
-import { useUpdateCard } from "@/hooks/useCard";
+import { useDeleteCardById, useUpdateCard } from "@/hooks/useCard";
 import { IBoardMember } from "@/interface/boardInterface";
 import { FormValues, ICard } from "@/interface/cardInterface";
 import { IProjectmember } from "@/interface/membersInterface";
@@ -33,13 +33,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CalendarIcon, User, Loader2 } from "lucide-react";
+import { CalendarIcon, User, Loader2, Trash } from "lucide-react";
 import CardLabelsSection from "./cardLabelSection";
 import CardStatusSection from "./cardStatusSection";
 import AssigneesSelect from "./assigneesSelect";
 import { format } from "date-fns";
 import CardActivitySection from "./cardActivitySection";
 import { IList } from "@/interface/listInterface";
+import { IActivity } from "@/interface/activityInterface";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 const defaultValues: FormValues = {
   title: "",
@@ -54,10 +61,12 @@ export function CardModalContent({
   cardData,
   members,
   currentLists,
+  activities,
 }: {
   cardData?: ICard;
   members?: IBoardMember[];
   currentLists?: IList[];
+  activities?: IActivity[];
 }) {
   const { isOpen, onClose, cardId } = useCardStore();
   const { channelId, projectId } = useParams() as {
@@ -169,13 +178,19 @@ export function CardModalContent({
     mutate({ cardId, projectId, formData: submitData });
   };
 
+  const deleteCard = useDeleteCardById(channelId);
+
+  const handleDeleteTask = () => {
+    deleteCard.mutate(cardData?._id);
+  };
+  
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[850px] bg-primary border-none text-gray-100 shadow-lg">
+      <DialogContent className="sm:max-w-[54rem] max-h-[39rem] bg-primary border-none text-gray-100 shadow-lg overflow-hidden">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex gap-6">
-              <div className="flex-1">
+            <div className="flex gap-6 h-full">
+              <div className="flex-1 overflow-scroll scrollbar-hide">
                 <DialogHeader className="border-b border-[#40444b] pb-4">
                   <DialogTitle>
                     <div className="flex items-center gap-2">
@@ -215,6 +230,7 @@ export function CardModalContent({
                             <Input
                               {...field}
                               value={field.value || ""}
+                              autoComplete="off"
                               placeholder="Add a more detailed description"
                               className="text-lg px-0 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-gray-100 placeholder:text-[#72767d]"
                             />
@@ -312,26 +328,44 @@ export function CardModalContent({
                 </div>
 
                 <DialogFooter className="border-t border-[#40444b] pt-4">
-                  {isPending ? (
-                    <Button
-                      className="bg-secondary border-none hover:bg-secondary/50 text-white"
-                      disabled
-                    >
-                      <Loader2 className="animate-spin" />
-                    </Button>
-                  ) : (
-                    <Button
-                      type="submit"
-                      className="bg-secondary border-none hover:bg-secondary/50 text-white transition-colors"
-                      disabled={!form.formState.isValid}
-                    >
-                      Save Changes
-                    </Button>
-                  )}
+                  <div className=" w-full flex justify-between items-center">
+                    <div>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button onClick={handleDeleteTask}>
+                              <Trash className="text-red-500" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-secondary text-white border-none">
+                            <p>Delete Task</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    <div>
+                      {isPending ? (
+                        <Button
+                          className="bg-secondary border-none hover:bg-secondary/50 text-white"
+                          disabled
+                        >
+                          <Loader2 className="animate-spin" />
+                        </Button>
+                      ) : (
+                        <Button
+                          type="submit"
+                          className="bg-secondary border-none hover:bg-secondary/50 text-white transition-colors"
+                          disabled={!form.formState.isValid}
+                        >
+                          Save Changes
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 </DialogFooter>
               </div>
 
-              <CardActivitySection />
+              <CardActivitySection activities={activities} />
             </div>
           </form>
         </Form>

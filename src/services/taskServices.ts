@@ -1,7 +1,10 @@
 import { GetCard, ICard } from "@/interface/cardInterface";
 import apiClient from "@/lib/axios.config";
 import API_ROUTES from "@/lib/routes";
-import { createCardSchema, UpdateCardSchema } from "@/validations/cardValidation";
+import {
+  createCardSchema,
+  UpdateCardSchema,
+} from "@/validations/cardValidation";
 import { z } from "zod";
 
 type CreateCard = {
@@ -89,6 +92,13 @@ export const updateCardPositionInDnd = async (
   const response = await apiClient.post(
     API_ROUTES.CARD.UPDATE_CARD_POSITION_IN_DND,
     data
+  );
+  return response.data;
+};
+
+export const deleteCardById = async (id?: string) => {
+  const response = await apiClient.delete(
+    API_ROUTES.CARD.DELETE_CARD_BY_ID + id
   );
   return response.data;
 };
