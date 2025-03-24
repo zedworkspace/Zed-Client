@@ -1,8 +1,7 @@
 "use client";
 import { Dialog, DialogContent, DialogTitle, DialogFooter } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+
 import { useRouter } from "next/navigation";
 import { useLeaveProject } from "@/hooks/useProject";
 import { useEffect, useState } from "react";

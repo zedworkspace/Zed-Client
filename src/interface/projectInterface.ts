@@ -9,6 +9,7 @@ export interface IProject {
     name: string;
     description: string;
     logo: string;
+    banner:string
     owner: {
       name: string;
       email: string;
@@ -32,6 +33,7 @@ export interface IGetProject extends IFetch {
     name: string;
     description: string;
     logo: string;
+    banner:string
     owner: {
       name: string;
       email: string;
