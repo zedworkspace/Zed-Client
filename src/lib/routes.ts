@@ -13,6 +13,8 @@ const API_ROUTES = {
     GET_PROJECT: "/v1/projects/",
     UPDATE_PROJECT: "/v1/projects/update/",
     LEAVE_PROJECT: "/v1/projects/",
+    CHANGE_OWNER: "/v1/projects/change-owner/",
+    CHECK_OWNERSHIP: "/v1/projects/check-ownership/",
   },
   PROFILE: {
     GET: "/v1/profile",

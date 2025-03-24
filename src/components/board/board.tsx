@@ -19,6 +19,7 @@ import DragOverlayWrapper from "./dragOverlayWrapper";
 import { useGetBoardById } from "@/hooks/useBoard";
 import { useGetLists } from "@/hooks/useList";
 import { useBoardDrag } from "@/hooks/useBoardDrag";
+import BoardLoading from "./boardLoading";
 import { useSocket } from "@/context/SocketProvider";
 
 type Props = {
@@ -87,7 +88,7 @@ export default function Board({ userId }: Props) {
   const isLoading = boardLoading || listLoading;
   const isSuccess = boardSuccess || listSuccess;
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <BoardLoading/>;
 
   if (isSuccess)
     return (

@@ -1,19 +1,9 @@
 import React from "react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-} from "../ui/sidebar";
 import { Skeleton } from "../ui/skeleton";
 
 export default function SidebarLoading() {
   return (
-    <div className="w-1/4 h-full">
+    <div className="w-64 h-full">
       <div className="h-1/4 w-full p-0 bg-cover bg-center bg-transparent">
         <Skeleton className="p-4 w-full bg-secondary rounded-none"></Skeleton>
       </div>

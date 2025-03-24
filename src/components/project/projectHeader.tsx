@@ -5,7 +5,6 @@ import { Pencil } from "lucide-react";
 import { useEditProjectStore } from "@/store/projectStore";
 
 const ProjectHeader = ({
-  bannerColor,
   projectData,
 }: {
   bannerColor: string;
@@ -16,10 +15,11 @@ const ProjectHeader = ({
   return (
     <div className="relative rounded-t-lg shadow-md">
       <div
-        className="relative h-44 flex items-end overflow-hidden"
-        style={{ backgroundColor: bannerColor }}
+        className="relative h-44 flex items-end overflow-hidden bg-primary"
+       
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30" />
+        {projectData?.banner && <img src={projectData?.banner} alt="banner" className="w-full"/>}
+        <div className="absolute " />
 
         <button
           className="absolute top-4 right-4 bg-secondary hover:bg-secondary/80 p-2 rounded-full transition-colors"
@@ -30,7 +30,7 @@ const ProjectHeader = ({
       </div>
 
       <div className="absolute -bottom-12 left-8">
-        <div className="relative w-24 h-24 bg-primary rounded-full flex items-center justify-center overflow-hidden shadow-lg border-4 border-background">
+        <div className="relative w-24 h-24 bg-zinc-900 rounded-full flex items-center justify-center overflow-hidden shadow-lg border-4 border-background">
           {projectData?.logo ? (
             <img
               src={projectData.logo}

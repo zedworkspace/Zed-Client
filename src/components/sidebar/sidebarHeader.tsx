@@ -22,6 +22,7 @@ import { useParams, useRouter } from "next/navigation";
 import { LeaveProjectModal } from "../modals/LeaveProjectModal";
 import { useGetMemberPermissions } from "@/hooks/useRole";
 import { hasPermission } from "@/utils/checkPermission";
+import ChangeOwnerModal from "../modals/ChangeOwnerModal";
 
 type Props = {
   projectData: any;
@@ -72,7 +73,7 @@ export default function SideBarHead({ projectData }: Props) {
   return (
     <div
       className="h-1/4 w-full p-0 bg-cover bg-center bg-transparent"
-      style={{ backgroundImage: `url(${projectData?.data.logo})` }}
+      style={{ backgroundImage: `url(${projectData?.data.banner})` }}
     >
       <InviteMembers />
       <LeaveProjectModal
@@ -80,6 +81,7 @@ export default function SideBarHead({ projectData }: Props) {
         onClose={() => setIsLeaveModalOpen(false)}
         projectId={projectData?.data._id}
       />
+      <ChangeOwnerModal/>
       <div className="flex justify-between items-center bg-black bg-opacity-20 p-3 w-full text-white text-base font-semibold">
         <h1>{projectData?.data.name}</h1>
         <DropdownMenu onOpenChange={setIsDropdownOpen}>

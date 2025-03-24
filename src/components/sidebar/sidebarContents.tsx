@@ -98,6 +98,7 @@ export default function SidebarContents({ channelData, boardData }: Props) {
   }, []);
   const { onOpen, setProfileId } = useProfileStore();
   const { data: profileData } = useGetProfile(userId);
+  console.log(profileData,"profiledata")
 
   return (
     <div className="h-3/4 bg-pri pt-4 flex flex-col justify-between bg-black">

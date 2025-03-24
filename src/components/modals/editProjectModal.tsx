@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Camera, LoaderCircle } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { useEditProjectStore } from "@/store/projectStore";
@@ -18,33 +18,41 @@ import { useGetProject, useUpdateProject } from "@/hooks/useProject";
 import { useParams } from "next/navigation";
 
 export function EditProjectModal() {
-  const { projectId } = useParams() as {
-    projectId: string;
-  };
+  const { projectId } = useParams() as { projectId: string };
   const { onClose, isOpen } = useEditProjectStore();
   const { data } = useGetProject(projectId, isOpen);
-
   const { mutate: updateProject, isPending } = useUpdateProject(projectId);
 
-  const [description, setDescription] = useState(data?.data?.description);
-  const [image, setImage] = useState<string>(data?.data?.logo ?? "");
-  const [name, setName] = useState(data?.data?.name);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [name, setName] = useState(data?.data?.name || "");
+  const [description, setDescription] = useState(data?.data?.description || "");
+  const [logo, setLogo] = useState<string>(data?.data?.logo ?? "");
+  const [banner, setBanner] = useState<string>(data?.data?.banner ?? "");
+
+  const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
+  const [selectedBanner, setSelectedBanner] = useState<File | null>(null);
 
   useEffect(() => {
     if (data) {
       setName(data.data.name || "");
       setDescription(data.data.description || "");
-      setImage(data.data.logo);
+      setLogo(data.data.logo || "");
+      setBanner(data.data.banner || "");
     }
   }, [data]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedFile(file); // Store the actual file
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
+      setSelectedLogo(file);
+      setLogo(URL.createObjectURL(file));
+    }
+  };
+
+  const handleBannerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedBanner(file);
+      setBanner(URL.createObjectURL(file));
     }
   };
 
@@ -52,9 +60,13 @@ export function EditProjectModal() {
     const formData = new FormData();
     formData.append("name", name ?? "");
     formData.append("description", description ?? "");
-    if (selectedFile) {
-      formData.append("logo", selectedFile);
+    if (selectedLogo) {
+      formData.append("logo", selectedLogo);
     }
+    if (selectedBanner) {
+      formData.append("banner", selectedBanner);
+    }
+
     updateProject({ projectId: projectId, data: formData });
   };
 
@@ -65,17 +77,43 @@ export function EditProjectModal() {
           <DialogTitle>Update your profile</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="flex items-center justify-center gap-4">
+          <div className="relative w-full h-40 rounded-lg overflow-hidden  ">
+          <label
+            htmlFor="bannerUpload"
+            className="absolute inset-0 flex items-center justify-center bg-primary hover:bg-primary/60 transition cursor-pointer text-white/40"
+          >
+            {banner ? (
+              <img
+                src={banner}
+                alt="Project Banner"
+                className="rounded-lg w-full object-cover"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center">
+                <div className=" ">Add Banner</div>
+                <Camera className="w-5 h-5" />
+              </div>
+            )}
+              </label>
+              <Input
+                id="bannerUpload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleBannerChange}
+              />
+          </div>
+
+          <div className="flex items-center justify-center relative -mt-16">
             <label
-              htmlFor="fileUpload"
+              htmlFor="logoUpload"
               className="relative flex items-center justify-center w-24 h-24 border rounded-full cursor-pointer overflow-hidden"
             >
-              {image ? (
-                <Image
-                  width={200}
-                  height={200}
-                  src={image}
-                  alt="Uploaded"
+              {logo ? (
+                <img
+               
+                  src={logo}
+                  alt="Uploaded Logo"
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
@@ -84,18 +122,19 @@ export function EditProjectModal() {
                   <p className="text-xs font-extrabold">Upload</p>
                 </div>
               )}
-              <Input
-                id="fileUpload"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleFileChange}
-              />
             </label>
+            <Input
+              id="logoUpload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleLogoChange}
+            />
           </div>
+
           <div className="space-y-1">
             <Label htmlFor="userName" className="text-right font-bold">
-              UserName
+              Project Name
             </Label>
             <Input
               id="userName"
@@ -104,18 +143,20 @@ export function EditProjectModal() {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+
           <div className="space-y-1">
-            <Label htmlFor="bio">Bio</Label>
+            <Label htmlFor="description">Description</Label>
             <Textarea
-              id="bio"
-              placeholder="Add your bio"
+              id="description"
+              placeholder="Add your description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
         </div>
+
         <DialogFooter>
-          <Button type="submit" onClick={handleUpdateProfile}>
+          <Button type="submit" onClick={handleUpdateProfile} disabled={description =="" || name == ""}>
             {isPending ? <LoaderCircle className="animate-spin" /> : "Update"}
           </Button>
         </DialogFooter>
