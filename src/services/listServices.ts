@@ -38,3 +38,9 @@ export const updateListPosition = async (data: UpdateListPosition) => {
   );
   return { ...response.data, boardId: data.boardId };
 };
+export const deleteListById = async (id: string) => {
+  const response = await apiClient.delete(
+    API_ROUTES.LIST.DELETE_LIST_BY_ID + id
+  );
+  return response.data;
+};

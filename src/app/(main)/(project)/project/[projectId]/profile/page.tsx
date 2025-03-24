@@ -26,7 +26,7 @@ export default function ProjectProfile() {
   }
 
   return (
-    <div className="flex bg-zinc-900 text-gray-200">
+    <div className="flex bg-zinc-900 text-gray-200 h-full">
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Content Area with Split View */}

@@ -163,8 +163,10 @@ export function CreateChannel() {
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                   {type === "voice" ? (
                     <Volume2 size={18} />
-                  ) : (
+                  ) : type === "text" ? (
                     <MessagesSquare size={18} />
+                  ) : (
+                    <Kanban size={18} />
                   )}
                 </span>
 

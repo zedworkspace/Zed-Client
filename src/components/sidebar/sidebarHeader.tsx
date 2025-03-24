@@ -73,7 +73,7 @@ export default function SideBarHead({ projectData }: Props) {
   return (
     <div
       className="h-1/4 w-full p-0 bg-cover bg-center bg-transparent"
-      style={{ backgroundImage: `url(${projectData?.data.logo})` }}
+      style={{ backgroundImage: `url(${projectData?.data.banner})` }}
     >
       <InviteMembers />
       <LeaveProjectModal
