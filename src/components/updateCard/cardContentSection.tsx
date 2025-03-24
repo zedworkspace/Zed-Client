@@ -1,4 +1,4 @@
-import { useUpdateCard } from "@/hooks/useCard";
+import { useDeleteCardById, useUpdateCard } from "@/hooks/useCard";
 import { IBoardMember } from "@/interface/boardInterface";
 import { FormValues, ICard } from "@/interface/cardInterface";
 import { IProjectmember } from "@/interface/membersInterface";
@@ -33,7 +33,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CalendarIcon, User, Loader2 } from "lucide-react";
+import { CalendarIcon, User, Loader2, Trash } from "lucide-react";
 import CardLabelsSection from "./cardLabelSection";
 import CardStatusSection from "./cardStatusSection";
 import AssigneesSelect from "./assigneesSelect";
@@ -41,6 +41,12 @@ import { format } from "date-fns";
 import CardActivitySection from "./cardActivitySection";
 import { IList } from "@/interface/listInterface";
 import { IActivity } from "@/interface/activityInterface";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 const defaultValues: FormValues = {
   title: "",
@@ -172,6 +178,12 @@ export function CardModalContent({
     mutate({ cardId, projectId, formData: submitData });
   };
 
+  const deleteCard = useDeleteCardById(channelId);
+
+  const handleDeleteTask = () => {
+    deleteCard.mutate(cardData?._id);
+  };
+  
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[54rem] max-h-[39rem] bg-primary border-none text-gray-100 shadow-lg overflow-hidden">
@@ -316,22 +328,40 @@ export function CardModalContent({
                 </div>
 
                 <DialogFooter className="border-t border-[#40444b] pt-4">
-                  {isPending ? (
-                    <Button
-                      className="bg-secondary border-none hover:bg-secondary/50 text-white"
-                      disabled
-                    >
-                      <Loader2 className="animate-spin" />
-                    </Button>
-                  ) : (
-                    <Button
-                      type="submit"
-                      className="bg-secondary border-none hover:bg-secondary/50 text-white transition-colors"
-                      disabled={!form.formState.isValid}
-                    >
-                      Save Changes
-                    </Button>
-                  )}
+                  <div className=" w-full flex justify-between items-center">
+                    <div>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button onClick={handleDeleteTask}>
+                              <Trash className="text-red-500" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-secondary text-white border-none">
+                            <p>Delete Task</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    <div>
+                      {isPending ? (
+                        <Button
+                          className="bg-secondary border-none hover:bg-secondary/50 text-white"
+                          disabled
+                        >
+                          <Loader2 className="animate-spin" />
+                        </Button>
+                      ) : (
+                        <Button
+                          type="submit"
+                          className="bg-secondary border-none hover:bg-secondary/50 text-white transition-colors"
+                          disabled={!form.formState.isValid}
+                        >
+                          Save Changes
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 </DialogFooter>
               </div>
 
