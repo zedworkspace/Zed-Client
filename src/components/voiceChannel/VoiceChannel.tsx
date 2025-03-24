@@ -11,11 +11,10 @@ import {
 import "@stream-io/video-react-sdk/dist/css/styles.css"; // Import styles
 
 const userId = localStorage.getItem("userId")!;
+const accessToken = localStorage.getItem("accessToken")!;
 const API_KEY = "th8534tttvjg"; // Replace with your API key
 const USER_ID = userId;
-const USER_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdiYzVlZGQ2OGExZDRkYjkzZjJjYWRiIn0.N0Wm4fHF9Z_OKtYq-4gCs_aL4g2uJBCzOoEKsMBvxHE"; // Replace with actual token
-
+const USER_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdkZDE4NDZhN2I0Mjg1NGFmZjhjN2FhIn0._aUp1GOp1_WRisCo7EuJLLBoMbxXyoeBj28ye7WiHrA';
 const client = new StreamVideoClient({ apiKey: API_KEY });
 
 const VoiceChannel = () => {
@@ -29,7 +28,7 @@ const VoiceChannel = () => {
         return;
       }
 
-      await client.connectUser({ id: USER_ID, name: "User" }, USER_TOKEN);
+      await client.connectUser({ id: USER_ID, name: "Abhay" }, USER_TOKEN);
       setConnected(true);
 
       const newCall = client.call("default", "group-call");
