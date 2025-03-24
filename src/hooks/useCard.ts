@@ -1,6 +1,7 @@
 import { useBoardSocket } from "@/context/boardSocketProvider";
 import {
   createCard,
+  deleteCardById,
   getCard,
   updateCardPositionBetweenList,
   updateCardPositionInDnd,
@@ -9,6 +10,7 @@ import {
 } from "@/services/taskServices";
 import { useCardStore } from "@/store/cardStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "./use-toast";
 
 export const useCreateCard = ({ boardId }: { boardId: string }) => {
   const queryClient = useQueryClient();
@@ -72,6 +74,17 @@ export const useUpdateCardPositionInDnd = () => {
     mutationFn: updateCardPositionInDnd,
     onSuccess: (data) => {
       socket?.emit("onChangeCardPositionWithInList", data.data.boardId);
+    },
+  });
+};
+
+export const useDeleteCardById = (boardId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteCardById,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["lists", boardId] });
+      toast({ title: data.message });
     },
   });
 };

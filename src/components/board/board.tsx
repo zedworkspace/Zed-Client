@@ -19,13 +19,15 @@ import DragOverlayWrapper from "./dragOverlayWrapper";
 import { useGetBoardById } from "@/hooks/useBoard";
 import { useGetLists } from "@/hooks/useList";
 import { useBoardDrag } from "@/hooks/useBoardDrag";
+import { useSocket } from "@/context/SocketProvider";
 
 type Props = {
   boardId: string;
   projectId: string;
+  userId: string;
 };
 
-export default function Board({}: Props) {
+export default function Board({ userId }: Props) {
   const { channelId, projectId } = useParams() as {
     channelId: string;
     projectId: string;
@@ -59,8 +61,11 @@ export default function Board({}: Props) {
     channelId,
   });
 
+  const { joinRoom } = useSocket();
+  
   useEffect(() => {
     initializeSocketHandlers();
+    joinRoom(channelId, userId);
   }, []);
 
   const sensors = useSensors(
