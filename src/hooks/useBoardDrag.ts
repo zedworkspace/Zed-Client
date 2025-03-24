@@ -165,7 +165,6 @@ export const useBoardDrag = ({ channelId }: { channelId: string }) => {
     }
 
     const { start, end } = dragData;
-    console.log({ dragData });
     if (!start) {
       resetDragState();
       return;

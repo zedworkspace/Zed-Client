@@ -30,3 +30,13 @@ export const leaveProject = async (id: string) => {
   const response = await apiClient.post(API_ROUTES.PROJECT.LEAVE_PROJECT + id);
   return response.data;
 };
+
+export const changeOwner = async (projectId:string, userId:string) => {
+  const response = await apiClient.post(API_ROUTES.PROJECT.CHANGE_OWNER + projectId + "/" + userId);
+  return response.data;
+};
+
+export const checkOwnership = async (projectId: string) => {
+  const response = await apiClient.get(API_ROUTES.PROJECT.CHECK_OWNERSHIP + projectId);
+  return response.data;
+};

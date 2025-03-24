@@ -92,7 +92,7 @@ export default function ProjectProfile() {
           </div>
 
           {/* Right Side - Activity Log */}
-          <ActivityLog />
+          {/* <ActivityLog /> */}
         </div>
       </div>
     </div>
