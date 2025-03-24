@@ -6,6 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useLeaveProject } from "@/hooks/useProject";
 import { useEffect, useState } from "react";
+import { usechangeOwnerStore } from "@/store/useModalStore";
 
 type LeaveProjectModalProps = {
   isOpen: boolean;
@@ -16,6 +17,7 @@ type LeaveProjectModalProps = {
 export const LeaveProjectModal = ({ isOpen, onClose, projectId }: LeaveProjectModalProps) => {
     const router = useRouter();
     const {mutate, data, isPending, isSuccess} = useLeaveProject(projectId);
+      const { openChangeOwner} = usechangeOwnerStore();
     const handleLeave = ()=>{
         mutate(projectId);
     }
@@ -37,6 +39,12 @@ export const LeaveProjectModal = ({ isOpen, onClose, projectId }: LeaveProjectMo
         onClose();
     }
 
+    const handleChangeOwner = () =>{
+        setIsOwnerModal(false);
+        onClose();
+        openChangeOwner();
+    }
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       {
@@ -47,7 +55,7 @@ export const LeaveProjectModal = ({ isOpen, onClose, projectId }: LeaveProjectMo
                 <Button variant="ghost" onClick={handleClose}>
                     Cancel
                 </Button>
-                <Button variant="destructive" onClick={handleLeave} >
+                <Button variant="destructive" onClick={handleChangeOwner} >
                     Change Ownership
                 </Button>
                 </DialogFooter>
