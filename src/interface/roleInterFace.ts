@@ -28,3 +28,12 @@ export interface IRole2 {
 export interface GetRole extends IFetch {
   data: IRole2[];
 }
+
+export interface IPermissions {
+  isOwner: boolean;
+  permissions?: string[];
+}
+
+export interface IGetMemberPermissions extends IFetch {
+  data: IPermissions;
+}

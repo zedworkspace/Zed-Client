@@ -30,7 +30,7 @@ const ProjectHeader = ({
       </div>
 
       <div className="absolute -bottom-12 left-8">
-        <div className="relative w-24 h-24 bg-primary rounded-full flex items-center justify-center overflow-hidden shadow-lg border-4 border-background">
+        <div className="relative w-24 h-24 bg-zinc-900 rounded-full flex items-center justify-center overflow-hidden shadow-lg border-4 border-background">
           {projectData?.logo ? (
             <img
               src={projectData.logo}

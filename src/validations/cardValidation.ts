@@ -15,6 +15,7 @@ export const UpdateCardSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   status: z.string().optional(),
+  listId: z.string().optional(),
   dueDate: z.union([z.date(), z.string()]).optional(),
   labels: z.array(z.string()).optional(),
   assignees: z.array(UserSchema.optional()),
