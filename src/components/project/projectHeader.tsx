@@ -7,7 +7,6 @@ import { useEditProjectStore } from "@/store/projectStore";
 const ProjectHeader = ({
   projectData,
 }: {
-  bannerColor: string;
   projectData: IProject["projectId"] | undefined;
 }) => {
 

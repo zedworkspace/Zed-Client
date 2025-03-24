@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import {
@@ -13,18 +14,16 @@ import {
   usePrivateChannelStore,
 } from "@/store/channelStore";
 import { Button } from "../ui/button";
-import { LoaderCircle, MessageSquare, Volume2 } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 
 import { useCreateChannel } from "@/hooks/useChannel";
 import { useParams, useRouter } from "next/navigation";
-import { FaLock } from "react-icons/fa";
-import { Input } from "../ui/input";
 import { useGetRoles } from "@/hooks/useRole";
 
-import Select, { GroupBase, MultiValue, StylesConfig } from "react-select";
+import Select, { GroupBase, StylesConfig } from "react-select";
 import { useEffect, useState } from "react";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { IRole2, Member } from "@/interface/roleInterFace";
+import { IRole2 } from "@/interface/roleInterFace";
 import { useCreateBoard } from "@/hooks/useBoard";
 
 // Define the option type for react-select
@@ -35,7 +34,7 @@ interface RoleOption {
 }
 
 export function PrivatChannel() {
-  const { onOpen, setName, setType, type, name, setIsPrivate, onClose } =
+  const { onOpen, setName, setType, type, name, setIsPrivate } =
     useCreateChannelStore();
 
   const { isOpenPrivate, onClosePriate } = usePrivateChannelStore();
@@ -100,14 +99,11 @@ export function PrivatChannel() {
     })) || [];
 
   // Discord-style colors
-  const discordBg = "#36393f";
   const discordLightBg = "#2f3136";
-  const discordDarkerBg = "#202225";
   const discordText = "#dcddde";
   const discordMutedText = "#8e9297";
   const discordPurple = "#5865f2";
   const discordRed = "#ed4245";
-  const discordGreen = "#3ba55c";
 
   const selectStyles: StylesConfig<RoleOption, true, GroupBase<RoleOption>> = {
     control: (base) => ({

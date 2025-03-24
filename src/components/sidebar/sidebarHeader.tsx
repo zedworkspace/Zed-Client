@@ -23,9 +23,10 @@ import { LeaveProjectModal } from "../modals/LeaveProjectModal";
 import { useGetMemberPermissions } from "@/hooks/useRole";
 import { hasPermission } from "@/utils/checkPermission";
 import ChangeOwnerModal from "../modals/ChangeOwnerModal";
+import { IGetProject } from "@/interface/projectInterface";
 
 type Props = {
-  projectData: any;
+  projectData: IGetProject;
 };
 
 export default function SideBarHead({ projectData }: Props) {

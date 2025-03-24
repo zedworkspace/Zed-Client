@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Camera, LoaderCircle } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { useGetProfile, useUpdateProfile } from "@/hooks/useProfile";

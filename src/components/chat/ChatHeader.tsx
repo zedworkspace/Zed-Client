@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Menu, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { IChannel } from "@/interface/channelInterface";
 
 export default function ChatHeader({ data }: { data?: IChannel }) {
