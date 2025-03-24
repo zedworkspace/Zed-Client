@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -76,7 +77,7 @@ export function UpdateProfileModal() {
               className="relative flex items-center justify-center w-24 h-24 border rounded-full cursor-pointer overflow-hidden"
             >
               {image ? (
-                <Image
+                <img
                   width={200}
                   height={200}
                   src={image}

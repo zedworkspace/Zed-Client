@@ -15,10 +15,10 @@ const ProjectHeader = ({
   return (
     <div className="relative rounded-t-lg shadow-md">
       <div
-        className="relative h-44 flex items-end overflow-hidden bg-primary"
+        className="relative h-56 flex items-end overflow-hidden bg-primary"
        
       >
-        {projectData?.banner && <img src={projectData?.banner} alt="banner" className="w-full"/>}
+        {projectData?.banner && <img src={projectData?.banner} alt="banner" className="w-full h-full"/>}
         <div className="absolute " />
 
         <button
