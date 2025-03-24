@@ -7,11 +7,7 @@ import HomeHeader from "@/components/home/homeheader";
 import { useNewProjectStore, useProjectStore } from "@/store/projectStore";
 import { useGetProjects } from "@/hooks/useProject";
 import { useRouter } from "next/navigation";
-// import { useGetProjectMembers } from "@/hooks/useMembers";
 
-
-// // Dummy members data (you would normally fetch this from an API)
-// const {data} = useGetProjectMembers
 const dummyMembersData = {
   data: [
     {

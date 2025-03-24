@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import {
   Form,
@@ -55,7 +56,7 @@ export default function AddCard({ listId, boardId }: Props) {
     }
   }
 
-  const handleBlur = (e: React.FocusEvent) => {
+  const handleBlur = () => {
     setTimeout(() => {
       const activeElement = document.activeElement;
       if (

@@ -1,4 +1,3 @@
-import { useCreateList } from "@/hooks/useList";
 import React, { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -22,13 +21,12 @@ export default function AddList({ boardId }: { boardId: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
 
-  const { mutate, isSuccess } = useCreateList({ boardId });
 
   useEffect(() => {
     if (isShowInput && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [inputRef, isShowInput, handleSubmit]);
+  }, [inputRef, isShowInput]);
 
   const handleAddList = () => {
     setIsShowInput(true);
@@ -49,13 +47,9 @@ export default function AddList({ boardId }: { boardId: string }) {
     onCreateList({ data: values, boardId });
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      form.reset();
-    }
-  }, [isSuccess]);
+ 
 
-  const handleBlur = (e: React.FocusEvent) => {
+  const handleBlur = () => {
     setTimeout(() => {
       const activeElement = document.activeElement;
       if (

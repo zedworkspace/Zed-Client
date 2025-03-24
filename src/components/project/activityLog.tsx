@@ -3,7 +3,7 @@ import { Activity, ChevronRight, Clock } from "lucide-react";
 import React from "react";
 
 const ActivityLog = () => {
-  const [activityLog, setActivityLog] = React.useState([
+  const activityLog =[
     {
       id: 1,
       user: "Abhay",
@@ -84,7 +84,7 @@ const ActivityLog = () => {
       //   icon: <Edit2 size={16} />,
       //   color: '#2196F3'
     },
-  ]);
+  ]
   return (
     <div>
       <div className="w-80 border-l border-gray-700 bg-zi flex flex-col">

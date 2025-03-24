@@ -4,13 +4,12 @@ import { Github, Kanban, MessagesSquare, Volume2 } from "lucide-react";
 import { IGetChannels } from "@/interface/channelInterface";
 import SidebarAccordion from "./sidebarAccordion";
 import { IGetBoards } from "@/interface/boardInterface";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Separator } from "../ui/separator";
 import { useGetNotification } from "@/hooks/useMessage";
 import { useParams } from "next/navigation";
 import { connectSocket, getSocket } from "@/utils/socket";
 
-import Image from "next/image";
 import { useProfileStore } from "@/store/profileStore";
 import { useGetProfile } from "@/hooks/useProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -31,6 +30,7 @@ export default function SidebarContents({ channelData, boardData }: Props) {
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
   const [socketChannelId, setSocketChannelId] = useState("");
   const { data } = useGetNotification(channelId);
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     if (data) {
@@ -70,10 +70,9 @@ export default function SidebarContents({ channelData, boardData }: Props) {
     return () => {
       socket.off("newUnreadMessage", handleNewUnreadMessage);
     };
-  }, []);
+  }, [channelId, socket, userId]);
 
   const textHandleClick = (channelId: string, type: string) => {
-    // socket.emit("readMessage", { channelId, userId }); // Send read event
 
     sessionStorage.setItem("channelType", type);
     router.replace(`/project/${projectId}/${channelId}`);
@@ -88,7 +87,6 @@ export default function SidebarContents({ channelData, boardData }: Props) {
     sessionStorage.setItem("channelType", type);
     router.replace(`/project/${projectId}/${channelId}`);
   };
-  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {

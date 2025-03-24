@@ -4,7 +4,6 @@ import React from "react";
 import ChatHeader from "./ChatHeader";
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
-import { useGetChannelById } from "@/hooks/useChannel";
 import { IChannel } from "@/interface/channelInterface";
 
 type Props = {
@@ -12,7 +11,6 @@ type Props = {
   userId: string;
   userProfileImg: string;
   userName: string;
-  projectId: string;
   data: IChannel;
 };
 
@@ -21,7 +19,6 @@ export default function TextChannel({
   userId,
   userName,
   userProfileImg,
-  projectId,
   data,
 }: Props) {
   return (

@@ -74,7 +74,6 @@ export default function ChatPage() {
       return (
         <TextChannel
           channelId={channelId}
-          projectId={projectId}
           userId={userId}
           userName={data?.name || "Anonymous"}
           userProfileImg={data?.profileImg || ""}

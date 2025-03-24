@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Camera, LoaderCircle } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { useGetProfile, useUpdateProfile } from "@/hooks/useProfile";
@@ -76,7 +76,7 @@ export function UpdateProfileModal() {
               className="relative flex items-center justify-center w-24 h-24 border rounded-full cursor-pointer overflow-hidden"
             >
               {image ? (
-                <Image
+                <img
                   width={200}
                   height={200}
                   src={image}

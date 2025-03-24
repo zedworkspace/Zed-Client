@@ -9,12 +9,10 @@ import { useGetRoles } from "@/hooks/useRole";
 import { useParams } from "next/navigation";
 import { useGetProject } from "@/hooks/useProject";
 
-import ActivityLog from "@/components/project/activityLog";
 import ProjectHeader from "@/components/project/projectHeader";
 import RolesList from "@/components/project/roleList";
 
 export default function ProjectProfile() {
-  const [bannerColor, setBannerColor] = React.useState("gray");
   const { onOpen } = useCreateNewRole();
   
   const { projectId } = useParams() as { projectId: string };
@@ -35,7 +33,6 @@ export default function ProjectProfile() {
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             {/* Banner Section */}
             <ProjectHeader 
-              bannerColor={bannerColor} 
               projectData={projectData?.data} 
             />
 

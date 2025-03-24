@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 
-import TopSection from "@/components/topSection/topSection";
 import LeftSection from "@/components/leftSection/leftSection";
 
 type Props = {

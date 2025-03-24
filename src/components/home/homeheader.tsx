@@ -10,7 +10,6 @@ export default function HomeHeader() {
   const [currentDateTime, setCurrentDateTime] = useState("");
   const [greeting, setGreeting] = useState("Good Day");
   const [selectedWeek, setSelectedWeek] = useState("This Week");
-  const [selectedMonth, setSelectedMonth] = useState("This Month");
   const [completedTasks, setCompletedTasks] = useState(0);
   const [collaborators, setCollaborators] = useState(1);
 

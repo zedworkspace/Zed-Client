@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Select, { MultiValue, StylesConfig, components } from "react-select";
 import { X } from "lucide-react";
@@ -146,7 +147,7 @@ export default function AssigneesSelect({
     <Select
       isMulti
       options={options}
-      onChange={(newValue, actionMeta) =>
+      onChange={(newValue) =>
         handleChange(
           newValue as MultiValue<{
             value: string;

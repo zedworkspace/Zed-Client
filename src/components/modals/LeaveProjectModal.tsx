@@ -31,7 +31,7 @@ export const LeaveProjectModal = ({ isOpen, onClose, projectId }: LeaveProjectMo
                 router.push("/");
             }
         }
-    },[isSuccess])
+    },[data.isOwner, isSuccess, onClose, router])
     
     const handleClose = () =>{
         setIsOwnerModal(false);

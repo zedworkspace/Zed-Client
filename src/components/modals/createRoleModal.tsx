@@ -32,7 +32,7 @@ export function CreateRole() {
     if (isSuccess) {
       router.push(`/project/${projectId}/profile/${roleId}`);
     }
-  }, [isSuccess, roleId, router]);
+  }, [isSuccess, projectId, roleId, router]);
   const handleCreate = () => {
     mutate({ name, projectId });
     setName("");
