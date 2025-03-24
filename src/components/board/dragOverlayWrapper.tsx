@@ -13,7 +13,7 @@ export default function DragOverlayWrapper({ activeList, activeCard }: Props) {
     <div>
       {createPortal(
         <DragOverlay>
-          {activeList && <BoardList list={activeList} index={0} />}
+          {activeList && <BoardList list={activeList} />}
           {activeCard && <BoardCard card={activeCard} />}
         </DragOverlay>,
         document.body

@@ -17,21 +17,16 @@ import { EllipsisVertical } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import { useDeleteListById } from "@/hooks/useList";
 
 type Props = {
   list: IList;
-  index: number;
+  boardId?: string;
 };
 
-export default function BoardList({ list, index }: Props) {
-  const colors = [
-    "border-l-red-400",
-    "border-l-blue-400",
-    "border-l-green-400",
-    "border-l-yellow-400",
-    "border-l-purple-400",
-  ];
-
+export default function BoardList({ list, boardId }: Props) {
+  const listDeleteMutate = useDeleteListById(boardId!);
+  
   const {
     setNodeRef,
     attributes,
@@ -45,6 +40,9 @@ export default function BoardList({ list, index }: Props) {
 
   const items = useMemo(() => list.cards.map((card) => card._id!), [list]);
 
+  const handleDeleteList = () => {
+    listDeleteMutate.mutate(list._id);
+  };
   if (isDragging)
     return (
       <div
@@ -53,9 +51,7 @@ export default function BoardList({ list, index }: Props) {
         style={style}
       >
         <div
-          className={`p-3 bg-primary/50 flex gap-2 items-center rounded-md border-l-4 ${
-            colors[index % colors.length]
-          } `}
+          className={`p-3 bg-primary/50 flex gap-2 items-center rounded-md border-l-4 border-l-${list.color}-400`}
         >
           <h1 className="line-clamp-1 font-bold">{list.name}</h1>
           <span className="bg-secondary px-2 py-1 border-none rounded-full text-xs font-semibold">
@@ -77,9 +73,7 @@ export default function BoardList({ list, index }: Props) {
       style={style}
     >
       <div
-        className={`p-3 bg-black/30 shadow-md shadow-black/50 flex justify-between items-center rounded-md border-l-4 ${
-          colors[index % colors.length]
-        } `}
+        className={`p-3 bg-black/30 shadow-md shadow-black/50 flex justify-between items-center rounded-md border-l-4 border-l-${list.color}-400`}
         {...attributes}
         {...listeners}
       >
@@ -101,10 +95,11 @@ export default function BoardList({ list, index }: Props) {
               >
                 Edit
               </Button>
-              <Separator className="bg-secondary"/>
+              <Separator className="bg-secondary" />
               <Button
                 variant="ghost"
                 className="text-left text-red-500 hover:text-red-500  p-0 font-semibold hover:bg-secondary rounded-none"
+                onClick={handleDeleteList}
               >
                 Delete
               </Button>

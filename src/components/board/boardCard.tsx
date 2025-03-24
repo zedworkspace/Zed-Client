@@ -6,7 +6,7 @@ import { useCardStore } from "@/store/cardStore";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime"; 
+import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 export default function BoardCard({ card }: { card: ICard }) {
@@ -52,6 +52,55 @@ export default function BoardCard({ card }: { card: ICard }) {
     }
   }
 
+  if (isDragging) {
+    return (
+      <div
+        {...attributes}
+        {...listeners}
+        ref={setNodeRef}
+        style={style}
+        className={`p-3 border opacity-20 rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing shadow-md shadow-black/50 font-sans bg-primary/20 hover:bg-primary/30 border-primary/30 transition-all duration-300`}
+      >
+        {card.labels.length > 0 && (
+          <div className="flex gap-2 overflow-scroll scrollbar-hide rounded-full">
+            {card.labels.map((label: string, index: number) => (
+              <Badge
+                className={`${
+                  colors[index % colors.length]
+                } transition-all duration-500 whitespace-nowrap`}
+                key={index}
+              >
+                <span className="font-bold text-black/70">{label}</span>
+              </Badge>
+            ))}
+          </div>
+        )}
+        <div>
+          <h1 className="font-semibold text-white/85">{card.title}</h1>
+        </div>
+
+        {(card.dueDate || card.assignees.length > 0) && (
+          <div className="flex justify-evenly items-center ">
+            <div className="w-1/2">
+              {card.dueDate && (
+                <h1 className={`text-xs ${dueDateColor}`}>{dueDateText}</h1>
+              )}
+            </div>
+            <div className="flex flex-row-reverse -space-x-1 overflow-scroll scrollbar-hide w-1/2 rounded-full">
+              {card.assignees.map((member: IUser) => (
+                <img
+                  key={member._id}
+                  src={member.profileImg}
+                  className="w-6 h-6 rounded-full object-cover"
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div
       {...attributes}
@@ -62,13 +111,7 @@ export default function BoardCard({ card }: { card: ICard }) {
         setCardid(card._id);
         onOpen();
       }}
-      className={`p-3 border rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing shadow-md shadow-black/50 font-sans bg-neutral-900/50
-        ${
-          isDragging
-            ? "bg-primary/40 border-primary/50 rotate-1 scale-105"
-            : "bg-primary/20 hover:bg-primary/30 border-primary/30"
-        }
-        transition-all duration-300`}
+      className={`p-3 border rounded-md flex flex-col justify-evenly gap-3 cursor-grab active:cursor-grabbing shadow-md shadow-black/50 font-sans bg-primary/20 hover:bg-primary/30 border-primary/30 transition-all duration-300`}
     >
       {card.labels.length > 0 && (
         <div className="flex gap-2 overflow-scroll scrollbar-hide rounded-full">

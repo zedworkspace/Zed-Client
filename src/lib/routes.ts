@@ -39,6 +39,7 @@ const API_ROUTES = {
   },
   LIST: {
     CREATE_LIST: "/v1/lists/",
+    DELETE_LIST_BY_ID: "/v1/lists/",
     UPDATE_LIST_POSITION: "/v1/lists/reorder",
   },
   CARD: {
