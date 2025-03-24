@@ -10,6 +10,7 @@ export interface IList {
   name: string;
   boardId: string;
   cards: ICard[];
+  color: string;
 }
 
 export interface IGetLists extends IFetch {

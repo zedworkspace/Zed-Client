@@ -167,10 +167,10 @@ export default function SidebarContents({ channelData, boardData }: Props) {
             <span className="text-sm font-medium">
               {profileData?.name || "Abhay pc"}
             </span>
-            <span className="text-xs text-muted-foreground/70 flex items-center gap-1">
+            {/* <span className="text-xs text-muted-foreground/70 flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-green-500"></span>
               Online
-            </span>
+            </span> */}
           </div>
         </button>
       </div>
