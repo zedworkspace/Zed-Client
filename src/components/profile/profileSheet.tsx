@@ -12,7 +12,6 @@ import { useGetProfile, useLogout } from "@/hooks/useProfile";
 import { ProfileActivity } from "./Activity";
 import { ProfileMyWork } from "./MyWork";
 import { ProfileAssigned } from "./Assigned";
-import Image from "next/image";
 import { User2Icon, UserPen, Activity, Briefcase, Users, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -34,7 +33,7 @@ export const ProfileSheet = () => {
   ];
   
   const [open, setOpen] = useState(false);
-  const { mutate: logout, isPending } = useLogout();
+  const { mutate: logout } = useLogout();
   const handleLogout = () => {
     logout();
     setOpen(false);

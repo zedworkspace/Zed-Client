@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useDeleteCardById, useUpdateCard } from "@/hooks/useCard";
 import { IBoardMember } from "@/interface/boardInterface";
 import { FormValues, ICard } from "@/interface/cardInterface";

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { Badge } from "../ui/badge";
 import { ICard } from "@/interface/cardInterface";
@@ -91,6 +92,7 @@ export default function BoardCard({ card }: { card: ICard }) {
                 <img
                   key={member._id}
                   src={member.profileImg}
+                  alt="profileImg"
                   className="w-6 h-6 rounded-full object-cover"
                 />
               ))}
@@ -143,6 +145,7 @@ export default function BoardCard({ card }: { card: ICard }) {
               <img
                 key={member._id}
                 src={member.profileImg}
+                alt="profileImg"
                 className="w-6 h-6 rounded-full object-cover"
               />
             ))}

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import {
   Dialog,
@@ -21,7 +22,6 @@ import {
 } from "lucide-react";
 import { Input } from "../ui/input";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-// import { useState } from "react";
 import { useCreateChannel } from "@/hooks/useChannel";
 import { useParams, useRouter } from "next/navigation";
 import { Switch } from "../ui/switch";
@@ -40,9 +40,7 @@ export function CreateChannel() {
     setIsPrivate,
   } = useCreateChannelStore();
   const { onOpenPrivate } = usePrivateChannelStore();
-  // const [type, setType] = useState("text");
-  // const [name, setName] = useState("");
-  // const [isPrivate, setIsPrivate] = useState(false);
+
   const { projectId } = useParams() as {
     projectId: string;
   };

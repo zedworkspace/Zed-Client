@@ -67,7 +67,7 @@ export default function Board({ userId }: Props) {
   useEffect(() => {
     initializeSocketHandlers();
     joinRoom(channelId, userId);
-  }, []);
+  }, [channelId, initializeSocketHandlers, joinRoom, userId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

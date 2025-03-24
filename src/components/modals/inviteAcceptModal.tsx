@@ -1,6 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useInviteStore } from "@/store/inviteStore";
@@ -21,7 +20,7 @@ interface AcceptInviteModalProps {
 export default function AcceptInviteModal({ project }: AcceptInviteModalProps) {
   const { isAcceptModalOpen, closeAcceptModal, inviteId } = useInviteStore();
   const router = useRouter();
-  const { mutate, isSuccess } = useAcceptInvite()
+  const { mutate } = useAcceptInvite()
 
   const handleAccept = () =>{
     if(inviteId) mutate({inviteLink: inviteId}, {
