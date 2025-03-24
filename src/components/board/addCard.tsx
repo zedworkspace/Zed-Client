@@ -23,6 +23,7 @@ type Props = {
 
 export default function AddCard({ listId, boardId }: Props) {
   const [isShowInput, setIsShowInput] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
 
@@ -39,12 +40,19 @@ export default function AddCard({ listId, boardId }: Props) {
     },
   });
 
+  useEffect(() => {
+    setUserId(localStorage.getItem("userId"));
+  }, []);
   const { socket } = useBoardSocket();
 
   const { onCreateCard } = useCardSocket({ socket, form });
 
   function handleSubmit(values: z.infer<typeof createCardSchema>) {
-    onCreateCard({ data: values, listId, boardId });
+    if (userId) {
+      onCreateCard({ data: values, listId, boardId, userId });
+    } else {
+      console.error("cant find userId in local storage");
+    }
   }
 
   const handleBlur = (e: React.FocusEvent) => {

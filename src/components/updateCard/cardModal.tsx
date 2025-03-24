@@ -6,6 +6,7 @@ import { useGetCard } from "@/hooks/useCard";
 import { useGetBoardMembers } from "@/hooks/useBoard";
 import { IGetLists } from "@/interface/listInterface";
 import { CardModalContent } from "./cardContentSection";
+import { useGetActivitiesByEntityId } from "@/hooks/useActivity";
 
 export function CardModal() {
   const queryClient = useQueryClient();
@@ -31,8 +32,17 @@ export function CardModal() {
     channelId,
   ]);
 
-  const isLoading = isCardLoading || isMembersLoading;
-  const isSuccess = isCardSuccess || isMembersSuccess;
+  const {
+    data: activities,
+    isLoading: activityLoading,
+    isSuccess: activitySuccess,
+  } = useGetActivitiesByEntityId({
+    enabled: isOpen,
+    entityId: cardId,
+  });
+
+  const isLoading = isCardLoading || isMembersLoading || activityLoading;
+  const isSuccess = isCardSuccess || isMembersSuccess || activitySuccess;
 
   if (isLoading) return <div>Loading.....</div>;
 
@@ -43,6 +53,7 @@ export function CardModal() {
       cardData={data?.data}
       members={membersData?.data}
       currentLists={currentLists?.data}
+      activities={activities?.data}
     />
   );
 }

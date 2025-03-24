@@ -56,6 +56,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import TrackerHeader from "@/components/GitHubTracker/TrackerHeader";
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -131,7 +132,7 @@ const chartConfig1 = {
   },
 } satisfies ChartConfig;
 
-const data = [1];
+const data = [1,2,3];
 
 const page = () => {
   const storedRepoName = localStorage.getItem("repoName") || "";
@@ -146,7 +147,7 @@ const page = () => {
   const { data: pull } = useRepoPulls(storedRepoName, isEnable);
   const { data: issues } = useRepoIssues(storedRepoName, isEnable);
   const { data: branches } = useRepoBranches(storedRepoName, isEnable);
-  console.log(branches)
+  console.log(branches);
 
   useEffect(() => {
     if (storedRepoName) {
@@ -177,11 +178,20 @@ const page = () => {
 
   if (details) {
     return (
-      <div>
-        <div className="w-[100%] flex flex-col items-center mt-10 gap-5 mb-10">
-          <div className="w-[90%] flex items-center gap-3">
-            <GitCommit />
-            <h1 className="text-2xl font-bold">Commits</h1>
+      <div className="bg-neutral-900/100">
+        <div className="fixed z-10 w-full"><TrackerHeader/></div>
+        <div className="w-[100%] flex flex-col items-center gap-5 mb-10">
+          <div className="w-[90%] flex items-center gap-3 justify-between mt-20">
+            <div className="flex items-center gap-3">
+              <GitCommit />
+              <h1 className="text-2xl font-bold">Commits</h1>
+            </div>
+            <button
+              onClick={() => setDetails(false)}
+              className="bg-black p-1 px-2 rounded-md text-white"
+            >
+              Back
+            </button>
           </div>
           <div className="top w-[90%] h-[20rem] rounded-md flex gap-5">
             <div className="commit-graph w-[60%] h-full bg-primary rounded-md p-6">
@@ -253,9 +263,9 @@ const page = () => {
             <div className="commit-list w-[40%] h-full bg-primary rounded-md p-5 flex flex-col gap-5 overflow-auto scrollbar-hide">
               <p className="font-bold text-lg">Commits</p>
               {commits &&
-                commits.map((commit: any) => {
+                commits.map((commit: any, index: number) => {
                   return (
-                    <div className="flex gap-5 items-center">
+                    <div key={index} className="flex gap-5 items-center">
                       <img
                         src={commit.author?.avatar_url}
                         alt=""
@@ -338,7 +348,9 @@ const page = () => {
     );
   } else {
     return (
-      <div className="w-full h-full flex justify-center">
+      <div className="w-full bg-neutral-900/100 h-full flex flex-col overflow-auto">
+        <div className="fixed z-10 w-full"><TrackerHeader/></div>
+      <div className="w-full h-full flex justify-center mt-10">
         <div className="w-[90%] h-full flex pt-10">
           <div className="left-side w-[60%] h-full flex flex-col gap-5">
             <div className="flex flex-col gap-3">
@@ -364,10 +376,18 @@ const page = () => {
               <Filter className="h-4 w-4" /> Sorted by
               <span className="font-bold">" date added "</span>
             </p>
-            {isEnable &&
-              data.map(() => {
+            <div>
+              {
+                repo?null: <p className="text-sm text-gray-400">Limit Exided... Check After Some Time.</p>
+              }
+            </div>
+            {isEnable && repo &&
+              data.map((value, index: number) => {
                 return (
-                  <div className="bg-primary h-[23rem] w-full rounded-md flex flex-col gap-5 p-5">
+                  <div
+                    key={index}
+                    className="bg-primary h-[23rem] w-full rounded-md flex flex-col gap-5 p-5"
+                  >
                     <div className="top flex justify-between w-full">
                       <div className=" w-full flex flex-col gap-3">
                         <div className="flex justify-between">
@@ -395,16 +415,16 @@ const page = () => {
                           </DropdownMenu> */}
                             <Select onValueChange={(value) => setBranch(value)}>
                               <SelectTrigger className="h-7 w-[5rem] focus:ring-0 border bg-secondary focus:border-gray-500 border-gray-500 rounded text-sm text-gray-400 flex items-center justify-between gap-2">
-                                <button className="flex items-center ">
+                                <div className="flex items-center ">
                                   <GitBranch className="h-3" />
                                   <SelectValue placeholder="main" />
-                                </button>
+                                </div>
                               </SelectTrigger>
 
                               {branches && (
                                 <SelectContent className="bg-black text-white">
                                   <SelectGroup>
-                                    {branches?.map((branch: any) => (
+                                    {branches.map((branch: any) => (
                                       <SelectItem
                                         key={branch.name}
                                         value={branch.name}
@@ -558,12 +578,12 @@ const page = () => {
                           by{" "}
                           <span className="text-white/90">
                             {" "}
-                            {commits?.[commits.length - 1]?.author?.login}
+                            {commits?.[0]?.author?.login}
                           </span>
                         </p>
                       </div>
                       <img
-                        src={commits?.[commits.length - 1]?.author?.avatar_url}
+                        src={commits?.[0]?.author?.avatar_url}
                         alt="Profile"
                         className=" rounded-full w-6 h-6"
                       />
@@ -624,6 +644,7 @@ const page = () => {
           </div>
         </div>
       </div>
+    </div>
     );
   }
 };
