@@ -132,7 +132,7 @@ const chartConfig1 = {
   },
 } satisfies ChartConfig;
 
-const data = [1,2,3];
+const data = [1];
 
 const page = () => {
   const storedRepoName = localStorage.getItem("repoName") || "";
@@ -386,7 +386,7 @@ const page = () => {
                 return (
                   <div
                     key={index}
-                    className="bg-primary h-[23rem] w-full rounded-md flex flex-col gap-5 p-5"
+                    className="bg-primary h-[23rem] w-full rounded-md flex flex-col gap-5 p-5 shadow-md shadow-black/70"
                   >
                     <div className="top flex justify-between w-full">
                       <div className=" w-full flex flex-col gap-3">

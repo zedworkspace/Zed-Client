@@ -92,7 +92,7 @@ export default function Page({ projectId }: { projectId: string }) {
   };
 
   return (
-    <div className="flex flex-col justify-center bg-neutral-900/100">
+    <div className="flex flex-col justify-center bg-neutral-900/100 h-screen">
       <HomeHeader />
 
       <div className="p-6">
@@ -176,11 +176,11 @@ export default function Page({ projectId }: { projectId: string }) {
             ))}
 
             <div
-              className="bg-primary rounded-lg border-2 border-dashed border-gray-200 p-6 flex flex-col items-center justify-center hover:border-gray-300 transition-colors cursor-pointer"
+              className="bg-primary rounded-lg border-2 border-dashed border-gray-500 p-6 flex flex-col items-center justify-center hover:border-gray-400 transition-colors cursor-pointer"
               onClick={onOpen}
             >
               <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-2">
-                <span className="text-2xl text-blue-500">+</span>
+                <span className="text-2xl text-gray-500">+</span>
               </div>
               <h3 className="text-lg font-medium text-muted-foreground">
                 Create Project
