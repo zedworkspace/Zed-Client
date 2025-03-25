@@ -26,7 +26,7 @@ import ChangeOwnerModal from "../modals/ChangeOwnerModal";
 import { IGetProject } from "@/interface/projectInterface";
 
 type Props = {
-  projectData: IGetProject;
+  projectData?: IGetProject;
 };
 
 export default function SideBarHead({ projectData }: Props) {

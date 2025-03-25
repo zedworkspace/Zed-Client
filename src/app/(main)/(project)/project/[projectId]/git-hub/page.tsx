@@ -14,15 +14,7 @@ import {
   useRepoIssues,
   useRepoPulls,
 } from "@/hooks/useGitHub";
-import {
-  Clock,
-  Filter,
-  GitBranch,
-  GitGraph,
-  Github,
-  Search,
-  Trash2,
-} from "lucide-react";
+import { Clock, Filter, GitBranch, Search, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import {
   Area,
@@ -36,27 +28,18 @@ import {
   XAxis,
 } from "recharts";
 import moment from "moment";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { GitCommit, Users } from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import TrackerHeader from "@/components/GitHubTracker/TrackerHeader";
+import Image from "next/image";
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -134,7 +117,20 @@ const chartConfig1 = {
 
 const data = [1];
 
-const page = () => {
+type Commit = {
+  author?: {
+    avatar_url: string;
+    login: string;
+  };
+  commit: {
+    message: string;
+    author: {
+      date: string;
+    };
+  };
+};
+
+const Page = () => {
   const storedRepoName = localStorage.getItem("repoName") || "";
   const [repoName, setRepoNme] = useState("");
   const [isEnable, setEnable] = useState(false);
@@ -155,7 +151,7 @@ const page = () => {
       qureyClient.invalidateQueries({ queryKey: ["commit", storedRepoName] });
     }
     console.log("useeffect worked");
-  }, [brach, storedRepoName]);
+  }, [brach, storedRepoName, qureyClient]);
 
   const handleOnSubmit = () => {
     setEnable(true);
@@ -166,20 +162,21 @@ const page = () => {
     return chartData1.reduce((acc, curr) => acc + curr.visitors, 0);
   }, []);
 
-  const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>("desktop");
-  const total = React.useMemo(
-    () => ({
-      desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
-      mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
-    }),
-    []
-  );
+  const [activeChart] = React.useState<keyof typeof chartConfig>("desktop");
+  // const total = React.useMemo(
+  //   () => ({
+  //     desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
+  //     mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
+  //   }),
+  //   []
+  // );
 
   if (details) {
     return (
       <div className="bg-neutral-900/100">
-        <div className="fixed z-10 w-full"><TrackerHeader/></div>
+        <div className="fixed z-10 w-full">
+          <TrackerHeader />
+        </div>
         <div className="w-[100%] flex flex-col items-center gap-5 mb-10">
           <div className="w-[90%] flex items-center gap-3 justify-between mt-20">
             <div className="flex items-center gap-3">
@@ -263,13 +260,15 @@ const page = () => {
             <div className="commit-list w-[40%] h-full bg-primary rounded-md p-5 flex flex-col gap-5 overflow-auto scrollbar-hide">
               <p className="font-bold text-lg">Commits</p>
               {commits &&
-                commits.map((commit: any, index: number) => {
+                commits.map((commit: Commit, index: number) => {
                   return (
                     <div key={index} className="flex gap-5 items-center">
-                      <img
-                        src={commit.author?.avatar_url}
-                        alt=""
-                        className="w-12 h-12 rounded-full bg-slate-300"
+                      <Image
+                        src={commit.author?.avatar_url || "/placeholder.png"}
+                        alt="Avatar"
+                        width={48}
+                        height={48}
+                        className="w-12 h-12 rounded-full"
                       />
                       <div>
                         <div className="flex gap-3 items-center">
@@ -349,53 +348,58 @@ const page = () => {
   } else {
     return (
       <div className="w-full bg-neutral-900/100 h-full flex flex-col overflow-auto">
-        <div className="fixed z-10 w-full"><TrackerHeader/></div>
-      <div className="w-full h-full flex justify-center mt-10">
-        <div className="w-[90%] h-full flex pt-10">
-          <div className="left-side w-[60%] h-full flex flex-col gap-5">
-            <div className="flex flex-col gap-3">
-              <p className="text-sm text-gray-400">
-                Add Reprositries to this Collection :
-              </p>
-              <div className="w-full bg-[#232326] p-3 gap-3 rounded-md h-[5rem] flex justify-center items-center relative">
-                <input
-                  onChange={(e) => setRepoNme(e.target.value)}
-                  type="text"
-                  placeholder="Search repositories "
-                  className=" focus:outline-none border-gray-500 text-sm px-2 w-[90%]  bg-primary border h-9 rounded"
-                />
-                <button
-                  onClick={handleOnSubmit}
-                  className="h-9 px-2 border border-gray-500 rounded bg-primary"
-                >
-                  <Search className="h-4 w-4 text-gray-400" />
-                </button>
-              </div>
-            </div>
-            <p className="flex gap-3 text-sm text-gray-400">
-              <Filter className="h-4 w-4" /> Sorted by
-              <span className="font-bold">" date added "</span>
-            </p>
-            <div>
-              {
-                repo?null: <p className="text-sm text-gray-400">Limit Exided... Check After Some Time.</p>
-              }
-            </div>
-            {isEnable && repo &&
-              data.map((value, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className="bg-primary h-[23rem] w-full rounded-md flex flex-col gap-5 p-5 shadow-md shadow-black/70"
+        <div className="fixed z-10 w-full">
+          <TrackerHeader />
+        </div>
+        <div className="w-full h-full flex justify-center mt-10">
+          <div className="w-[90%] h-full flex pt-10">
+            <div className="left-side w-[60%] h-full flex flex-col gap-5">
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-gray-400">
+                  Add Reprositries to this Collection :
+                </p>
+                <div className="w-full bg-[#232326] p-3 gap-3 rounded-md h-[5rem] flex justify-center items-center relative">
+                  <input
+                    onChange={(e) => setRepoNme(e.target.value)}
+                    type="text"
+                    placeholder="Search repositories "
+                    className=" focus:outline-none border-gray-500 text-sm px-2 w-[90%]  bg-primary border h-9 rounded"
+                  />
+                  <button
+                    onClick={handleOnSubmit}
+                    className="h-9 px-2 border border-gray-500 rounded bg-primary"
                   >
-                    <div className="top flex justify-between w-full">
-                      <div className=" w-full flex flex-col gap-3">
-                        <div className="flex justify-between">
-                          <p className="text-sm text-gray-400">
-                            Last seen : 4m ago
-                          </p>
-                          <div className="flex gap-2 h-7 ">
-                            {/* <DropdownMenu>
+                    <Search className="h-4 w-4 text-gray-400" />
+                  </button>
+                </div>
+              </div>
+              <p className="flex gap-3 text-sm text-gray-400">
+                <Filter className="h-4 w-4" /> Sorted by
+                <span className="font-bold">&quot; date added &quot;</span>
+              </p>
+              <div>
+                {repo ? null : (
+                  <p className="text-sm text-gray-400">
+                    Limit Exided... Check After Some Time.
+                  </p>
+                )}
+              </div>
+              {isEnable &&
+                repo &&
+                data.map((value, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="bg-primary h-[23rem] w-full rounded-md flex flex-col gap-5 p-5 shadow-md shadow-black/70"
+                    >
+                      <div className="top flex justify-between w-full">
+                        <div className=" w-full flex flex-col gap-3">
+                          <div className="flex justify-between">
+                            <p className="text-sm text-gray-400">
+                              Last seen : 4m ago
+                            </p>
+                            <div className="flex gap-2 h-7 ">
+                              {/* <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <div className="px-2 border p-1 border-gray-500 rounded text-sm text-gray-400 flex items-center justify-between gap-2">
                                 <GitBranch className="h-3 w-3" />
@@ -413,240 +417,256 @@ const page = () => {
                               </DropdownMenuCheckboxItem>
                             </DropdownMenuContent>
                           </DropdownMenu> */}
-                            <Select onValueChange={(value) => setBranch(value)}>
-                              <SelectTrigger className="h-7 w-[5rem] focus:ring-0 border bg-secondary focus:border-gray-500 border-gray-500 rounded text-sm text-gray-400 flex items-center justify-between gap-2">
-                                <div className="flex items-center ">
-                                  <GitBranch className="h-3" />
-                                  <SelectValue placeholder="main" />
-                                </div>
-                              </SelectTrigger>
+                              <Select
+                                onValueChange={(value) => setBranch(value)}
+                              >
+                                <SelectTrigger className="h-7 w-[5rem] focus:ring-0 border bg-secondary focus:border-gray-500 border-gray-500 rounded text-sm text-gray-400 flex items-center justify-between gap-2">
+                                  <div className="flex items-center ">
+                                    <GitBranch className="h-3" />
+                                    <SelectValue placeholder="main" />
+                                  </div>
+                                </SelectTrigger>
 
-                              {branches && (
-                                <SelectContent className="bg-black text-white">
-                                  <SelectGroup>
-                                    {branches.map((branch: any) => (
-                                      <SelectItem
-                                        key={branch.name}
-                                        value={branch.name}
-                                      >
-                                        {branch.name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectGroup>
-                                </SelectContent>
-                              )}
-                            </Select>
+                                {branches && (
+                                  <SelectContent className="bg-black text-white">
+                                    <SelectGroup>
+                                      {branches.map(
+                                        (branch: { name: string }) => (
+                                          <SelectItem
+                                            key={branch.name}
+                                            value={branch.name}
+                                          >
+                                            {branch.name}
+                                          </SelectItem>
+                                        )
+                                      )}
+                                    </SelectGroup>
+                                  </SelectContent>
+                                )}
+                              </Select>
 
-                            <button
-                              onClick={() => setDetails(true)}
-                              className=" w-[5rem] border border-gray-500 rounded flex justify-center items-center text-sm text-gray-400 bg-secondary"
+                              <button
+                                onClick={() => setDetails(true)}
+                                className=" w-[5rem] border border-gray-500 rounded flex justify-center items-center text-sm text-gray-400 bg-secondary"
+                              >
+                                Details
+                              </button>
+                              <button className=" w-[2rem] flex justify-center items-center border border-gray-500 rounded text-sm text-gray-400 bg-secondary">
+                                <Trash2 className="h-3 w-3" />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex gap-3 items-center">
+                            <Image
+                              className="h-14 w-12.5 rounded-md"
+                              src={
+                                repo?.owner?.avatar_url || "/placeholder.png"
+                              }
+                              alt="Repository Owner Avatar"
+                              width={50}
+                              height={56}
+                            />
+                            <div className="flex flex-col">
+                              <p className=" text-gray-400">
+                                {repo?.owner?.login}
+                              </p>
+                              <h1 className="text-2xl font-bold">
+                                {repo?.name}{" "}
+                              </h1>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex justify-between ">
+                        <div className="text-sm text-gray-400 flex flex-col gap-3 w-full ">
+                          <div className="flex gap-3">
+                            <div>
+                              <p>Commits : {commits?.length}</p>
+                              <p>Issues : {issues?.length}</p>
+                              <p>Pull Requests : {pull?.length}</p>
+                            </div>
+                            <ChartContainer
+                              config={chartConfig}
+                              className="w-[75%] h-[5rem]"
                             >
-                              Details
-                            </button>
-                            <button className=" w-[2rem] flex justify-center items-center border border-gray-500 rounded text-sm text-gray-400 bg-secondary">
-                              <Trash2 className="h-3 w-3" />
-                            </button>
-                          </div>
-                        </div>
-                        <div className="flex gap-3 items-center">
-                          <img
-                            className="h-14  w-12.5  rounded-md"
-                            src={repo?.owner?.avatar_url}
-                            alt=""
-                          />
-                          <div className="flex flex-col">
-                            <p className=" text-gray-400">
-                              {repo?.owner?.login}
-                            </p>
-                            <h1 className="text-2xl font-bold">
-                              {repo?.name}{" "}
-                            </h1>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-between ">
-                      <div className="text-sm text-gray-400 flex flex-col gap-3 w-full ">
-                        <div className="flex gap-3">
-                          <div>
-                            <p>Commits : {commits?.length}</p>
-                            <p>Issues : {issues?.length}</p>
-                            <p>Pull Requests : {pull?.length}</p>
-                          </div>
-                          <ChartContainer
-                            config={chartConfig}
-                            className="w-[75%] h-[5rem]"
-                          >
-                            <AreaChart accessibilityLayer data={chartData}>
-                              <CartesianGrid vertical={false} />
-                              <XAxis
-                                dataKey="month"
-                                tickLine={false}
-                                axisLine={false}
-                                tickMargin={8}
-                                tickFormatter={(value) => value.slice(0, 3)}
-                              />
-                              <ChartTooltip
-                                cursor={false}
-                                content={<ChartTooltipContent />}
-                              />
-                              <defs>
-                                <linearGradient
-                                  id="fillDesktop"
-                                  x1="0"
-                                  y1="0"
-                                  x2="0"
-                                  y2="1"
-                                >
-                                  <stop
-                                    offset="5%"
-                                    stopColor="var(--color-desktop)"
-                                    stopOpacity={0.8}
-                                  />
-                                  <stop
-                                    offset="95%"
-                                    stopColor="var(--color-desktop)"
-                                    stopOpacity={0.1}
-                                  />
-                                </linearGradient>
-                                <linearGradient
-                                  id="fillMobile"
-                                  x1="0"
-                                  y1="0"
-                                  x2="0"
-                                  y2="1"
-                                >
-                                  <stop
-                                    offset="5%"
-                                    stopColor="var(--color-mobile)"
-                                    stopOpacity={0.8}
-                                  />
-                                  <stop
-                                    offset="95%"
-                                    stopColor="var(--color-mobile)"
-                                    stopOpacity={0.1}
-                                  />
-                                </linearGradient>
-                              </defs>
-                              <Area
-                                dataKey="mobile"
-                                type="natural"
-                                fill="url(#fillMobile)"
-                                fillOpacity={0.4}
-                                stroke="var(--color-mobile)"
-                                stackId="a"
-                              />
-                              <Area
-                                dataKey="desktop"
-                                type="natural"
-                                fill="url(#fillDesktop)"
-                                fillOpacity={0.4}
-                                stroke="var(--color-desktop)"
-                                stackId="a"
-                              />
-                            </AreaChart>
-                          </ChartContainer>
-                        </div>
-                        <div>
-                          <h1 className="text-lg font-bold text-white">
-                            Contributions
-                          </h1>
-                          <div className="flex -space-x-3">
-                            {contributors?.map((forkes: any) => {
-                              return (
-                                <img
-                                  src={forkes.owner.avatar_url}
-                                  alt="Profile"
-                                  className="border-2 border-black rounded-full w-8 h-8 "
+                              <AreaChart accessibilityLayer data={chartData}>
+                                <CartesianGrid vertical={false} />
+                                <XAxis
+                                  dataKey="month"
+                                  tickLine={false}
+                                  axisLine={false}
+                                  tickMargin={8}
+                                  tickFormatter={(value) => value.slice(0, 3)}
                                 />
-                              );
-                            })}
+                                <ChartTooltip
+                                  cursor={false}
+                                  content={<ChartTooltipContent />}
+                                />
+                                <defs>
+                                  <linearGradient
+                                    id="fillDesktop"
+                                    x1="0"
+                                    y1="0"
+                                    x2="0"
+                                    y2="1"
+                                  >
+                                    <stop
+                                      offset="5%"
+                                      stopColor="var(--color-desktop)"
+                                      stopOpacity={0.8}
+                                    />
+                                    <stop
+                                      offset="95%"
+                                      stopColor="var(--color-desktop)"
+                                      stopOpacity={0.1}
+                                    />
+                                  </linearGradient>
+                                  <linearGradient
+                                    id="fillMobile"
+                                    x1="0"
+                                    y1="0"
+                                    x2="0"
+                                    y2="1"
+                                  >
+                                    <stop
+                                      offset="5%"
+                                      stopColor="var(--color-mobile)"
+                                      stopOpacity={0.8}
+                                    />
+                                    <stop
+                                      offset="95%"
+                                      stopColor="var(--color-mobile)"
+                                      stopOpacity={0.1}
+                                    />
+                                  </linearGradient>
+                                </defs>
+                                <Area
+                                  dataKey="mobile"
+                                  type="natural"
+                                  fill="url(#fillMobile)"
+                                  fillOpacity={0.4}
+                                  stroke="var(--color-mobile)"
+                                  stackId="a"
+                                />
+                                <Area
+                                  dataKey="desktop"
+                                  type="natural"
+                                  fill="url(#fillDesktop)"
+                                  fillOpacity={0.4}
+                                  stroke="var(--color-desktop)"
+                                  stackId="a"
+                                />
+                              </AreaChart>
+                            </ChartContainer>
+                          </div>
+                          <div>
+                            <h1 className="text-lg font-bold text-white">
+                              Contributions
+                            </h1>
+                            <div className="flex -space-x-3">
+                              {contributors?.map(
+                                (
+                                  forkes: { owner: { avatar_url: string } },
+                                  index: number
+                                ) => {
+                                  return (
+                                    <Image
+                                      key={index}
+                                      src={forkes.owner.avatar_url}
+                                      alt="Profile"
+                                      className="border-2 border-black rounded-full w-8 h-8 "
+                                    />
+                                  );
+                                }
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <Separator className="bg-gray-500" />
-                    <div className="bott flex justify-between">
-                      <div className="flex gap-2 text-gray-400 items-center">
-                        <Clock className="h-4 w-4" />
-                        <p className="text-sm">
-                          Last commit{" "}
-                          <span className="text-white/90">
-                            {moment(commits?.[0]?.commit.author.date).fromNow()}{" "}
-                            {/* {moment('2025-03-14T11:48:52Z').fromNow()} */}
-                          </span>
-                          by{" "}
-                          <span className="text-white/90">
-                            {" "}
-                            {commits?.[0]?.author?.login}
-                          </span>
-                        </p>
+                      <Separator className="bg-gray-500" />
+                      <div className="bott flex justify-between">
+                        <div className="flex gap-2 text-gray-400 items-center">
+                          <Clock className="h-4 w-4" />
+                          <p className="text-sm">
+                            Last commit{" "}
+                            <span className="text-white/90">
+                              {moment(
+                                commits?.[0]?.commit.author.date
+                              ).fromNow()}{" "}
+                              {/* {moment('2025-03-14T11:48:52Z').fromNow()} */}
+                            </span>
+                            by{" "}
+                            <span className="text-white/90">
+                              {" "}
+                              {commits?.[0]?.author?.login}
+                            </span>
+                          </p>
+                        </div>
+                        <Image
+                          src={commits?.[0]?.author?.avatar_url}
+                          alt="Profile"
+                          className=" rounded-full w-6 h-6"
+                        />
                       </div>
-                      <img
-                        src={commits?.[0]?.author?.avatar_url}
-                        alt="Profile"
-                        className=" rounded-full w-6 h-6"
-                      />
                     </div>
-                  </div>
-                );
-              })}
-          </div>
-          <div className="right-side w-[40%] h-full flex justify-center">
-            <ChartContainer
-              config={chartConfig1}
-              className="mx-auto aspect-square max-h-[250px]"
-            >
-              <PieChart>
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                />
-                <Pie
-                  data={chartData1}
-                  dataKey="visitors"
-                  nameKey="browser"
-                  innerRadius={60}
-                  strokeWidth={5}
-                >
-                  <Label
-                    content={({ viewBox }) => {
-                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                        return (
-                          <text
-                            x={viewBox.cx}
-                            y={viewBox.cy}
-                            textAnchor="middle"
-                            dominantBaseline="middle"
-                          >
-                            <tspan
+                  );
+                })}
+            </div>
+            <div className="right-side w-[40%] h-full flex justify-center">
+              <ChartContainer
+                config={chartConfig1}
+                className="mx-auto aspect-square max-h-[250px]"
+              >
+                <PieChart>
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Pie
+                    data={chartData1}
+                    dataKey="visitors"
+                    nameKey="browser"
+                    innerRadius={60}
+                    strokeWidth={5}
+                  >
+                    <Label
+                      content={({ viewBox }) => {
+                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                          return (
+                            <text
                               x={viewBox.cx}
                               y={viewBox.cy}
-                              className="fill-foreground text-3xl font-bold"
+                              textAnchor="middle"
+                              dominantBaseline="middle"
                             >
-                              {totalVisitors.toLocaleString()}
-                            </tspan>
-                            <tspan
-                              x={viewBox.cx}
-                              y={(viewBox.cy || 0) + 24}
-                              className="fill-muted-foreground"
-                            >
-                              Visitors
-                            </tspan>
-                          </text>
-                        );
-                      }
-                    }}
-                  />
-                </Pie>
-              </PieChart>
-            </ChartContainer>
+                              <tspan
+                                x={viewBox.cx}
+                                y={viewBox.cy}
+                                className="fill-foreground text-3xl font-bold"
+                              >
+                                {totalVisitors.toLocaleString()}
+                              </tspan>
+                              <tspan
+                                x={viewBox.cx}
+                                y={(viewBox.cy || 0) + 24}
+                                className="fill-muted-foreground"
+                              >
+                                Visitors
+                              </tspan>
+                            </text>
+                          );
+                        }
+                      }}
+                    />
+                  </Pie>
+                </PieChart>
+              </ChartContainer>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     );
   }
 };
 
-export default page;
+export default Page;

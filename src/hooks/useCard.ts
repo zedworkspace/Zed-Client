@@ -8,7 +8,6 @@ import {
   updateCardPositionWithInList,
   updatedCard,
 } from "@/services/taskServices";
-import { useCardStore } from "@/store/cardStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "./use-toast";
 

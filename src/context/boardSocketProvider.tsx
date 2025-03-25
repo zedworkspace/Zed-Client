@@ -34,7 +34,7 @@ export const BoardSocketProvider = ({ children }: { children: ReactNode }) => {
       const newSocket = connectSocket();
       setSocket(newSocket);
     }
-  }, []);
+  }, [socket]);
 
   const onCardDrop = ({
     fromListId,

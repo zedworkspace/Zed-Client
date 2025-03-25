@@ -2,7 +2,6 @@
 import { useDeleteCardById, useUpdateCard } from "@/hooks/useCard";
 import { IBoardMember } from "@/interface/boardInterface";
 import { FormValues, ICard } from "@/interface/cardInterface";
-import { IProjectmember } from "@/interface/membersInterface";
 import { useCardStore } from "@/store/cardStore";
 import { UpdateCardSchema } from "@/validations/cardValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -83,12 +82,11 @@ export function CardModalContent({
 
   const [newLabel, setNewLabel] = useState("");
   const [assignees, setAssignees] = useState<
-    | MultiValue<{
-        value: string;
-        label: React.JSX.Element;
-        data: IProjectmember;
-      }>
-    | unknown
+    MultiValue<{
+      value: string;
+      label: React.ReactNode;
+      data: IBoardMember;
+    }>
   >([]);
 
   const form = useForm<FormValues>({
@@ -114,7 +112,7 @@ export function CardModalContent({
   useEffect(() => {
     if (cardData?.assignees) {
       const formattedAssignees = cardData.assignees.map((assignee) => ({
-        value: assignee.name,
+        value: assignee.name as string,
         label: (
           <div className="flex items-center gap-2">
             <img
@@ -127,7 +125,7 @@ export function CardModalContent({
             {assignee.name}
           </div>
         ),
-        data: assignee,
+        data: assignee as IBoardMember,
       }));
       setAssignees(formattedAssignees);
     }
@@ -184,7 +182,7 @@ export function CardModalContent({
   const handleDeleteTask = () => {
     deleteCard.mutate(cardData?._id);
   };
-  
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[54rem] max-h-[39rem] bg-primary border-none text-gray-100 shadow-lg overflow-hidden">

@@ -27,7 +27,7 @@ export const useCardSocket = ({
   };
 
   const updateCardHandler = (queryClient: QueryClient, boardId: string) => {
-    socket?.on("onUpdateCard", ({ data, isSuccess }) => {
+    socket?.on("onUpdateCard", ({ data }) => {
       queryClient.setQueryData(["lists", boardId], (oldData: IGetLists) => {
         return { ...oldData, data: data };
       });

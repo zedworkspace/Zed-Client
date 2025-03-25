@@ -1,4 +1,4 @@
-import { GetCard, ICard } from "@/interface/cardInterface";
+import { GetCard } from "@/interface/cardInterface";
 import apiClient from "@/lib/axios.config";
 import API_ROUTES from "@/lib/routes";
 import {
