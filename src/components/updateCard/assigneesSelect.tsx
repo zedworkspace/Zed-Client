@@ -16,7 +16,7 @@ type Option = {
 };
 
 type Props = {
-  members: IBoardMember[];
+  members?: IBoardMember[];
   handleChange: (selected: MultiValue<Option>) => void;
   value: MultiValue<Option>;
 };
@@ -34,6 +34,8 @@ export default function AssigneesSelect({
   handleChange,
   value,
 }: Props) {
+  if (!members) return;
+
   const options: Option[] = members.map((member) => ({
     value: member.name,
     label: (

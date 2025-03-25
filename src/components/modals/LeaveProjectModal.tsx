@@ -10,15 +10,15 @@ import { usechangeOwnerStore } from "@/store/useModalStore";
 type LeaveProjectModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  projectId: string;
+  projectId?: string;
 };
 
 export const LeaveProjectModal = ({ isOpen, onClose, projectId }: LeaveProjectModalProps) => {
     const router = useRouter();
-    const {mutate, data, isPending, isSuccess} = useLeaveProject(projectId);
+    const {mutate, data, isPending, isSuccess} = useLeaveProject();
       const { openChangeOwner} = usechangeOwnerStore();
     const handleLeave = ()=>{
-        mutate(projectId);
+        mutate(projectId as string);
     }
     const [isOwnerModal, setIsOwnerModal] = useState(false);
 

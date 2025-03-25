@@ -77,7 +77,7 @@ function Page() {
   const router = useRouter();
 
   // Function to generate initials from name
-  const getInitials = (name) => {
+  const getInitials = (name: string) => {
     return name
       .split(" ")
       .map((part) => part[0])
