@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import {GoogleOAuthProvider} from '@react-oauth/google';
 import { SheetProvider } from "@/providers/sheetProvider";
 
-const CLIENTID = process.env.NEXT_GOOGLE_CLIENT_ID!;
+const CLIENTID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
 
 
 const geistSans = Geist({
