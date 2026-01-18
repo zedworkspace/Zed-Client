@@ -7,7 +7,6 @@ import { Toaster } from "@/components/ui/toaster";
 import {GoogleOAuthProvider} from '@react-oauth/google';
 import { SheetProvider } from "@/providers/sheetProvider";
 
-const CLIENTID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
 
 
 const geistSans = Geist({
@@ -30,6 +29,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+const CLIENTID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+
   return (
     <html lang="en">
       <body
